@@ -54,11 +54,30 @@
         .chart-card h3 { margin: 0 0 20px 0; font-size: 1.1rem; color: var(--text-main); font-weight: 500; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
         .chart-container { position: relative; height: 280px; width: 100%; }
 
-        /* Estilos de Tabla */
-        .table-container { overflow-x: auto; }
+        /* Estilos de Tabla Mejorados con Scroll */
+        .table-container { 
+            overflow-y: auto; /* Permite scroll vertical */
+            max-height: 500px; /* Altura máxima antes de que aparezca el scroll */
+            border: 1px solid var(--border); 
+            border-radius: 6px;
+        }
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th, td { padding: 12px 15px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-        th { background-color: #f8f9fa; color: var(--text-muted); font-weight: 500; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
+        
+        /* Hace que el encabezado se quede fijo arriba al hacer scroll */
+        th { 
+            background-color: #f8f9fa; 
+            color: var(--text-muted); 
+            font-weight: 500; 
+            text-transform: uppercase; 
+            font-size: 0.8rem; 
+            letter-spacing: 0.5px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1; 
+            box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1); /* Sombrilla sutil para separar el header */
+        }
+        
         tr:hover { background-color: #f1f3f4; }
         .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; display: inline-block; }
         .badge-active { background: #e6f4ea; color: var(--success); }
@@ -122,9 +141,9 @@
             </div>
         </div>
 
-        <!-- Tabla Detallada -->
+        <!-- Tabla Detallada: LISTADO COMPLETO -->
         <div class="chart-card">
-            <h3>Top 5 Usuarios: Mayor Consumo de Almacenamiento</h3>
+            <h3>Listado Completo de Usuarios y Almacenamiento</h3>
             <div class="table-container">
                 <table>
                     <thead>
@@ -197,7 +216,7 @@
                     totalPhotosGB += photosGB;
                     totalStorageGB += userTotalGB;
 
-                    // Guardar para el Top 5
+                    // Guardar TODO el usuario en la lista
                     userList.push({
                         email: user['Email Address [Required]'],
                         status: status,
@@ -243,12 +262,12 @@
                     options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
                 });
 
-                // Tabla Top 5
+                // --- TABLA COMPLETA (Ya no hay limitación de 5) ---
+                // Opcional: Los ordenamos para que los que consumen más sigan saliendo arriba
                 userList.sort((a, b) => b.totalGB - a.totalGB);
-                const top5 = userList.slice(0, 5);
                 
                 const tableBody = document.getElementById('topUsersTableBody');
-                top5.forEach(u => {
+                userList.forEach(u => {
                     const statusBadge = (u.status === 'active' || u.status === 'activo') 
                         ? '<span class="badge badge-active">Activo</span>' 
                         : '<span class="badge badge-suspended">Suspendido</span>';
