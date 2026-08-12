@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control - Google Workspace</title>
+    <title>Dashboard SERVIALCO - Workspace</title>
     <!-- Chart.js para las gráficas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- PapaParse para leer el CSV -->
@@ -68,11 +68,11 @@
 <body>
     
     <div class="navbar">
-        <h1><span class="material-symbols-outlined">dashboard</span> Panel de Administración Workspace</h1>
+        <h1><span class="material-symbols-outlined">dashboard</span> SERVIALCO - Workspace</h1>
     </div>
 
     <div class="container">
-        <div id="errorMessage" class="error-msg">⚠️ No se encontró el archivo "datos.csv" o hubo un error al leerlo.</div>
+        <div id="errorMessage" class="error-msg">⚠️ No se encontró el archivo "SERVIALCO.csv". Por favor súbelo a GitHub.</div>
 
         <!-- Fila de Indicadores (KPIs) -->
         <div class="kpi-grid">
@@ -157,7 +157,8 @@
             return val;
         }
 
-        Papa.parse("datos.csv", {
+        // ====== AQUÍ SE LLAMA AL ARCHIVO SERVIALCO.csv ======
+        Papa.parse("SERVIALCO.csv", {
             download: true,
             header: true,
             skipEmptyLines: true,
@@ -177,7 +178,7 @@
                     if (status === 'active' || status === 'activo') activos++;
                     else suspendidos++;
 
-                    // 2. Seguridad 2FA (2-Step Verification)
+                    // 2. Seguridad 2FA
                     const enrolled2FA = (user['2sv Enrolled [READ ONLY]'] || '').toLowerCase();
                     if (enrolled2FA === 'false' || enrolled2FA === 'falso') sin2FA++;
 
@@ -206,13 +207,13 @@
                     });
                 });
 
-                // --- PINTAR LOS INDICADORES SUPERIORES ---
+                // Pintar KPIs
                 document.getElementById('totalUsers').innerText = totalUsers;
                 document.getElementById('totalStorage').innerText = totalStorageGB.toFixed(2) + " GB";
                 document.getElementById('suspendedUsers').innerText = suspendidos;
                 document.getElementById('usersWithout2FA').innerText = sin2FA;
 
-                // --- GRÁFICA 1: Almacenamiento (Pie) ---
+                // Gráfica de Almacenamiento
                 new Chart(document.getElementById('storageBreakdownChart'), {
                     type: 'doughnut',
                     data: {
@@ -227,7 +228,7 @@
                     options: { maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom' } } }
                 });
 
-                // --- GRÁFICA 2: Unidades Organizativas (Bar) ---
+                // Gráfica de Unidades Organizativas
                 new Chart(document.getElementById('orgChart'), {
                     type: 'bar',
                     data: {
@@ -242,7 +243,7 @@
                     options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
                 });
 
-                // --- TABLA: Top 5 Usuarios ---
+                // Tabla Top 5
                 userList.sort((a, b) => b.totalGB - a.totalGB);
                 const top5 = userList.slice(0, 5);
                 
