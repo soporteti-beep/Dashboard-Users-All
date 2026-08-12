@@ -1,0 +1,95 @@
+First Name [Required],Last Name [Required],Email Address [Required],Password [Required],Password Hash Function [UPLOAD ONLY],Org Unit Path [Required],New Primary Email [UPLOAD ONLY],Status [READ ONLY],Last Sign In [READ ONLY],Recovery Email,Home Secondary Email,Work Secondary Email,Recovery Phone [MUST BE IN THE E.164 FORMAT],Work Phone,Home Phone,Mobile Phone,Work Address,Home Address,Employee ID,Employee Type,Employee Title,Manager Email,Department,Cost Center,2sv Enrolled [READ ONLY],2sv Enforced [READ ONLY],Building ID,Floor Name,Floor Section,Email Usage [READ ONLY],Drive Usage [READ ONLY],Photos Usage [READ ONLY],Storage limit [READ ONLY],Storage Used [READ ONLY],Change Password at Next Sign-In,New Status [UPLOAD ONLY],Gemini Limit Status [READ ONLY]
+Admin,AppSheet,adminappsheet@servialco.com,****,,/,,Active,2026/05/28 08:24:20,juan.bulla@tiglobal.com.co,,,+573002034883,,,,,,,,,,,,False,False,,,,0.04GB,54.56GB,0.0GB, --,54.6GB,False,,-
+Alejandro,Garcia,soporteti@servialco.com,****,,/,,Active,2026/08/09 15:00:20,,,,+573009440036,,,,,,,,,,,,False,False,,,,0.72GB,465.73GB,0.0GB, --,466.45GB,False,,-
+Analista,Mesa de Ayuda,mesadeayuda@servialco.com,****,,/,,Active,2026/08/09 17:15:13,,,,+573156650627,,,,,,,,,,,,False,False,,,,0.98GB,11.34GB,0.47GB, --,12.79GB,False,,-
+Andrés,Huertas,soporte@servialco.com,****,,/,,Active,2026/07/23 08:22:54,,,nevaconf@gmail.com,,3003008605,,,,,,,,,,,False,False,,,,10.67GB,4.73GB,0.0GB, --,15.4GB,False,,-
+Angie,Baez,abogadosenior1@servialco.com,****,,/,,Active,2026/07/28 07:01:51,,,,,,,,,,,,,,,,False,False,,,,3.1GB,1.33GB,0.0GB, --,4.42GB,False,,NOT_APPROACHING_LIMIT
+Bladimir,Aragon,pmjunior@servialco.com,****,,/,,Active,2026/08/09 21:35:09,analistati@servialco.com,,,,,,,,,,,,,,,False,False,,,,2.51GB,11.88GB,0.0GB, --,14.4GB,False,,NOT_APPROACHING_LIMIT
+Brandon,Arias,director.infraestructura@servialco.com,****,,/,,Active,2026/08/07 10:15:16,liderti@servialco.com,,,,,,,,,,,,,,,False,False,,,,19.88GB,18.8GB,0.07GB, --,38.75GB,False,,-
+Brayan Augusto,Ayala Perez,logistica@servialco.com,****,,/,,Active,2026/08/10 06:28:36,,,nevaconf@gmail.com,,3003008605,,,,,,,,,,,False,False,,,,8.37GB,2.58GB,0.01GB, --,10.96GB,False,,NOT_APPROACHING_LIMIT
+Carlos,Camacho,admonlan1@servialco.com,****,,/,,Active,2026/07/29 14:00:57,,,nevaconf@gmail.com,,3003008605,,,,,,,,,,,False,False,,,,10.2GB,1.64GB,0.0GB, --,11.84GB,False,,-
+Carolayn,Acosta,financiera@servialco.com,****,,/,,Active,2026/08/06 10:17:34,,,nevaconf@gmail.com,+573508685671,3003008605,,,,,,,,,,,False,False,,,,29.59GB,0.85GB,0.0GB, --,30.45GB,False,,NOT_APPROACHING_LIMIT
+Celeste,Arbelaez,analistatesoreria@servialco.com,****,,/,,Active,2026/08/08 17:18:35,analistati@servialco.com,,,,,,,,,,,,,,,False,False,,,,4.9GB,0.81GB,0.0GB, --,5.71GB,False,,-
+COMERCIAL,SERVIALCO,comercial@servialco.com,****,,/,,Active,2026/08/08 18:33:22,nevaconf@gmail.com,nevaconf@gmail.com,,+573125665693,,3003008605,,,,,,,,,,True,False,,,,31.53GB,70.01GB,1.08GB, --,102.62GB,False,,NOT_APPROACHING_LIMIT
+COORDINACION PROYECTOS,SERVIALCO,coordinacionproyectos@servialco.com,****,,/,,Active,2026/02/16 06:12:40,,,,,,,,,,,,,,,,False,False,,,,18.93GB,27.6GB,0.09GB, --,46.63GB,False,,-
+Coordinador,Cauca,coord_cauca@servialco.com,****,,/,,Active,2026/04/06 07:21:36,,,,,,,,,,,,,,,,False,False,,,,1.63GB,19.05GB,0.0GB, --,20.68GB,True,,NOT_APPROACHING_LIMIT
+Cristian,Acevedo,disenador2@servialco.com,****,,/,,Active,2026/08/08 05:38:47,,,,,,,,,,,,,,,,False,False,,,,1.72GB,89.27GB,0.0GB, --,90.99GB,False,,NOT_APPROACHING_LIMIT
+Cristian,Castillo,bodega.popayan@servialco.com,****,,/,,Active,2026/08/06 12:23:11,liderti@servialco.com,,,,,,,,,,,,,,,False,False,,,,4.53GB,0.79GB,0.0GB, --,5.32GB,False,,-
+Cristian,Vanegas,director.financiero@servialco.com,****,,/,,Active,2026/07/29 17:23:12,,,,+573058806610,,,,,,,,,,,,False,False,,,,2.47GB,1.65GB,0.0GB, --,4.11GB,False,,-
+Daniel,Useche,documentador_proyectos@servialco.com,****,,/,,Active,2026/08/06 14:08:36,,,,,,,,,,,,,,,,False,False,,,,1.16GB,16.64GB,0.0GB, --,17.81GB,False,,NOT_APPROACHING_LIMIT
+Daniel,Camacho,lider.compras@servialco.com,****,,/,,Active,2026/08/06 13:54:40,,,,,,,,,,,,,,,,True,False,,,,19.37GB,13.79GB,0.2GB, --,33.36GB,False,,NOT_APPROACHING_LIMIT
+Daniela,Quintero,analistacontable@servialco.com,****,,/,,Active,2026/07/30 09:59:38,,,,+573502239345,,,,,,,,,,,,False,False,,,,2.45GB,0.48GB,0.0GB, --,2.92GB,False,,NOT_APPROACHING_LIMIT
+Danilo,Ternera,juridica@servialco.com,****,,/,,Active,2026/07/29 08:51:22,nevaconf@gmail.com,,nevaconf@gmail.com,+573003008605,3003008605,,,,,,,,,,,False,False,,,,21.22GB,10.12GB,0.0GB, --,31.34GB,False,,NOT_APPROACHING_LIMIT
+David,Garcia,apoyo.administrativo_fna@servialco.com,****,,/,,Active,2026/07/29 08:45:32,,,,,,,,,,,,,,,,False,False,,,,0.02GB,10.57GB,0.0GB, --,10.59GB,False,,-
+Deisy,Cruz,controllerfinanciero@servialco.com,****,,/,,Active,2026/07/29 06:27:51,,,,,,,,,,,,,,,,False,False,,,,5.44GB,1.45GB,0.0GB, --,6.89GB,False,,NOT_APPROACHING_LIMIT
+Dev,RedNeutra,devredneutra@servialco.com,****,,/,,Active,2026/05/22 09:07:00,,,,,3186856557,,,,,,,,,,,False,False,,,,0.01GB,0.16GB,0.0GB, --,0.17GB,False,,-
+Diana,Rodriguez,comercial_cali@servialco.com,****,,/,,Active,2026/08/05 11:49:38,,,nevaconf@gmail.com,+573013785082,3003008605,,,,,,,,,,,False,False,,,,5.81GB,22.89GB,0.18GB, --,28.88GB,False,,NOT_APPROACHING_LIMIT
+Diego,Barragan,apoyo.proyecto_fna@servialco.com,****,,/,,Active,2026/07/30 05:53:42,,,,,,,,,,,,,,,,False,False,,,,0.06GB,0.28GB,0.0GB, --,0.34GB,False,,-
+Diego,Anzola,admonlan2@servialco.com,****,,/,,Active,2026/08/09 13:32:25,,,nevaconf@gmail.com,,3003008605,,,,,,,,,,,False,False,,,,11.3GB,769.15GB,0.43GB, --,780.88GB,False,,-
+disenador,4 Stoc,disenador4@servialco.com,****,,/,,Active,2026/08/04 13:06:49,,,,,,,,,,,,,,,,False,False,,,,1.75GB,70.04GB,0.0GB, --,71.78GB,False,,-
+Duvan,Ramirez,contadorjunior@servialco.com,****,,/,,Active,2026/08/03 12:06:41,analistati@servialco.com,,,+573182080215,,,,,,,,,,,,False,False,,,,4.76GB,2.06GB,0.0GB, --,6.83GB,False,,NOT_APPROACHING_LIMIT
+Elvis,Pestana,liderti@servialco.com,****,,/,,Active,2026/08/06 09:12:35,,,,,,,,,,,,,,,,True,False,,,,2.95GB,408.16GB,0.0GB, --,411.11GB,False,,NOT_APPROACHING_LIMIT
+Erick Leandro,Pedraza Angel,cableado2@servialco.com,****,,/,,Active,2026/08/05 06:35:18,,,nevaconf@gmail.com,,3003008605,,,,,,,,,,,False,False,,,,11.1GB,2.36GB,0.0GB, --,13.45GB,False,,-
+Estefania,Valencia,analistahseq@servialco.com,****,,/,,Active,2026/07/31 06:27:59,liderti@servialco.com,,,,,,,,,,,,,,,True,False,,,,3.43GB,1.92GB,0.0GB, --,5.36GB,False,,NOT_APPROACHING_LIMIT
+Fabian Steven,Castillo,calidad.innovacion@servialco.com,****,,/,,Active,2026/08/05 11:50:16,,,,+573118741456,,,,,,,,,,,,False,False,,,,0.2GB,2.57GB,0.0GB, --,2.77GB,False,,-
+Flora,Daza,directorcompliance@servialco.com,****,,/,,Active,2026/08/03 06:30:26,floramargarita.daza@gmail.com,,,+573002632182,,,,,,,,,,,,False,False,,,,0.92GB,33.01GB,0.0GB, --,33.93GB,False,,NOT_APPROACHING_LIMIT
+Gabriel,Sanchez,desarrollador.junior1@servialco.com,****,,/,,Active,2026/08/05 23:41:50,,,,+573222464106,,,,,,,,,,,,True,False,,,,0.41GB,3.45GB,0.0GB, --,3.86GB,False,,-
+Guillermo,Niño,admoninfraestructura@servialco.com,****,,/,,Active,2026/08/05 14:17:54,,,,+573184670346,,3184670349 ,,,,,,,,,,True,False,,,,10.18GB,34.52GB,0.23GB, --,44.94GB,False,,-
+Harbey,Cubides,gestormonitoreo@servialco.com,****,,/,,Active,2026/07/29 06:48:15,hcubides65@gmail.com,,nevaconf@gmail.com,+573015509958,3003008605,,,,,,,,,,,True,False,,,,15.99GB,23.67GB,0.0GB, --,39.66GB,False,,-
+Helen,Vargas,soporteadministrativo@servialco.com,****,,/,,Active,2026/08/06 14:01:45,nevaconf@gmail.com,,,+573162843420,,,,,,,,,,,,False,False,,,,27.55GB,8.76GB,0.1GB, --,36.42GB,False,,NOT_APPROACHING_LIMIT
+INFO,SERVIALCO,info@servialco.com,****,,/,,Active,2026/08/09 21:21:01,nevaconf@gmail.com,nevaconf@gmail.com,,+573003008605,,3003008605,,,,,,,,,,False,False,,,,16.16GB,8.75GB,0.0GB, --,24.91GB,False,,NOT_APPROACHING_LIMIT
+Jean,Lucas,abogado@servialco.com,****,,/,,Active,2026/07/29 06:22:57,analistati@servialco.com,,,,,,,,,,,,,,,False,False,,,,3.39GB,5.63GB,0.13GB, --,9.16GB,False,,-
+Jean,quimbayo,supervisor_valle@servialco.com,****,,/,,Active,2026/08/09 18:25:15,,,,,,,,,,,,,,,,False,False,,,,1.92GB,8.85GB,0.0GB, --,10.77GB,False,,NOT_APPROACHING_LIMIT
+Jhonier,Fino,analistati@servialco.com,****,,/,,Active,2026/08/06 01:30:47,,,,,,,,,,,,,,,,False,False,,,,1.06GB,2.61GB,0.09GB, --,3.76GB,False,,NOT_APPROACHING_LIMIT
+John,Molano,pmo@servialco.com,****,,/,,Active,2026/08/08 08:41:44,liderti@servialco.com,,nevaconf@gmail.com,+573166621337,3003008605,,,,,,,,,,,False,False,,,,34.41GB,32.83GB,0.18GB, --,67.42GB,False,,NOT_APPROACHING_LIMIT
+Jorge,Morales,pm_1@servialco.com,****,,/,,Active,2026/08/09 06:15:33,,,nevaconf@gmail.com,,3003008605,,,,,,,,,,,False,False,,,,15.49GB,23.9GB,0.0GB, --,39.39GB,False,,NOT_APPROACHING_LIMIT
+Jose,Almeciga,admonti2@servialco.com,****,,/,,Active,2026/08/09 21:56:30,,,nevaconf@gmail.com,+573183400016,3003008605,,,,,,,,,,,False,False,,,,4.6GB,34.19GB,0.37GB, --,39.16GB,False,,-
+Juan,Pinto,coordinador_fna@servialco.com,****,,/,,Active,2026/07/15 09:25:03,,,,,,,,,,,,,,,,False,False,,,,0.06GB,0.0GB,0.0GB, --,0.06GB,False,,-
+Juan Carlos,Sandoval Curtidor,disenador5@servialco.com,****,,/,,Active,2026/08/06 08:56:00,soporteti@servialco.com,,,,,,,,,,,,,,,False,False,,,,1.48GB,86.79GB,0.0GB, --,88.27GB,False,,-
+Juan Pablo,Garcia,supervisor.putumayo@servialco.com,****,,/,,Active,2026/08/06 06:18:26,analistati@servialco.com,,,+573209439356,,,,,,,,,,,,False,False,,,,0.6GB,0.3GB,0.0GB, --,0.9GB,False,,-
+Juan pablo,Jacanamejoy,bodega.putumayo@servialco.com,****,,/,,Active,2026/07/28 12:10:57,lunayesid7@gmail.com,,,+573227592856,,,,,,,,,,,,False,False,,,,0.51GB,1.27GB,0.0GB, --,1.78GB,False,,-
+Julian,Garzon,comercial_2@servialco.com,****,,/,,Active,2026/05/30 11:05:04,,,,,,,,,,,,,,,,False,False,,,,0.0GB,0.0GB,0.0GB, --,0.0GB,True,,-
+Julian,Baquero,disenador3@servialco.com,****,,/,,Active,2026/07/30 06:35:50,nevaconf@gmail.com,,nevaconf@gmail.com,+573003008605,3003008605,,,,,,,,,,,True,False,,,,2.38GB,61.38GB,0.09GB, --,63.84GB,False,,-
+Julian,Robles,lider.innovacion@servialco.com,****,,/,,Active,2026/08/10 19:47:11,,,,+573222473405,,,,,,,,,,,,False,False,,,,0.42GB,1.2GB,0.0GB, --,1.62GB,False,,-
+Laura,Pachon,comercial_bogota@servialco.com,****,,/,,Active,2026/08/06 07:00:46,liderti@servialco.com,,,+573028660468,,,,,,,,,,,,False,False,,,,5.4GB,13.75GB,1.05GB, --,20.19GB,False,,-
+LICITACIONES,SERVIALCO,licitaciones@servialco.com,****,,/,,Active,2026/06/24 06:03:56,nevaconf@gmail.com,,nevaconf@gmail.com,+573125665693,312 5665693,,,,,,,,,,,False,False,,,,4.75GB,28.98GB,0.0GB, --,33.73GB,False,,-
+Lider,HSEQ,HSEQ@servialco.com,****,,/,,Active,2026/08/06 09:12:59,nevaconf@gmail.com,,,,,,,,,,,,,,,False,False,,,,22.31GB,8.5GB,0.0GB, --,30.82GB,False,,NOT_APPROACHING_LIMIT
+Lizeth,Palma,liderdiseno@servialco.com,****,,/,,Active,2026/08/10 06:17:05,asistenteoperaciones@servialco.com,,,+573151840424,,,,,,,,,,,,True,False,,,,16.01GB,110.34GB,0.23GB, --,126.59GB,False,,NOT_APPROACHING_LIMIT
+Lorena,Guevara,lorena.guevara@servialco.com,****,,/,,Active,2026/06/04 06:05:04,,,,,,,,,,,,,,,,False,False,,,,0.02GB,0.0GB,0.0GB, --,0.02GB,False,,-
+Luz,Tamara,documentador_fna@servialco.com,****,,/,,Active,2026/07/24 08:35:00,,,,,,,,,,,,,,,,False,False,,,,0.48GB,1.73GB,0.0GB, --,2.21GB,False,,-
+Marco,Romero,liderprocesos@servialco.com,****,,/,,Active,2026/04/17 05:26:31,,,nevaconf@gmail.com,,3003008605,,,,,,,,,,,False,False,,,,26.49GB,4.01GB,0.0GB, --,30.5GB,False,,-
+Maria,Escobar,liderpreventati@servialco.com,****,,/,,Active,2026/08/05 07:18:13,,,,,3003008605,,,,,,,,,,,True,False,,,,6.69GB,56.88GB,0.0GB, --,63.57GB,False,,-
+Mariana,Ramirez,disenador6@servialco.com,****,,/,,Active,2026/08/09 20:19:48,marianaramirez2413@gmail.com,,,,,,,,,,,,,,,True,False,,,,12.93GB,248.03GB,0.0GB, --,260.96GB,False,,NOT_APPROACHING_LIMIT
+Maryeli,Perez,pmjunior2@servialco.com,****,,/,,Active,2026/07/29 05:50:09,,,,,,,,,,,,,,,,False,False,,,,0.67GB,0.83GB,0.0GB, --,1.51GB,False,,-
+Mauricio,Agudelo,pm_3@servialco.com,****,,/,,Active,2026/07/28 06:10:51,,,,,,,,,,,,,,,,False,False,,,,7.31GB,106.47GB,0.0GB, --,113.79GB,False,,NOT_APPROACHING_LIMIT
+Mauricio,Castro,supervisor_quindio1@servialco.com,****,,/,,Active,2026/08/06 04:56:25,,,,,,,,,,,,,,,,False,False,,,,1.01GB,0.23GB,0.0GB, --,1.24GB,False,,NOT_APPROACHING_LIMIT
+Maycon,Acosta,arquitectosoluciones@servialco.com,****,,/,,Active,2026/07/23 16:31:08,,,nevaconf@gmail.com,,3003008605,,,,,,,,,,,True,False,,,,13.1GB,17.68GB,0.0GB, --,30.79GB,False,,-
+Mayda,Diaz,pmjunior1@servialco.com,****,,/,,Active,2026/08/06 18:56:09,,,,,,,,,,,,,,,,False,False,,,,2.32GB,5.07GB,0.0GB, --,7.39GB,False,,-
+Melva,Blanco,desarrollador.junior2@servialco.com,****,,/,,Active,2026/08/03 14:30:51,,,,,,,,,,,,,,,,True,False,,,,0.02GB,0.0GB,0.0GB, --,0.02GB,False,,-
+Michelle,Rivera,admonlan3@servialco.com,****,,/,,Active,2026/08/02 07:17:12,michelle1223@hotmail.es,,nevaconf@gmail.com,+573183585593,3003008605,,,,,,,,,,,True,False,,,,3.88GB,8.28GB,0.62GB, --,12.78GB,False,,NOT_APPROACHING_LIMIT
+MONITOREO FNA,SERVIALCO,monitoreofna@servialco.com,****,,/,,Active,2026/08/09 23:55:45,,,nevaconf@gmail.com,+573183400016,3003008605,,,,,,,,,,,True,False,,,,0.38GB,0.0GB,0.0GB, --,0.38GB,False,,-
+Naisser,Álvarez,tributario@servialco.com,****,,/,,Active,2026/07/28 06:52:53,liderti@servialco.com,,,,,,,,,,,,,,,False,False,,,,5.86GB,2.13GB,0.02GB, --,8.0GB,False,,-
+NEVARDO CONTRERAS,SERVIALCO,nevardo.contreras@servialco.com,****,,/,,Active,2026/08/04 19:37:57,nevaconf@gmail.com,nevaconf@gmail.com,,+573003008605,3003008605,,,,,,,,,,,False,False,,,,24.86GB,36.22GB,0.07GB, --,61.15GB,False,,-
+Nicolas,Camargo,admonti1@servialco.com,****,,/,,Active,2026/08/05 14:32:16,,,nevaconf@gmail.com,,3003008605,,,,,,,,,,,False,False,,,,15.7GB,17.62GB,0.0GB, --,33.32GB,False,,-
+Omar,Cerquera,bodega.armenia@servialco.com,****,,/,,Active,2026/08/04 07:43:51,,,,,,,,,,,,,,,,False,False,,,,4.24GB,2.85GB,0.0GB, --,7.09GB,False,,-
+Oscar,Diaz,fna_pm@servialco.com,****,,/,,Active,2026/06/02 07:12:27,,,,+573009440036,,,,,,,,,,,,False,False,,,,0.08GB,0.0GB,0.0GB, --,0.08GB,False,,-
+Paola,Ballesteros,liderdemesadeservicios@servialco.com,****,,/,,Active,2026/08/06 12:13:25,,,,+573178262097,,,,,,,,,,,,False,False,,,,1.53GB,25.64GB,0.0GB, --,27.17GB,False,,-
+Radicacion,Facturas,facturacion@servialco.com,****,,/,,Active,2026/08/11 09:38:01,,,,,,,,,,,,,,,,False,False,,,,9.23GB,286.63GB,0.0GB, --,295.86GB,False,,-
+Rafael,Jimenez,formulador@servialco.com,****,,/,,Active,2026/07/31 07:36:59,leonardojimenezq1986@gmail.com,,,,,,,,,,,,,,,False,False,,,,11.38GB,7.15GB,0.06GB, --,18.59GB,False,,-
+Red,Neutra,redesneutrasquindio@servialco.com,****,,/,,Active,2026/05/26 13:30:25,,,,,,,,,,,,,,,,False,False,,,,0.52GB,0.0GB,0.0GB, --,0.52GB,False,,-
+Redes,Neutras,redesneutrasputumayo@servialco.com,****,,/,,Active,2026/06/24 09:34:22,,,,,,,,,,,,,,,,False,False,,,,1.15GB,0.0GB,0.0GB, --,1.15GB,False,,-
+Redes,Neutras,redesneutrasvalledelcauca@servialco.com,****,,/,,Active,2026/06/23 12:34:03,,,,,,,,,,,,,,,,False,False,,,,0.37GB,0.0GB,0.0GB, --,0.37GB,False,,-
+Redes,Neutra,redesneutrascauca@servialco.com,****,,/,,Active,2026/05/15 06:31:04,,,,,,,,,,,,,,,,False,False,,,,0.17GB,0.0GB,0.0GB, --,0.17GB,False,,-
+RedNeutra,Administradora,redneutraadmin@servialco.com,****,,/,,Active,2026/05/25 06:18:26,,,,+573118883918,3118883918,,,,,,,,,,,False,False,,,,0.26GB,3.96GB,0.0GB, --,4.22GB,False,,-
+Rene,Rojas,comunicaciones@servialco.com,****,,/,,Active,2026/08/07 18:08:21,rocruzrene@gmail.com,,,+573162843420,,,,,,,,,,,,False,False,,,,12.8GB,32.92GB,0.0GB, --,45.72GB,False,,-
+REVISOR FISCAL,SERVIALCO,revisorfiscal@servialco.com,****,,/,,Active,2026/07/29 15:24:33,,,nevaconf@gmail.com,+573117418213,3003008605,,,,,,,,,,,False,False,,,,0.58GB,0.02GB,0.0GB, --,0.59GB,False,,-
+Sandra,Bustos,gestorproyectos@servialco.com,****,,/,,Active,2026/07/31 04:11:13,,,nevaconf@gmail.com,,3003008605,,,,,,,,,,,False,False,,,,17.09GB,8.85GB,0.0GB, --,25.94GB,False,,-
+Santiago,Rubio,gerencia@servialco.com,****,,/,,Active,2026/08/06 09:18:18,santiagorubio@hotmail.com,,nevaconf@gmail.com,+573166755737,3003008605,,,,,,,,,,,False,False,,,,25.48GB,17.42GB,0.28GB, --,43.17GB,False,,-
+SERVIALCO,SAS,servialco.odoo@servialco.com,****,,/,,Active,2026/08/09 20:51:59,analistati@servialco.com,,,,,,,,,,,,,,,True,False,,,,0.71GB,0.01GB,0.0GB, --,0.73GB,False,,-
+stoc,tic,pmojuniorcauca@servialco.com,****,,/,,Active,2026/05/29 08:43:34,,,,+573124571464,,,,,,,,,,,,False,False,,,,5.32GB,0.51GB,0.0GB, --,5.83GB,True,,-
+Stock,Tic,administrativo@servialco.com,****,,/,,Active,2026/05/25 06:52:54,,,,,,,,,,,,,,,,True,False,,,,6.17GB,1.72GB,0.14GB, --,8.03GB,False,,NOT_APPROACHING_LIMIT
+Talento,Humano,talentohumano@servialco.com,****,,/,,Active,2026/08/06 14:35:14,,,,,,,,,,,,,,,,False,False,,,,17.55GB,21.31GB,0.43GB, --,39.3GB,False,,NOT_APPROACHING_LIMIT
+Willys,Prasca,pm_2@servialco.com,****,,/,,Active,2026/08/08 12:07:16,wprascamat@gmail.com,,,+573025399605,,,,,,,,,,,,False,False,,,,22.73GB,105.97GB,29.02GB, --,157.72GB,False,,NOT_APPROACHING_LIMIT
+Wilmer,Babativa,contabilidad@servialco.com,****,,/,,Active,2026/08/04 12:31:08,nevaconf@gmail.com,,,+573003008605,,,,,,,,,,,,False,False,,,,8.71GB,4.42GB,0.0GB, --,13.12GB,False,,NOT_APPROACHING_LIMIT
+Yilber,Silva,supervisor_cauca@servialco.com,****,,/,,Active,2026/07/28 12:56:51,,,,+573245316846,,,,,,,,,,,,False,False,,,,4.58GB,10.94GB,0.0GB, --,15.52GB,False,,-
+Zetkin,Mora,disenador1@servialco.com,****,,/,,Active,2026/08/09 06:41:20,,,,,,,,,,,,,,,,False,False,,,,1.82GB,61.21GB,0.06GB, --,63.09GB,False,,NOT_APPROACHING_LIMIT
