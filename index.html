@@ -1,29 +1,194 @@
-Dashboard Admin - Google Workspace
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Almacenamiento y Usuarios - Google Workspace</title>
+    <!-- Librerías desde CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 20px; color: #202124; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #1a73e8; margin-bottom: 5px; }
+        
+        .grid-top { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto 20px auto; }
+        .grid-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(60,64,67,0.3); border-top: 4px solid transparent; }
+        .card-blue { border-top-color: #1a73e8; }
+        .card-green { border-top-color: #34a853; }
+        
+        .metric-title { font-size: 1.1em; color: #5f6368; text-align: center; margin-bottom: 15px; font-weight: 500; }
+        .metric-value { font-size: 2.8em; font-weight: bold; text-align: center; }
+        .text-blue { color: #1a73e8; }
+        .text-green { color: #34a853; }
+        
+        .chart-container { position: relative; height: 300px; width: 100%; }
+        .error-msg { color: #d93025; text-align: center; font-weight: bold; display: none; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Dashboard General - Google Workspace</h1>
+        <p>Métricas de Usuarios y Almacenamiento extraídas de <b>datos.csv</b></p>
+        <div id="errorMessage" class="error-msg">⚠️ No se encontró "datos.csv" o hubo un error al leerlo.</div>
+    </div>
     
-    
-    
-    
+    <!-- Tarjetas de Métricas Principales -->
+    <div class="grid-top">
+        <div class="card card-blue">
+            <div class="metric-title">Total de Usuarios</div>
+            <div id="totalUsers" class="metric-value text-blue">Cargando...</div>
+        </div>
+        <div class="card card-green">
+            <div class="metric-title">Almacenamiento Total Usado</div>
+            <div id="totalStorage" class="metric-value text-green">Cargando...</div>
+        </div>
+    </div>
 
+    <!-- Tarjetas de Gráficas -->
+    <div class="grid-charts">
+        <div class="card">
+            <div class="metric-title">Estado de Cuentas</div>
+            <div class="chart-container"><canvas id="statusChart"></canvas></div>
+        </div>
+        <div class="card">
+            <div class="metric-title">Distribución de Almacenamiento (GB)</div>
+            <div class="chart-container"><canvas id="storageBreakdownChart"></canvas></div>
+        </div>
+        <div class="card" style="grid-column: 1 / -1;">
+            <div class="metric-title">Top 5 Usuarios con más consumo (GB)</div>
+            <div class="chart-container"><canvas id="topUsersChart"></canvas></div>
+        </div>
+    </div>
 
-    
-        Dashboard de Usuarios - Google Workspace
-        Los datos se actualizan automáticamente al subir el archivo datos.csv a GitHub
-        ⚠️ No se encontró el archivo "datos.csv". Por favor súbelo a GitHub.
-    
-    
-    
-        
-            Total de Usuarios
-            -
-        
-        
-            Costo Mensual Estimado
-            -
-            *Calculado a $12 USD por usuario activo
-        
-        
-            Estado de Cuentas
+    <script>
+        // Función para convertir textos como "54.56GB" o "500MB" a números en Gigabytes puros
+        function parseStorageToGB(str) {
+            if (!str || str === '--') return 0;
+            let val = parseFloat(str); // Extrae el número ignorando las letras
+            if (isNaN(val)) return 0;
             
-        
-        
-            Usuarios por Unidad Organizativa
+            let upperStr = str.toUpperCase();
+            if (upperStr.includes('TB')) return val * 1024;
+            if (upperStr.includes('MB')) return val / 1024;
+            if (upperStr.includes('KB')) return val / (1024 * 1024);
+            // Por defecto asumimos que son GB si no tiene unidad o dice GB
+            return val;
+        }
+
+        Papa.parse("datos.csv", {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                const data = results.data.filter(row => row['Email Address [Required]']); // Filtrar filas vacías
+
+                // Contadores y Acumuladores
+                let totalUsers = 0;
+                let activos = 0;
+                let suspendidos = 0;
+
+                let totalEmailGB = 0;
+                let totalDriveGB = 0;
+                let totalPhotosGB = 0;
+                let totalStorageGB = 0;
+
+                let userStorageArray = [];
+
+                // Recorrer todas las filas del CSV
+                data.forEach(user => {
+                    totalUsers++;
+
+                    // 1. Estado (Active / Suspended)
+                    const status = (user['Status [READ ONLY]'] || '').toLowerCase();
+                    if (status === 'active' || status === 'activo') {
+                        activos++;
+                    } else {
+                        suspendidos++;
+                    }
+
+                    // 2. Almacenamiento
+                    const emailGB = parseStorageToGB(user['Email Usage [READ ONLY]']);
+                    const driveGB = parseStorageToGB(user['Drive Usage [READ ONLY]']);
+                    const photosGB = parseStorageToGB(user['Photos Usage [READ ONLY]']);
+                    const userTotalGB = parseStorageToGB(user['Storage Used [READ ONLY]']);
+
+                    totalEmailGB += emailGB;
+                    totalDriveGB += driveGB;
+                    totalPhotosGB += photosGB;
+                    totalStorageGB += userTotalGB;
+
+                    // 3. Guardar usuario para el Top 5
+                    userStorageArray.push({
+                        email: user['Email Address [Required]'].split('@')[0], // Solo el nombre antes del @
+                        storage: userTotalGB
+                    });
+                });
+
+                // ================= PINTAR LOS DATOS =================
+
+                // Métricas numéricas
+                document.getElementById('totalUsers').innerText = totalUsers;
+                document.getElementById('totalStorage').innerText = totalStorageGB.toFixed(2) + " GB";
+
+                // Gráfica 1: Activos vs Suspendidos
+                new Chart(document.getElementById('statusChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Activos', 'Suspendidos'],
+                        datasets: [{
+                            data: [activos, suspendidos],
+                            backgroundColor: ['#34a853', '#ea4335'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { maintainAspectRatio: false, cutout: '70%' }
+                });
+
+                // Gráfica 2: Distribución de almacenamiento
+                new Chart(document.getElementById('storageBreakdownChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Google Drive', 'Gmail', 'Google Photos'],
+                        datasets: [{
+                            data: [totalDriveGB.toFixed(2), totalEmailGB.toFixed(2), totalPhotosGB.toFixed(2)],
+                            backgroundColor: ['#4285f4', '#ea4335', '#fbbc04'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { maintainAspectRatio: false }
+                });
+
+                // Gráfica 3: Top 5 Usuarios que más consumen
+                userStorageArray.sort((a, b) => b.storage - a.storage); // Ordenar de mayor a menor
+                const top5 = userStorageArray.slice(0, 5); // Tomar los primeros 5
+
+                new Chart(document.getElementById('topUsersChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: top5.map(u => u.email),
+                        datasets: [{
+                            label: 'Consumo (GB)',
+                            data: top5.map(u => u.storage.toFixed(2)),
+                            backgroundColor: '#1a73e8',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+
+            },
+            error: function(err) {
+                document.getElementById('errorMessage').style.display = 'block';
+                console.error("Error al leer el CSV:", err);
+            }
+        });
+    </script>
+</body>
+</html>
