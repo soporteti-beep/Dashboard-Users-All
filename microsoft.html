@@ -1,411 +1,2387 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Dashboard MICROSOFT 365</title>
-    <!-- Chart.js y PapaParse -->
+
+    <!-- =========================================================
+         LIBRERÍAS
+    ========================================================== -->
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- Google Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Material Symbols -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+
+
     <style>
+
+        /* =========================================================
+           COLORES PRINCIPALES
+        ========================================================== */
+
         :root {
-            --primary: #0078D4; 
+
+            --primary: #0078D4;
             --success: #107C10;
             --danger: #D83B01;
             --warning: #FFB900;
+
             --money: #0d652d;
+
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
+
             --text-main: #202124;
             --text-muted: #5f6368;
+
             --border: #dadce0;
+
         }
 
-        body { font-family: 'Google Sans', Arial, sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: var(--text-main); }
-        
-        .navbar { background-color: white; padding: 15px 30px; box-shadow: 0 1px 2px 0 rgba(60,64,67,0.1); display: flex; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); }
-        .navbar h1 { margin: 0; font-size: 1.4rem; color: var(--text-main); font-weight: 500; display: flex; align-items: center; gap: 12px; }
-        .navbar .material-symbols-outlined { color: var(--primary); font-size: 28px; }
 
-        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px 40px 20px; }
-        .error-msg { background: #fce8e6; color: var(--danger); padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; display: none; font-weight: 500; border: 1px solid #fad2cf; }
+        /* =========================================================
+           GENERAL
+        ========================================================== */
 
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .kpi-card { background: var(--card-bg); border-radius: 8px; padding: 20px; box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3); display: flex; flex-direction: column; position: relative; overflow: hidden; }
-        .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
-        
-        .kpi-blue::before { background-color: var(--primary); }
-        .kpi-green::before { background-color: var(--success); }
-        .kpi-money::before { background-color: var(--money); }
-        .kpi-warning::before { background-color: var(--warning); }
-        .kpi-red::before { background-color: var(--danger); }
-        
-        .kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: var(--text-muted); font-size: 0.9rem; font-weight: 500;}
-        .kpi-header .material-symbols-outlined { font-size: 24px; opacity: 0.8; }
-        .kpi-value { font-size: 2rem; font-weight: 400; color: var(--text-main); line-height: 1.2; }
-        .kpi-subtext { font-size: 0.75rem; color: var(--text-muted); margin-top: 5px; }
+        * {
+            box-sizing: border-box;
+        }
 
-        /* GRID PARA 3 GRÁFICAS */
-        .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .chart-card { background: var(--card-bg); border-radius: 8px; padding: 20px; box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3); }
-        .chart-card h3 { margin: 0 0 20px 0; font-size: 1.1rem; color: var(--text-main); font-weight: 500; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-        .chart-container { position: relative; height: 280px; width: 100%; }
+        body {
 
-        .table-container { overflow-x: auto; max-height: 500px; border: 1px solid var(--border); border-radius: 6px;}
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 12px 15px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-        th { background-color: #f8f9fa; color: var(--text-muted); font-weight: 500; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; position: sticky; top: 0; z-index: 1; box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1); }
-        tr:hover { background-color: #f1f3f4; }
-        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; display: inline-block; }
-        .badge-active { background: #e6f4ea; color: var(--success); }
-        .badge-suspended { background: #fce8e6; color: var(--danger); }
-        .text-small { font-size: 0.8rem; color: #5f6368; }
-        
-        .lic-tag { background: #e3f2fd; color: #0078D4; padding: 3px 8px; border-radius: 4px; display: inline-block; margin: 2px; font-size: 0.75rem; border: 1px solid #bbdefb;}
-        .lic-free { background: #f1f3f4; color: #5f6368; border-color: #dadce0;}
-        .lic-none { color: #D83B01; font-weight: 500; font-size: 0.8rem; background: #fce8e6; padding: 3px 8px; border-radius: 4px; display: inline-block;}
+            font-family: 'Google Sans', Arial, sans-serif;
+
+            background-color: var(--bg-color);
+
+            margin: 0;
+
+            padding: 0;
+
+            color: var(--text-main);
+
+        }
+
+
+        /* =========================================================
+           NAVBAR
+        ========================================================== */
+
+        .navbar {
+
+            background-color: white;
+
+            padding: 15px 30px;
+
+            box-shadow:
+                0 1px 2px 0 rgba(60,64,67,0.1);
+
+            display: flex;
+
+            align-items: center;
+
+            margin-bottom: 30px;
+
+            border-bottom: 1px solid var(--border);
+
+        }
+
+
+        .navbar h1 {
+
+            margin: 0;
+
+            font-size: 1.4rem;
+
+            color: var(--text-main);
+
+            font-weight: 500;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+        }
+
+
+        .navbar .material-symbols-outlined {
+
+            color: var(--primary);
+
+            font-size: 28px;
+
+        }
+
+
+        /* =========================================================
+           CONTENEDOR
+        ========================================================== */
+
+        .container {
+
+            max-width: 1400px;
+
+            margin: 0 auto;
+
+            padding: 0 20px 40px 20px;
+
+        }
+
+
+        /* =========================================================
+           MENSAJE DE ERROR
+        ========================================================== */
+
+        .error-msg {
+
+            background: #fce8e6;
+
+            color: var(--danger);
+
+            padding: 15px;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            margin-bottom: 20px;
+
+            display: none;
+
+            font-weight: 500;
+
+            border: 1px solid #fad2cf;
+
+        }
+
+
+        /* =========================================================
+           KPIs
+        ========================================================== */
+
+        .kpi-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(200px, 1fr));
+
+            gap: 20px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .kpi-card {
+
+            background: var(--card-bg);
+
+            border-radius: 8px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 1px 2px 0 rgba(60,64,67,0.3);
+
+            display: flex;
+
+            flex-direction: column;
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+
+        .kpi-card::before {
+
+            content: '';
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            width: 4px;
+
+            height: 100%;
+
+        }
+
+
+        .kpi-blue::before {
+            background-color: var(--primary);
+        }
+
+
+        .kpi-green::before {
+            background-color: var(--success);
+        }
+
+
+        .kpi-money::before {
+            background-color: var(--money);
+        }
+
+
+        .kpi-warning::before {
+            background-color: var(--warning);
+        }
+
+
+        .kpi-red::before {
+            background-color: var(--danger);
+        }
+
+
+        .kpi-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 10px;
+
+            color: var(--text-muted);
+
+            font-size: 0.9rem;
+
+            font-weight: 500;
+
+        }
+
+
+        .kpi-header .material-symbols-outlined {
+
+            font-size: 24px;
+
+            opacity: 0.8;
+
+        }
+
+
+        .kpi-value {
+
+            font-size: 2rem;
+
+            font-weight: 400;
+
+            color: var(--text-main);
+
+            line-height: 1.2;
+
+        }
+
+
+        .kpi-subtext {
+
+            font-size: 0.75rem;
+
+            color: var(--text-muted);
+
+            margin-top: 5px;
+
+        }
+
+
+        /* =========================================================
+           GRÁFICAS
+        ========================================================== */
+
+        .charts-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(350px, 1fr));
+
+            gap: 20px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .chart-card {
+
+            background: var(--card-bg);
+
+            border-radius: 8px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 1px 2px 0 rgba(60,64,67,0.3);
+
+        }
+
+
+        .chart-card h3 {
+
+            margin: 0 0 20px 0;
+
+            font-size: 1.1rem;
+
+            color: var(--text-main);
+
+            font-weight: 500;
+
+            border-bottom: 1px solid var(--border);
+
+            padding-bottom: 12px;
+
+        }
+
+
+        .chart-container {
+
+            position: relative;
+
+            height: 280px;
+
+            width: 100%;
+
+        }
+
+
+        /* =========================================================
+           TABLA
+        ========================================================== */
+
+        .table-container {
+
+            overflow-x: auto;
+
+            max-height: 500px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 6px;
+
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            text-align: left;
+
+        }
+
+
+        th,
+        td {
+
+            padding: 12px 15px;
+
+            border-bottom: 1px solid var(--border);
+
+            font-size: 0.9rem;
+
+        }
+
+
+        th {
+
+            background-color: #f8f9fa;
+
+            color: var(--text-muted);
+
+            font-weight: 500;
+
+            text-transform: uppercase;
+
+            font-size: 0.8rem;
+
+            letter-spacing: 0.5px;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1;
+
+            box-shadow:
+                0 2px 2px -1px rgba(0,0,0,0.1);
+
+        }
+
+
+        tr:hover {
+
+            background-color: #f1f3f4;
+
+        }
+
+
+        /* =========================================================
+           BADGES
+        ========================================================== */
+
+        .badge {
+
+            padding: 4px 10px;
+
+            border-radius: 12px;
+
+            font-size: 0.75rem;
+
+            font-weight: 500;
+
+            display: inline-block;
+
+        }
+
+
+        .badge-active {
+
+            background: #e6f4ea;
+
+            color: var(--success);
+
+        }
+
+
+        .badge-suspended {
+
+            background: #fce8e6;
+
+            color: var(--danger);
+
+        }
+
+
+        .text-small {
+
+            font-size: 0.8rem;
+
+            color: #5f6368;
+
+        }
+
+
+        /* =========================================================
+           LICENCIAS
+        ========================================================== */
+
+        .lic-tag {
+
+            background: #e3f2fd;
+
+            color: #0078D4;
+
+            padding: 3px 8px;
+
+            border-radius: 4px;
+
+            display: inline-block;
+
+            margin: 2px;
+
+            font-size: 0.75rem;
+
+            border: 1px solid #bbdefb;
+
+        }
+
+
+        .lic-free {
+
+            background: #f1f3f4;
+
+            color: #5f6368;
+
+            border-color: #dadce0;
+
+        }
+
+
+        .lic-none {
+
+            color: #D83B01;
+
+            font-weight: 500;
+
+            font-size: 0.8rem;
+
+            background: #fce8e6;
+
+            padding: 3px 8px;
+
+            border-radius: 4px;
+
+            display: inline-block;
+
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================== */
+
+        @media (max-width: 700px) {
+
+            .navbar {
+
+                padding: 15px;
+
+            }
+
+            .navbar h1 {
+
+                font-size: 1.1rem;
+
+            }
+
+            .container {
+
+                padding: 0 10px 30px 10px;
+
+            }
+
+            .charts-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
     </style>
+
 </head>
+
+
 <body>
-    
+
+
+    <!-- =========================================================
+         ENCABEZADO
+    ========================================================== -->
+
     <div class="navbar">
-        <h1><span class="material-symbols-outlined">window</span> MICROSOFT 365 - Entra ID</h1>
+
+        <h1>
+
+            <span class="material-symbols-outlined">
+                window
+            </span>
+
+            MICROSOFT 365 - Entra ID
+
+        </h1>
+
     </div>
+
 
     <div class="container">
-        <div id="errorMessage" class="error-msg">⚠️ No se encontró el archivo "MICROSOFT.csv" o no está separado por comas correctamente.</div>
 
-        <!-- KPIs SUPERIORES -->
+
+        <!-- =====================================================
+             ERROR CSV
+        ====================================================== -->
+
+        <div id="errorMessage" class="error-msg">
+
+            ⚠️ No se encontró el archivo
+            <strong>"MICROSOFT.csv"</strong>
+            o el archivo no tiene el formato esperado.
+
+        </div>
+
+
+        <!-- =====================================================
+             KPIs
+        ====================================================== -->
+
         <div class="kpi-grid">
+
+
+            <!-- TOTAL USUARIOS -->
+
             <div class="kpi-card kpi-blue">
+
                 <div class="kpi-header">
-                    <span>Total Usuarios</span>
-                    <span class="material-symbols-outlined">group</span>
+
+                    <span>
+                        Total Usuarios
+                    </span>
+
+                    <span class="material-symbols-outlined">
+                        group
+                    </span>
+
                 </div>
-                <div id="totalUsers" class="kpi-value">...</div>
-                <div class="kpi-subtext">Cuentas en directorio</div>
+
+                <div id="totalUsers"
+                     class="kpi-value">
+
+                    ...
+
+                </div>
+
+                <div class="kpi-subtext">
+
+                    Cuentas en directorio
+
+                </div>
+
             </div>
-            
-            <div class="kpi-card kpi-money" style="background-color: #f6feef; border: 1px solid #cce8d6;">
+
+
+
+            <!-- =================================================
+                 FACTURACIÓN REAL
+            ================================================== -->
+
+            <div class="kpi-card kpi-money"
+                 style="background-color:#f6feef;
+                        border:1px solid #cce8d6;">
+
                 <div class="kpi-header">
-                    <span style="color: var(--money); font-weight: bold;">Costo Real (Mes)</span>
-                    <span class="material-symbols-outlined" style="color: var(--money);">payments</span>
+
+                    <span style="
+                        color:var(--money);
+                        font-weight:bold;">
+
+                        Facturado (Mes)
+
+                    </span>
+
+                    <span class="material-symbols-outlined"
+                          style="color:var(--money);">
+
+                        payments
+
+                    </span>
+
                 </div>
-                <div id="totalCost" class="kpi-value" style="color: var(--money); font-weight: bold;">...</div>
-                <div class="kpi-subtext">Suma de licencias de pago (USD)</div>
+
+
+                <div id="totalCost"
+                     class="kpi-value"
+                     style="
+                        color:var(--money);
+                        font-weight:bold;">
+
+                    ...
+
+                </div>
+
+
+                <div class="kpi-subtext">
+
+                    Facturación real registrada en Microsoft
+
+                </div>
+
             </div>
+
+
+
+            <!-- =================================================
+                 ACTIVOS
+            ================================================== -->
 
             <div class="kpi-card kpi-green">
+
                 <div class="kpi-header">
-                    <span>Cuentas Activas</span>
-                    <span class="material-symbols-outlined">check_circle</span>
+
+                    <span>
+                        Cuentas Activas
+                    </span>
+
+                    <span class="material-symbols-outlined">
+                        check_circle
+                    </span>
+
                 </div>
-                <div id="activeUsers" class="kpi-value">...</div>
-                <div class="kpi-subtext">Habilitadas</div>
+
+
+                <div id="activeUsers"
+                     class="kpi-value">
+
+                    ...
+
+                </div>
+
+
+                <div class="kpi-subtext">
+
+                    Habilitadas
+
+                </div>
+
             </div>
+
+
+
+            <!-- =================================================
+                 BLOQUEADOS
+            ================================================== -->
+
             <div class="kpi-card kpi-red">
+
                 <div class="kpi-header">
-                    <span>Cuentas Bloqueadas</span>
-                    <span class="material-symbols-outlined">block</span>
+
+                    <span>
+                        Cuentas Bloqueadas
+                    </span>
+
+                    <span class="material-symbols-outlined">
+                        block
+                    </span>
+
                 </div>
-                <div id="blockedUsers" class="kpi-value">...</div>
-                <div class="kpi-subtext">Inicio de sesión bloqueado</div>
+
+
+                <div id="blockedUsers"
+                     class="kpi-value">
+
+                    ...
+
+                </div>
+
+
+                <div class="kpi-subtext">
+
+                    Inicio de sesión bloqueado
+
+                </div>
+
             </div>
+
+
+
+            <!-- =================================================
+                 PASSWORD
+            ================================================== -->
+
             <div class="kpi-card kpi-warning">
+
                 <div class="kpi-header">
-                    <span>Pass Nunca Expira</span>
-                    <span class="material-symbols-outlined">key</span>
+
+                    <span>
+                        Pass Nunca Expira
+                    </span>
+
+                    <span class="material-symbols-outlined">
+                        key
+                    </span>
+
                 </div>
-                <div id="passNeverExpires" class="kpi-value">...</div>
-                <div class="kpi-subtext">Sin caducidad</div>
+
+
+                <div id="passNeverExpires"
+                     class="kpi-value">
+
+                    ...
+
+                </div>
+
+
+                <div class="kpi-subtext">
+
+                    Sin caducidad
+
+                </div>
+
             </div>
+
+
         </div>
 
-        <!-- GRÁFICAS DE ANÁLISIS -->
+
+
+        <!-- =====================================================
+             GRÁFICAS
+        ====================================================== -->
+
         <div class="charts-grid">
-            <!-- Gráfica 1: Estado de las cuentas -->
+
+
+            <!-- =================================================
+                 GRÁFICA 1
+            ================================================== -->
+
             <div class="chart-card">
-                <h3>Estado de Credenciales</h3>
-                <div class="chart-container"><canvas id="statusChart"></canvas></div>
-            </div>
-            
-            <!-- Gráfica 2: Conteo de licencias puras (Omitiendo Unlicensed) -->
-            <div class="chart-card">
-                <h3>Volumen de Licencias Asignadas</h3>
-                <div class="chart-container"><canvas id="licensesChart"></canvas></div>
+
+                <h3>
+                    Estado de Credenciales
+                </h3>
+
+                <div class="chart-container">
+
+                    <canvas id="statusChart"></canvas>
+
+                </div>
+
             </div>
 
-            <!-- Gráfica 3: El dinero por cada tipo de licencia (NUEVA) -->
+
+
+            <!-- =================================================
+                 GRÁFICA 2
+            ================================================== -->
+
             <div class="chart-card">
-                <h3>Costo Mensual por Licencia (USD)</h3>
-                <div class="chart-container"><canvas id="costBreakdownChart"></canvas></div>
+
+                <h3>
+                    Volumen de Licencias Asignadas
+                </h3>
+
+                <div class="chart-container">
+
+                    <canvas id="licensesChart"></canvas>
+
+                </div>
+
             </div>
+
+
+
+            <!-- =================================================
+                 GRÁFICA 3
+            ================================================== -->
+
+            <div class="chart-card">
+
+                <h3>
+                    Costo Mensual Estimado por Licencia (USD)
+                </h3>
+
+                <div class="chart-container">
+
+                    <canvas id="costBreakdownChart"></canvas>
+
+                </div>
+
+            </div>
+
+
         </div>
 
-        <!-- TABLA -->
+
+
+        <!-- =====================================================
+             INFORMACIÓN DE COSTOS
+        ====================================================== -->
+
+        <div class="chart-card"
+             style="margin-bottom:30px;">
+
+            <h3>
+                Resumen de Costos
+            </h3>
+
+
+            <div style="
+                display:grid;
+                grid-template-columns:
+                    repeat(auto-fit,minmax(220px,1fr));
+                gap:20px;
+            ">
+
+
+                <!-- FACTURADO -->
+
+                <div style="
+                    background:#f6feef;
+                    border:1px solid #cce8d6;
+                    border-radius:8px;
+                    padding:18px;
+                ">
+
+                    <div style="
+                        color:var(--text-muted);
+                        font-size:.85rem;
+                    ">
+
+                        Facturación de agosto
+
+                    </div>
+
+
+                    <div id="billingAmount"
+                         style="
+                            color:var(--money);
+                            font-size:1.7rem;
+                            font-weight:bold;
+                            margin-top:8px;
+                         ">
+
+                        $432.60 USD
+
+                    </div>
+
+
+                    <div style="
+                        color:var(--text-muted);
+                        font-size:.75rem;
+                        margin-top:5px;
+                    ">
+
+                        Cargos registrados
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ESTIMADO -->
+
+                <div style="
+                    background:#f8f9fa;
+                    border:1px solid var(--border);
+                    border-radius:8px;
+                    padding:18px;
+                ">
+
+                    <div style="
+                        color:var(--text-muted);
+                        font-size:.85rem;
+                    ">
+
+                        Licencias asignadas
+
+                    </div>
+
+
+                    <div id="assignedCost"
+                         style="
+                            color:var(--text-main);
+                            font-size:1.7rem;
+                            font-weight:bold;
+                            margin-top:8px;
+                         ">
+
+                        $0.00 USD
+
+                    </div>
+
+
+                    <div style="
+                        color:var(--text-muted);
+                        font-size:.75rem;
+                        margin-top:5px;
+                    ">
+
+                        Costo mensual estimado
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DIFERENCIA -->
+
+                <div style="
+                    background:#fff8e1;
+                    border:1px solid #ffe082;
+                    border-radius:8px;
+                    padding:18px;
+                ">
+
+                    <div style="
+                        color:var(--text-muted);
+                        font-size:.85rem;
+                    ">
+
+                        Diferencia
+
+                    </div>
+
+
+                    <div id="costDifference"
+                         style="
+                            color:#8a6500;
+                            font-size:1.7rem;
+                            font-weight:bold;
+                            margin-top:8px;
+                         ">
+
+                        $0.00 USD
+
+                    </div>
+
+
+                    <div style="
+                        color:var(--text-muted);
+                        font-size:.75rem;
+                        margin-top:5px;
+                    ">
+
+                        Estimado vs facturado
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             TABLA DE USUARIOS
+        ====================================================== -->
+
         <div class="chart-card">
-            <h3>Directorio de Usuarios y Costo Individual</h3>
+
+            <h3>
+                Directorio de Usuarios y Costo Individual
+            </h3>
+
+
             <div class="table-container">
+
                 <table>
+
                     <thead>
+
                         <tr>
-                            <th>Nombre Completo</th>
-                            <th>Correo (UPN)</th>
-                            <th>Estado</th>
-                            <th>Licencias Asignadas</th>
-                            <th>Costo Usuario (USD)</th>
+
+                            <th>
+                                Nombre Completo
+                            </th>
+
+                            <th>
+                                Correo (UPN)
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                            <th>
+                                Licencias Asignadas
+                            </th>
+
+                            <th>
+                                Costo Usuario (USD)
+                            </th>
+
                         </tr>
+
                     </thead>
+
+
                     <tbody id="usersTableBody">
-                        <!-- Llenado por JavaScript -->
+
+                        <!-- JavaScript -->
+
                     </tbody>
+
                 </table>
+
             </div>
+
         </div>
+
+
     </div>
 
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
     <script>
-        // ========================================================
-        // PRECIOS UNITARIOS EXACTOS (En Dólares USD)
-        // Extraídos matemáticamente del desglose de facturación
-        // ========================================================
+
+
+        /* =========================================================
+           PRECIOS UNITARIOS
+        ========================================================== */
+
         const PRECIOS_LICENCIAS_USD = {
-            "Aplicaciones de Microsoft 365 para negocios": 6.435, 
+
+            "Aplicaciones de Microsoft 365 para negocios": 6.435,
+
             "Planner y Project Plan 3": 31.50,
+
             "Microsoft Teams Essentials": 4.20,
+
             "Visio Plan 2": 15.75,
+
             "Microsoft Fabric (Gratis)": 0,
+
             "Microsoft Power Automate Free": 0
+
         };
 
-        Papa.parse("MICROSOFT.csv", {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            complete: function(results) {
-                let data = results.data;
-                
-                // Arreglo para CSV separado por punto y coma
-                if (data.length > 0 && !data[0]['User principal name'] && Object.keys(data[0])[0].includes(';')) {
-                     const rawKeys = Object.keys(data[0])[0].split(';');
-                     data = data.map(row => {
-                         const rawVals = row[Object.keys(row)[0]].split(';');
-                         let newRow = {};
-                         rawKeys.forEach((k, i) => newRow[k] = rawVals[i]);
-                         return newRow;
-                     });
-                }
 
-                const filteredData = data.filter(row => row['User principal name']); 
 
-                if(filteredData.length === 0){
-                     document.getElementById('errorMessage').style.display = 'block';
-                     return;
-                }
+        /* =========================================================
+           FACTURACIÓN REAL
+           
+           IMPORTANTE:
+           Estos valores vienen de las capturas proporcionadas.
+        ========================================================== */
 
-                let totalUsers = 0, activos = 0, bloqueados = 0, passNeverExpires = 0;
-                let granTotalCostoUSD = 0;
-                
-                let licensesCount = {}; // Para el gráfico de volumen
-                let licensesCost = {};  // Para el gráfico de dinero
-                let userList = [];
+        const FACTURACION_MENSUAL = {
 
-                // Normalización inteligente
-                const normalizeLicenseName = (name) => {
-                    const lower = name.toLowerCase();
-                    if(lower.includes("aplicaciones de microsoft 365") || lower.includes("microsoft 365 apps")) return "Aplicaciones de Microsoft 365 para negocios";
-                    if(lower.includes("planner") || lower.includes("project")) return "Planner y Project Plan 3";
-                    if(lower.includes("teams essentials")) return "Microsoft Teams Essentials";
-                    if(lower.includes("visio plan 2")) return "Visio Plan 2";
-                    if(lower.includes("fabric")) return "Microsoft Fabric (Gratis)";
-                    if(lower.includes("power automate free")) return "Microsoft Power Automate Free";
-                    if(lower.includes("unlicensed") || lower.includes("sin licencia")) return "Unlicensed";
-                    return name.trim();
-                };
+            "2026-08": {
 
-                filteredData.forEach(user => {
-                    totalUsers++;
+                microsoft365:
+                    199.50,
 
-                    const isBlocked = (user['Block credential'] || '').toLowerCase() === 'true';
-                    if (isBlocked) bloqueados++; else activos++;
+                planner:
+                    157.50,
 
-                    const passNoExp = (user['Password never expires'] || '').toLowerCase() === 'true';
-                    if (passNoExp) passNeverExpires++;
+                teams:
+                    75.60,
 
-                    // Análisis de Licencias
-                    const rawLicenses = user['Licenses'] || 'Unlicensed';
-                    const separators = ['+', ','];
-                    let splitLicenses = [rawLicenses];
-                    separators.forEach(sep => {
-                        let newSplit = [];
-                        splitLicenses.forEach(part => newSplit.push(...part.split(sep)));
-                        splitLicenses = newSplit;
-                    });
-                    
-                    let htmlLicencias = '';
-                    let costoUsuarioMes = 0;
-                    let hasValidLicense = false;
+                total:
+                    432.60
 
-                    splitLicenses.forEach(lic => {
-                        let cleanLic = lic.trim();
-                        if (cleanLic) {
-                            cleanLic = normalizeLicenseName(cleanLic);
-                            
-                            // Ignorar por completo la palabra "Unlicensed" en el conteo y gráficas
-                            if(cleanLic === "Unlicensed" || cleanLic === "") return;
-
-                            hasValidLicense = true;
-                            
-                            // Acumular volumen
-                            licensesCount[cleanLic] = (licensesCount[cleanLic] || 0) + 1;
-                            
-                            // Acumular costo
-                            const precio = PRECIOS_LICENCIAS_USD[cleanLic] || 0;
-                            costoUsuarioMes += precio;
-                            licensesCost[cleanLic] = (licensesCost[cleanLic] || 0) + precio;
-
-                            // Formato visual en tabla
-                            if(precio === 0) {
-                                htmlLicencias += `<span class="lic-tag lic-free">${cleanLic}</span>`;
-                            } else {
-                                htmlLicencias += `<span class="lic-tag">${cleanLic}</span>`;
-                            }
-                        }
-                    });
-
-                    // Si después de limpiar no le quedó ninguna licencia real, lo marcamos claro:
-                    if(!hasValidLicense) {
-                        htmlLicencias = '<span class="lic-none">Sin licencia asignada</span>';
-                    }
-
-                    granTotalCostoUSD += costoUsuarioMes;
-
-                    userList.push({
-                        name: user['Display name'] || 'Sin nombre',
-                        email: user['User principal name'],
-                        status: isBlocked ? 'bloqueado' : 'activo',
-                        licensesHtml: htmlLicencias, 
-                        costo: costoUsuarioMes
-                    });
-                });
-
-                // 1. Pintar KPIs
-                document.getElementById('totalUsers').innerText = totalUsers;
-                document.getElementById('activeUsers').innerText = activos;
-                document.getElementById('blockedUsers').innerText = bloqueados;
-                document.getElementById('passNeverExpires').innerText = passNeverExpires;
-                
-                document.getElementById('totalCost').innerText = "$" + granTotalCostoUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " USD";
-
-                // 2. Gráfica 1: Credenciales (Anillo)
-                new Chart(document.getElementById('statusChart'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Activos', 'Bloqueados'],
-                        datasets: [{
-                            data: [activos, bloqueados],
-                            backgroundColor: ['#107C10', '#D83B01'], 
-                            borderWidth: 0
-                        }]
-                    },
-                    options: { maintainAspectRatio: false, cutout: '65%' }
-                });
-
-                // 3. Gráfica 2: Volumen de Licencias (Barras Horizontales)
-                const sortedLicenses = Object.keys(licensesCount)
-                    .map(key => ({ name: key, count: licensesCount[key] }))
-                    .sort((a, b) => b.count - a.count); 
-
-                new Chart(document.getElementById('licensesChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: sortedLicenses.map(l => l.name),
-                        datasets: [{
-                            label: 'Usuarios asignados',
-                            data: sortedLicenses.map(l => l.count),
-                            backgroundColor: '#0078D4',
-                            borderRadius: 4
-                        }]
-                    },
-                    options: { 
-                        indexAxis: 'y', 
-                        maintainAspectRatio: false, 
-                        plugins: { legend: { display: false } }
-                    }
-                });
-
-                // 4. Gráfica 3: Costo de Licencias (Dinero) - NUEVA GRÁFICA
-                // Filtramos solo las licencias que generaron costo mayor a 0
-                const costLabels = Object.keys(licensesCost)
-                    .filter(k => licensesCost[k] > 0)
-                    .sort((a, b) => licensesCost[b] - licensesCost[a]);
-                
-                const costData = costLabels.map(l => licensesCost[l]);
-
-                new Chart(document.getElementById('costBreakdownChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: costLabels,
-                        datasets: [{
-                            label: 'Costo Total (USD)',
-                            data: costData,
-                            backgroundColor: '#0d652d', // Color verde de dinero
-                            borderRadius: 4
-                        }]
-                    },
-                    options: { 
-                        maintainAspectRatio: false, 
-                        plugins: { 
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return '$' + context.parsed.y.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' USD';
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                ticks: {
-                                    callback: function(value) { return '$' + value; }
-                                }
-                            }
-                        }
-                    }
-                });
-
-                // 5. Pintar Tabla Detallada
-                const tableBody = document.getElementById('usersTableBody');
-                
-                // Ordenar: primero los más caros
-                userList.sort((a, b) => b.costo - a.costo);
-
-                userList.forEach(u => {
-                    const statusBadge = u.status === 'activo' 
-                        ? '<span class="badge badge-active">Activo</span>' 
-                        : '<span class="badge badge-suspended">Bloqueado</span>';
-                    
-                    const costoStr = u.costo > 0 
-                        ? `<strong style="color:var(--money)">$${u.costo.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>` 
-                        : '<span class="text-small">$0.00</span>';
-
-                    const row = `<tr>
-                        <td><strong>${u.name}</strong></td>
-                        <td>${u.email}</td>
-                        <td>${statusBadge}</td>
-                        <td>${u.licensesHtml}</td>
-                        <td>${costoStr}</td>
-                    </tr>`;
-                    tableBody.innerHTML += row;
-                });
-            },
-            error: function() {
-                document.getElementById('errorMessage').style.display = 'block';
             }
-        });
+
+        };
+
+
+
+        /* =========================================================
+           MES DEL DASHBOARD
+        ========================================================== */
+
+        const MES_ACTUAL = "2026-08";
+
+
+
+        /* =========================================================
+           FUNCIÓN DE NORMALIZACIÓN
+        ========================================================== */
+
+        function normalizeLicenseName(name) {
+
+            if (!name) {
+                return "";
+            }
+
+
+            const lower =
+                name
+                    .toLowerCase()
+                    .trim();
+
+
+            if (
+                lower.includes(
+                    "aplicaciones de microsoft 365"
+                )
+                ||
+                lower.includes(
+                    "microsoft 365 apps"
+                )
+            ) {
+
+                return "Aplicaciones de Microsoft 365 para negocios";
+
+            }
+
+
+            if (
+                lower.includes("planner")
+                ||
+                lower.includes("project")
+            ) {
+
+                return "Planner y Project Plan 3";
+
+            }
+
+
+            if (
+                lower.includes(
+                    "teams essentials"
+                )
+            ) {
+
+                return "Microsoft Teams Essentials";
+
+            }
+
+
+            if (
+                lower.includes(
+                    "visio plan 2"
+                )
+            ) {
+
+                return "Visio Plan 2";
+
+            }
+
+
+            if (
+                lower.includes("fabric")
+            ) {
+
+                return "Microsoft Fabric (Gratis)";
+
+            }
+
+
+            if (
+                lower.includes(
+                    "power automate free"
+                )
+            ) {
+
+                return "Microsoft Power Automate Free";
+
+            }
+
+
+            if (
+                lower.includes("unlicensed")
+                ||
+                lower.includes("sin licencia")
+            ) {
+
+                return "Unlicensed";
+
+            }
+
+
+            return name.trim();
+
+        }
+
+
+
+        /* =========================================================
+           ESCAPE HTML
+           
+           Evita que datos provenientes del CSV
+           sean interpretados como HTML.
+        ========================================================== */
+
+        function escapeHTML(value) {
+
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+
+        /* =========================================================
+           FORMATO MONEDA
+        ========================================================== */
+
+        function formatUSD(value) {
+
+            return "$" +
+                Number(value || 0)
+                    .toLocaleString(
+                        "en-US",
+                        {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }
+                    )
+                +
+                " USD";
+
+        }
+
+
+
+        /* =========================================================
+           OBTENER FACTURACIÓN
+        ========================================================== */
+
+        const billing =
+            FACTURACION_MENSUAL[MES_ACTUAL]
+            ||
+            {
+                microsoft365: 0,
+                planner: 0,
+                teams: 0,
+                total: 0
+            };
+
+
+
+        /* =========================================================
+           CARGAR CSV
+        ========================================================== */
+
+        Papa.parse(
+            "MICROSOFT.csv",
+            {
+
+                download: true,
+
+                header: true,
+
+                skipEmptyLines: true,
+
+
+                complete: function(results) {
+
+
+                    let data =
+                        results.data;
+
+
+
+                    /* =============================================
+                       SOPORTE CSV SEPARADO POR ;
+                    ============================================== */
+
+                    if (
+
+                        data.length > 0
+
+                        &&
+
+                        !data[0][
+                            "User principal name"
+                        ]
+
+                        &&
+
+                        Object.keys(data[0])[0]
+                            .includes(";")
+
+                    ) {
+
+
+                        const rawKeys =
+                            Object.keys(data[0])[0]
+                                .split(";");
+
+
+                        data = data.map(row => {
+
+
+                            const firstKey =
+                                Object.keys(row)[0];
+
+
+                            const rawVals =
+                                String(
+                                    row[firstKey] || ""
+                                ).split(";");
+
+
+                            let newRow = {};
+
+
+                            rawKeys.forEach(
+                                (key, index) => {
+
+                                    newRow[
+                                        key.trim()
+                                    ] =
+                                        (
+                                            rawVals[index]
+                                            || ""
+                                        ).trim();
+
+                                }
+                            );
+
+
+                            return newRow;
+
+                        });
+
+                    }
+
+
+
+                    /* =============================================
+                       FILTRAR USUARIOS VÁLIDOS
+                    ============================================== */
+
+                    const filteredData =
+                        data.filter(
+                            row =>
+                                row[
+                                    "User principal name"
+                                ]
+                        );
+
+
+
+                    if (
+                        filteredData.length === 0
+                    ) {
+
+                        document
+                            .getElementById(
+                                "errorMessage"
+                            )
+                            .style.display =
+                            "block";
+
+                        return;
+
+                    }
+
+
+
+                    /* =============================================
+                       VARIABLES
+                    ============================================== */
+
+                    let totalUsers = 0;
+
+                    let activos = 0;
+
+                    let bloqueados = 0;
+
+                    let passNeverExpires = 0;
+
+
+                    let granTotalCostoUSD = 0;
+
+
+                    let licensesCount = {};
+
+                    let licensesCost = {};
+
+                    let userList = [];
+
+
+
+                    /* =============================================
+                       PROCESAR USUARIOS
+                    ============================================== */
+
+                    filteredData.forEach(
+                        user => {
+
+
+                            totalUsers++;
+
+
+
+                            /* =====================================
+                               ESTADO
+                            ====================================== */
+
+                            const isBlocked =
+                                String(
+                                    user[
+                                        "Block credential"
+                                    ] || ""
+                                )
+                                .toLowerCase()
+                                .trim()
+                                === "true";
+
+
+                            if (isBlocked) {
+
+                                bloqueados++;
+
+                            } else {
+
+                                activos++;
+
+                            }
+
+
+
+                            /* =====================================
+                               PASSWORD
+                            ====================================== */
+
+                            const passNoExp =
+                                String(
+                                    user[
+                                        "Password never expires"
+                                    ] || ""
+                                )
+                                .toLowerCase()
+                                .trim()
+                                === "true";
+
+
+                            if (passNoExp) {
+
+                                passNeverExpires++;
+
+                            }
+
+
+
+                            /* =====================================
+                               LICENCIAS
+                            ====================================== */
+
+                            const rawLicenses =
+                                user["Licenses"]
+                                ||
+                                "Unlicensed";
+
+
+                            let splitLicenses =
+                                [rawLicenses];
+
+
+                            const separators =
+                                ["+", ",", ";"];
+
+
+                            separators.forEach(
+                                separator => {
+
+
+                                    let newSplit = [];
+
+
+                                    splitLicenses.forEach(
+                                        part => {
+
+                                            newSplit.push(
+                                                ...String(part)
+                                                    .split(separator)
+                                            );
+
+                                        }
+                                    );
+
+
+                                    splitLicenses =
+                                        newSplit;
+
+                                }
+                            );
+
+
+
+                            let htmlLicencias = "";
+
+                            let costoUsuarioMes = 0;
+
+                            let hasValidLicense = false;
+
+
+
+                            /* =====================================
+                               PROCESAR CADA LICENCIA
+                            ====================================== */
+
+                            splitLicenses.forEach(
+                                lic => {
+
+
+                                    let cleanLic =
+                                        lic.trim();
+
+
+                                    if (!cleanLic) {
+                                        return;
+                                    }
+
+
+                                    cleanLic =
+                                        normalizeLicenseName(
+                                            cleanLic
+                                        );
+
+
+
+                                    /* =============================
+                                       IGNORAR UNLICENSED
+                                    ============================== */
+
+                                    if (
+                                        cleanLic ===
+                                        "Unlicensed"
+                                        ||
+                                        cleanLic === ""
+                                    ) {
+
+                                        return;
+
+                                    }
+
+
+
+                                    hasValidLicense =
+                                        true;
+
+
+
+                                    /* =============================
+                                       CONTADOR
+                                    ============================== */
+
+                                    licensesCount[
+                                        cleanLic
+                                    ] =
+                                        (
+                                            licensesCount[
+                                                cleanLic
+                                            ]
+                                            ||
+                                            0
+                                        )
+                                        +
+                                        1;
+
+
+
+                                    /* =============================
+                                       COSTO
+                                    ============================== */
+
+                                    const precio =
+                                        PRECIOS_LICENCIAS_USD[
+                                            cleanLic
+                                        ]
+                                        ||
+                                        0;
+
+
+                                    costoUsuarioMes +=
+                                        precio;
+
+
+                                    licensesCost[
+                                        cleanLic
+                                    ] =
+                                        (
+                                            licensesCost[
+                                                cleanLic
+                                            ]
+                                            ||
+                                            0
+                                        )
+                                        +
+                                        precio;
+
+
+
+                                    /* =============================
+                                       HTML LICENCIA
+                                    ============================== */
+
+                                    const safeLicense =
+                                        escapeHTML(
+                                            cleanLic
+                                        );
+
+
+                                    if (
+                                        precio === 0
+                                    ) {
+
+                                        htmlLicencias +=
+                                            `<span class="lic-tag lic-free">
+                                                ${safeLicense}
+                                            </span>`;
+
+                                    } else {
+
+                                        htmlLicencias +=
+                                            `<span class="lic-tag">
+                                                ${safeLicense}
+                                            </span>`;
+
+                                    }
+
+                                }
+                            );
+
+
+
+                            /* =====================================
+                               SIN LICENCIA
+                            ====================================== */
+
+                            if (!hasValidLicense) {
+
+                                htmlLicencias =
+                                    '<span class="lic-none">' +
+                                    'Sin licencia asignada' +
+                                    '</span>';
+
+                            }
+
+
+
+                            /* =====================================
+                               COSTO TOTAL ASIGNADO
+                            ====================================== */
+
+                            granTotalCostoUSD +=
+                                costoUsuarioMes;
+
+
+
+                            /* =====================================
+                               AGREGAR USUARIO
+                            ====================================== */
+
+                            userList.push({
+
+                                name:
+                                    user[
+                                        "Display name"
+                                    ]
+                                    ||
+                                    "Sin nombre",
+
+                                email:
+                                    user[
+                                        "User principal name"
+                                    ],
+
+                                status:
+                                    isBlocked
+                                    ?
+                                    "bloqueado"
+                                    :
+                                    "activo",
+
+                                licensesHtml:
+                                    htmlLicencias,
+
+                                costo:
+                                    costoUsuarioMes
+
+                            });
+
+                        }
+                    );
+
+
+
+                    /* =================================================
+                       ACTUALIZAR KPIs
+                    ================================================== */
+
+                    document
+                        .getElementById(
+                            "totalUsers"
+                        )
+                        .innerText =
+                        totalUsers;
+
+
+
+                    document
+                        .getElementById(
+                            "activeUsers"
+                        )
+                        .innerText =
+                        activos;
+
+
+
+                    document
+                        .getElementById(
+                            "blockedUsers"
+                        )
+                        .innerText =
+                        bloqueados;
+
+
+
+                    document
+                        .getElementById(
+                            "passNeverExpires"
+                        )
+                        .innerText =
+                        passNeverExpires;
+
+
+
+                    /* =================================================
+                       FACTURACIÓN REAL
+                       
+                       $432.60
+                    ================================================== */
+
+                    document
+                        .getElementById(
+                            "totalCost"
+                        )
+                        .innerText =
+                        formatUSD(
+                            billing.total
+                        );
+
+
+
+                    document
+                        .getElementById(
+                            "billingAmount"
+                        )
+                        .innerText =
+                        formatUSD(
+                            billing.total
+                        );
+
+
+
+                    /* =================================================
+                       COSTO ESTIMADO DE LICENCIAS
+                    ================================================== */
+
+                    document
+                        .getElementById(
+                            "assignedCost"
+                        )
+                        .innerText =
+                        formatUSD(
+                            granTotalCostoUSD
+                        );
+
+
+
+                    /* =================================================
+                       DIFERENCIA
+                    ================================================== */
+
+                    const difference =
+                        granTotalCostoUSD
+                        -
+                        billing.total;
+
+
+                    document
+                        .getElementById(
+                            "costDifference"
+                        )
+                        .innerText =
+                        formatUSD(
+                            difference
+                        );
+
+
+
+                    /* =================================================
+                       GRÁFICA 1
+                       ESTADO DE USUARIOS
+                    ================================================== */
+
+                    new Chart(
+
+                        document
+                            .getElementById(
+                                "statusChart"
+                            ),
+
+                        {
+
+                            type: "doughnut",
+
+
+                            data: {
+
+                                labels: [
+                                    "Activos",
+                                    "Bloqueados"
+                                ],
+
+
+                                datasets: [{
+
+                                    data: [
+                                        activos,
+                                        bloqueados
+                                    ],
+
+
+                                    backgroundColor: [
+                                        "#107C10",
+                                        "#D83B01"
+                                    ],
+
+
+                                    borderWidth: 0
+
+                                }]
+
+                            },
+
+
+                            options: {
+
+                                responsive: true,
+
+                                maintainAspectRatio: false,
+
+                                cutout: "65%",
+
+                                plugins: {
+
+                                    legend: {
+
+                                        position: "bottom"
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    );
+
+
+
+                    /* =================================================
+                       GRÁFICA 2
+                       VOLUMEN DE LICENCIAS
+                    ================================================== */
+
+                    const sortedLicenses =
+
+                        Object.keys(
+                            licensesCount
+                        )
+
+                        .map(
+                            key => ({
+
+                                name: key,
+
+                                count:
+                                    licensesCount[
+                                        key
+                                    ]
+
+                            })
+                        )
+
+                        .sort(
+                            (a, b) =>
+                                b.count - a.count
+                        );
+
+
+
+                    new Chart(
+
+                        document
+                            .getElementById(
+                                "licensesChart"
+                            ),
+
+                        {
+
+                            type: "bar",
+
+
+                            data: {
+
+                                labels:
+                                    sortedLicenses.map(
+                                        l => l.name
+                                    ),
+
+
+                                datasets: [{
+
+                                    label:
+                                        "Usuarios asignados",
+
+
+                                    data:
+                                        sortedLicenses.map(
+                                            l => l.count
+                                        ),
+
+
+                                    backgroundColor:
+                                        "#0078D4",
+
+
+                                    borderRadius: 4
+
+                                }]
+
+                            },
+
+
+                            options: {
+
+                                indexAxis: "y",
+
+                                responsive: true,
+
+                                maintainAspectRatio:
+                                    false,
+
+
+                                plugins: {
+
+                                    legend: {
+
+                                        display: false
+
+                                    }
+
+                                },
+
+
+                                scales: {
+
+                                    x: {
+
+                                        beginAtZero:
+                                            true,
+
+                                        ticks: {
+
+                                            precision: 0
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    );
+
+
+
+                    /* =================================================
+                       GRÁFICA 3
+                       COSTO ESTIMADO POR LICENCIA
+                    ================================================== */
+
+                    const costLabels =
+
+                        Object.keys(
+                            licensesCost
+                        )
+
+                        .filter(
+                            key =>
+                                licensesCost[key]
+                                > 0
+                        )
+
+                        .sort(
+                            (a, b) =>
+                                licensesCost[b]
+                                -
+                                licensesCost[a]
+                        );
+
+
+
+                    const costData =
+                        costLabels.map(
+                            license =>
+                                licensesCost[
+                                    license
+                                ]
+                        );
+
+
+
+                    new Chart(
+
+                        document
+                            .getElementById(
+                                "costBreakdownChart"
+                            ),
+
+                        {
+
+                            type: "bar",
+
+
+                            data: {
+
+                                labels:
+                                    costLabels,
+
+
+                                datasets: [{
+
+                                    label:
+                                        "Costo estimado (USD)",
+
+
+                                    data:
+                                        costData,
+
+
+                                    backgroundColor:
+                                        "#0d652d",
+
+
+                                    borderRadius: 4
+
+                                }]
+
+                            },
+
+
+                            options: {
+
+                                responsive: true,
+
+                                maintainAspectRatio:
+                                    false,
+
+
+                                plugins: {
+
+                                    legend: {
+
+                                        display: false
+
+                                    },
+
+
+                                    tooltip: {
+
+                                        callbacks: {
+
+                                            label:
+                                                function(
+                                                    context
+                                                ) {
+
+                                                    return (
+                                                        "$" +
+                                                        Number(
+                                                            context.raw
+                                                        )
+                                                        .toLocaleString(
+                                                            "en-US",
+                                                            {
+                                                                minimumFractionDigits: 2,
+                                                                maximumFractionDigits: 2
+                                                            }
+                                                        )
+                                                        +
+                                                        " USD"
+                                                    );
+
+                                                }
+
+                                        }
+
+                                    }
+
+                                },
+
+
+                                scales: {
+
+                                    y: {
+
+                                        beginAtZero: true,
+
+
+                                        ticks: {
+
+                                            callback:
+                                                function(
+                                                    value
+                                                ) {
+
+                                                    return (
+                                                        "$" +
+                                                        value
+                                                    );
+
+                                                }
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    );
+
+
+
+                    /* =================================================
+                       TABLA
+                    ================================================== */
+
+                    const tableBody =
+                        document
+                            .getElementById(
+                                "usersTableBody"
+                            );
+
+
+
+                    /* =================================================
+                       ORDENAR POR COSTO
+                    ================================================== */
+
+                    userList.sort(
+                        (a, b) =>
+                            b.costo - a.costo
+                    );
+
+
+
+                    /* =================================================
+                       PINTAR TABLA
+                    ================================================== */
+
+                    userList.forEach(
+                        user => {
+
+
+                            const statusBadge =
+
+                                user.status ===
+                                "activo"
+
+                                ?
+
+                                '<span class="badge badge-active">' +
+                                'Activo' +
+                                '</span>'
+
+                                :
+
+                                '<span class="badge badge-suspended">' +
+                                'Bloqueado' +
+                                '</span>';
+
+
+
+                            const costoStr =
+
+                                user.costo > 0
+
+                                ?
+
+                                `<strong style="color:var(--money)">
+                                    ${formatUSD(user.costo)}
+                                </strong>`
+
+                                :
+
+                                '<span class="text-small">' +
+                                '$0.00 USD' +
+                                '</span>';
+
+
+
+                            const safeName =
+                                escapeHTML(
+                                    user.name
+                                );
+
+
+                            const safeEmail =
+                                escapeHTML(
+                                    user.email
+                                );
+
+
+
+                            const row =
+
+                                `<tr>
+
+                                    <td>
+                                        <strong>
+                                            ${safeName}
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        ${safeEmail}
+                                    </td>
+
+                                    <td>
+                                        ${statusBadge}
+                                    </td>
+
+                                    <td>
+                                        ${user.licensesHtml}
+                                    </td>
+
+                                    <td>
+                                        ${costoStr}
+                                    </td>
+
+                                </tr>`;
+
+
+                            tableBody.innerHTML +=
+                                row;
+
+                        }
+                    );
+
+
+                },
+
+
+                /* =====================================================
+                   ERROR
+                ====================================================== */
+
+                error: function() {
+
+                    document
+                        .getElementById(
+                            "errorMessage"
+                        )
+                        .style.display =
+                        "block";
+
+                }
+
+            }
+        );
+
+
     </script>
+
+
 </body>
+
 </html>
