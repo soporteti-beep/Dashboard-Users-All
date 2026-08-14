@@ -90,7 +90,7 @@
                     <span class="material-symbols-outlined" style="color: var(--money);">payments</span>
                 </div>
                 <div id="totalCost" class="kpi-value" style="color: var(--money); font-weight: bold;">...</div>
-                <div class="kpi-subtext">Facturación de licencias en USD</div>
+                <div class="kpi-subtext">Suma de licencias de pago (USD)</div>
             </div>
 
             <div class="kpi-card kpi-green">
@@ -125,7 +125,7 @@
                 <div class="chart-container"><canvas id="statusChart"></canvas></div>
             </div>
             <div class="chart-card">
-                <h3>Top Licencias Asignadas (Desglose)</h3>
+                <h3>Licencias Asignadas (Desglose)</h3>
                 <div class="chart-container"><canvas id="licensesChart"></canvas></div>
             </div>
         </div>
@@ -154,13 +154,13 @@
     <script>
         // ========================================================
         // TABULADOR EXACTO DE PRECIOS MICROSOFT (EN DÓLARES USD)
-        // Extraído matemáticamente del historial de facturación
+        // Valores extraídos de las capturas de facturación y licencias
         // ========================================================
         const PRECIOS_LICENCIAS_USD = {
-            "Aplicaciones de Microsoft 365 para negocios": 199.50 / 31, // $6.435 USD
+            "Aplicaciones de Microsoft 365 para negocios": 6.435, 
             "Planner y Project Plan 3": 31.50,
             "Microsoft Teams Essentials": 4.20,
-            "Visio Plan 2": 15.75, // Basado en factura de $78.75 / 5
+            "Visio Plan 2": 15.75,
             "Microsoft Fabric (Gratis)": 0,
             "Microsoft Power Automate Free": 0
         };
@@ -195,6 +195,18 @@
                 let licensesCount = {};
                 let userList = [];
 
+                // Normalización de nombres de licencias para que coincidan con el diccionario
+                const normalizeLicenseName = (name) => {
+                    const lower = name.toLowerCase();
+                    if(lower.includes("aplicaciones de microsoft 365") || lower.includes("microsoft 365 apps")) return "Aplicaciones de Microsoft 365 para negocios";
+                    if(lower.includes("planner") || lower.includes("project")) return "Planner y Project Plan 3";
+                    if(lower.includes("teams essentials")) return "Microsoft Teams Essentials";
+                    if(lower.includes("visio plan 2")) return "Visio Plan 2";
+                    if(lower.includes("fabric")) return "Microsoft Fabric (Gratis)";
+                    if(lower.includes("power automate free")) return "Microsoft Power Automate Free";
+                    return name; // fallback
+                };
+
                 filteredData.forEach(user => {
                     totalUsers++;
 
@@ -205,22 +217,28 @@
                     if (passNoExp) passNeverExpires++;
 
                     // Análisis de Licencias y Costo Individual
+                    // Las licencias en el CSV pueden venir separadas por comas o signos más
                     const rawLicenses = user['Licenses'] || '';
-                    const splitLicenses = rawLicenses.split('+');
+                    const separators = ['+', ','];
+                    let splitLicenses = [rawLicenses];
+                    separators.forEach(sep => {
+                        let newSplit = [];
+                        splitLicenses.forEach(part => newSplit.push(...part.split(sep)));
+                        splitLicenses = newSplit;
+                    });
                     
                     let htmlLicencias = '';
                     let costoUsuarioMes = 0;
 
                     splitLicenses.forEach(lic => {
-                        const cleanLic = lic.trim();
+                        let cleanLic = lic.trim();
                         if (cleanLic) {
+                            cleanLic = normalizeLicenseName(cleanLic);
                             licensesCount[cleanLic] = (licensesCount[cleanLic] || 0) + 1;
                             
-                            // Buscar precio en nuestro diccionario (USD)
                             const precio = PRECIOS_LICENCIAS_USD[cleanLic] || 0;
                             costoUsuarioMes += precio;
 
-                            // Formato visual: grises para las gratis, azules para las de cobro
                             if(precio === 0) {
                                 htmlLicencias += `<span class="lic-tag lic-free">${cleanLic}</span>`;
                             } else {
@@ -229,9 +247,8 @@
                         }
                     });
 
-                    if(!htmlLicencias) htmlLicencias = '<span class="text-small">Sin Licencia</span>';
+                    if(!htmlLicencias) htmlLicencias = '<span class="text-small">Unlicensed</span>';
 
-                    // Acumulamos el costo general
                     granTotalCostoUSD += costoUsuarioMes;
 
                     userList.push({
