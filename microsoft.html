@@ -3,628 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Microsoft 365 - Entra ID | SERVIALCO</title>
 
-    <!-- Chart.js -->
+    <!-- Chart.js y PapaParse -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 
     <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
-
         /* =========================================================
            CONFIGURACIÓN GENERAL
         ========================================================= */
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: #f5f6f8;
-            color: #1f1f1f;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1450px;
-            margin: auto;
-            padding: 0 28px 50px;
-        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: #f5f6f8; color: #1f1f1f; }
+        .container { width: 100%; max-width: 1450px; margin: auto; padding: 0 28px 50px; }
 
         /* =========================================================
            ENCABEZADO
         ========================================================= */
-
-        .header {
-            background: #ffffff;
-            border-bottom: 1px solid #e2e2e2;
-            padding: 20px 30px;
-            margin-bottom: 28px;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 25px;
-            font-weight: 600;
-            color: #171717;
-        }
-
-        .header i {
-            color: #0078d4;
-            margin-right: 8px;
-        }
-
+        .header { background: #ffffff; border-bottom: 1px solid #e2e2e2; padding: 20px 30px; margin-bottom: 28px; }
+        .header h1 { margin: 0; font-size: 25px; font-weight: 600; color: #171717; }
+        .header i { color: #0078d4; margin-right: 8px; }
 
         /* =========================================================
            TARJETAS KPI
         ========================================================= */
-
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 20px;
-            margin-bottom: 28px;
-        }
-
-        .kpi {
-            background: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            min-height: 145px;
-            padding: 22px 20px;
-            position: relative;
-            box-shadow: 0 1px 3px rgba(0,0,0,.08);
-            overflow: hidden;
-        }
-
-        .kpi::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-        }
-
-        .kpi.blue::before {
-            background: #0078d4;
-        }
-
-        .kpi.green::before {
-            background: #107c10;
-        }
-
-        .kpi.red::before {
-            background: #d83b01;
-        }
-
-        .kpi.yellow::before {
-            background: #ffb900;
-        }
-
-        .kpi-title {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 12px;
-        }
-
-        .kpi-value {
-            font-size: 31px;
-            font-weight: 600;
-            line-height: 1.1;
-            color: #111;
-        }
-
-        .kpi-value.green-text {
-            color: #107c10;
-        }
-
-        .kpi-subtitle {
-            margin-top: 8px;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .kpi-icon {
-            position: absolute;
-            right: 20px;
-            top: 22px;
-            font-size: 21px;
-            color: #777;
-        }
-
+        .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 28px; }
+        .kpi { background: #ffffff; border: 1px solid #ddd; border-radius: 8px; min-height: 145px; padding: 22px 20px; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,.08); overflow: hidden; }
+        .kpi::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+        .kpi.blue::before { background: #0078d4; }
+        .kpi.green::before { background: #107c10; }
+        .kpi.red::before { background: #d83b01; }
+        .kpi.yellow::before { background: #ffb900; }
+        .kpi-title { font-size: 14px; color: #555; margin-bottom: 12px; }
+        .kpi-value { font-size: 31px; font-weight: 600; line-height: 1.1; color: #111; }
+        .kpi-value.green-text { color: #107c10; }
+        .kpi-subtitle { margin-top: 8px; font-size: 12px; color: #666; }
+        .kpi-icon { position: absolute; right: 20px; top: 22px; font-size: 21px; color: #777; }
 
         /* =========================================================
            SECCIÓN DE GRÁFICAS
         ========================================================= */
-
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 28px;
-        }
-
-        .card {
-            background: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,.08);
-            padding: 20px;
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin: 0;
-            color: #171717;
-        }
-
-        .card-description {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-            margin-bottom: 14px;
-        }
-
-        .card-header {
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 12px;
-            margin-bottom: 15px;
-        }
-
-        .chart-container {
-            position: relative;
-            height: 285px;
-        }
-
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+        .card { background: #ffffff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 20px; }
+        .card-title { font-size: 18px; font-weight: 600; margin: 0; color: #171717; }
+        .card-description { font-size: 12px; color: #666; margin-top: 5px; margin-bottom: 14px; }
+        .card-header { border-bottom: 1px solid #ddd; padding-bottom: 12px; margin-bottom: 15px; }
+        .chart-container { position: relative; height: 285px; }
 
         /* =========================================================
-           RESUMEN DE COSTOS
+           RESUMEN DE COSTOS (ACLARACIÓN)
         ========================================================= */
-
-        .cost-section {
-            margin-bottom: 28px;
-        }
-
-        .cost-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 18px;
-        }
-
-        .cost-box {
-            border-radius: 8px;
-            padding: 20px;
-            border: 1px solid #ddd;
-        }
-
-        .cost-box.green {
-            background: #f3fbef;
-            border-color: #b7dfae;
-        }
-
-        .cost-box.gray {
-            background: #fafafa;
-        }
-
-        .cost-box.yellow {
-            background: #fff8df;
-            border-color: #f1d879;
-        }
-
-        .cost-label {
-            font-size: 13px;
-            color: #666;
-        }
-
-        .cost-value {
-            font-size: 28px;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-
-        .green-value {
-            color: #107c10;
-        }
-
-        .yellow-value {
-            color: #9a6a00;
-        }
-
-        .cost-description {
-            font-size: 12px;
-            color: #777;
-            margin-top: 5px;
-        }
-
+        .cost-section { margin-bottom: 28px; }
+        .cost-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 18px; }
+        .cost-box { border-radius: 8px; padding: 20px; border: 1px solid #ddd; }
+        .cost-box.green { background: #f3fbef; border-color: #b7dfae; }
+        .cost-box.gray { background: #fafafa; }
+        .cost-box.yellow { background: #fff8df; border-color: #f1d879; }
+        .cost-label { font-size: 13px; color: #666; font-weight: 600;}
+        .cost-value { font-size: 28px; font-weight: 600; margin-top: 8px; }
+        .green-value { color: #107c10; }
+        .yellow-value { color: #9a6a00; }
+        .cost-description { font-size: 12px; color: #555; margin-top: 8px; line-height: 1.4; }
 
         /* =========================================================
            TABLA DE LICENCIAS
         ========================================================= */
-
-        .license-table-section {
-            margin-bottom: 28px;
-        }
-
-        .license-summary {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        .license-summary th {
-            background: #f5f5f5;
-            color: #444;
-            font-weight: 600;
-            font-size: 13px;
-            text-align: left;
-            padding: 13px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .license-summary td {
-            padding: 13px;
-            border-bottom: 1px solid #eee;
-            font-size: 13px;
-        }
-
-        .license-summary tr:hover {
-            background: #fafafa;
-        }
-
-        .license-name {
-            font-weight: 500;
-            color: #333;
-        }
-
-        .amount {
-            font-weight: 600;
-            color: #107c10;
-        }
-
+        .license-table-section { margin-bottom: 28px; }
+        .license-summary { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .license-summary th { background: #f5f5f5; color: #444; font-weight: 600; font-size: 13px; text-align: left; padding: 13px; border-bottom: 1px solid #ddd; }
+        .license-summary td { padding: 13px; border-bottom: 1px solid #eee; font-size: 13px; }
+        .license-summary tr:hover { background: #fafafa; }
+        .license-name { font-weight: 500; color: #333; }
+        .amount { font-weight: 600; color: #107c10; }
 
         /* =========================================================
            TABLA DE USUARIOS
         ========================================================= */
-
-        .users-section {
-            margin-top: 28px;
-        }
-
-        .table-toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            margin: 18px 0;
-            flex-wrap: wrap;
-        }
-
-        .search-box {
-            position: relative;
-            width: 330px;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 13px;
-            top: 11px;
-            color: #777;
-        }
-
-        .search-box input {
-            width: 100%;
-            height: 38px;
-            border: 1px solid #bbb;
-            border-radius: 5px;
-            padding: 0 12px 0 38px;
-            outline: none;
-            font-size: 13px;
-        }
-
-        .search-box input:focus {
-            border-color: #0078d4;
-            box-shadow: 0 0 0 1px #0078d4;
-        }
-
-        .user-count {
-            font-size: 13px;
-            color: #666;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-        }
-
-        .users-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 950px;
-        }
-
-        .users-table thead {
-            background: #f5f5f5;
-        }
-
-        .users-table th {
-            padding: 13px 12px;
-            text-align: left;
-            font-size: 12px;
-            color: #444;
-            border-bottom: 1px solid #ddd;
-            white-space: nowrap;
-        }
-
-        .users-table td {
-            padding: 13px 12px;
-            font-size: 12px;
-            border-bottom: 1px solid #eee;
-            vertical-align: middle;
-        }
-
-        .users-table tbody tr:hover {
-            background: #f8fbff;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: #222;
-        }
-
-        .username {
-            color: #666;
-        }
-
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 11px;
-            font-weight: 500;
-        }
-
-        .status.active {
-            color: #107c10;
-        }
+        .users-section { margin-top: 28px; }
+        .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin: 18px 0; flex-wrap: wrap; }
+        .search-box { position: relative; width: 330px; }
+        .search-box i { position: absolute; left: 13px; top: 11px; color: #777; }
+        .search-box input { width: 100%; height: 38px; border: 1px solid #bbb; border-radius: 5px; padding: 0 12px 0 38px; outline: none; font-size: 13px; }
+        .search-box input:focus { border-color: #0078d4; box-shadow: 0 0 0 1px #0078d4; }
+        .user-count { font-size: 13px; color: #666; }
+        .table-wrapper { overflow-x: auto; border: 1px solid #ddd; border-radius: 6px; max-height: 500px;}
+        .users-table { width: 100%; border-collapse: collapse; min-width: 950px; }
+        .users-table thead th { background: #f5f5f5; padding: 13px 12px; text-align: left; font-size: 12px; color: #444; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 1;}
+        .users-table td { padding: 13px 12px; font-size: 12px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .users-table tbody tr:hover { background: #f8fbff; }
+        .user-name { font-weight: 600; color: #222; }
+        .username { color: #666; }
+        .status { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; }
+        .status.active { color: #107c10; }
+        .status.blocked { color: #d83b01; }
+        .status i { font-size: 9px; }
         
-        .status.blocked {
-            color: #d83b01;
-        }
+        .license-tag { display: inline-block; background: #e3f2fd; border: 1px solid #bbdefb; color: #0078D4; border-radius: 4px; padding: 4px 7px; margin: 2px; font-size: 10px; font-weight: 500; }
+        .lic-free { background: #f1f3f4; color: #5f6368; border-color: #dadce0; }
+        .lic-none { color: #D83B01; font-weight: 500; background: #fce8e6; border: 1px solid #fad2cf; padding: 4px 7px; border-radius: 4px; font-size: 10px;}
+        .cost-user { font-weight: 600; color: #107c10; white-space: nowrap; }
 
-        .status i {
-            font-size: 9px;
-        }
+        footer { text-align: center; color: #777; font-size: 11px; padding: 25px 0 5px; }
+        .error-msg { background: #fce8e6; color: #d83b01; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; display: none; font-weight: 500; border: 1px solid #fad2cf; }
 
-        .license-tag {
-            display: inline-block;
-            background: #e3f2fd;
-            border: 1px solid #bbdefb;
-            color: #0078D4;
-            border-radius: 4px;
-            padding: 4px 7px;
-            margin: 2px;
-            font-size: 10px;
-            font-weight: 500;
-        }
-        
-        .lic-free {
-            background: #f1f3f4; 
-            color: #5f6368; 
-            border-color: #dadce0;
-        }
-        
-        .lic-none { 
-            color: #D83B01; 
-            font-weight: 500; 
-            background: #fce8e6; 
-            border: 1px solid #fad2cf;
-        }
-
-        .cost-user {
-            font-weight: 600;
-            color: #107c10;
-            white-space: nowrap;
-        }
-
-
-        /* =========================================================
-           FOOTER
-        ========================================================= */
-
-        footer {
-            text-align: center;
-            color: #777;
-            font-size: 11px;
-            padding: 25px 0 5px;
-        }
-
-        /* =========================================================
-           RESPONSIVE
-        ========================================================= */
-
-        @media (max-width: 1100px) {
-            .kpi-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-            .cost-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 650px) {
-            .container {
-                padding: 0 12px 30px;
-            }
-            .kpi-grid {
-                grid-template-columns: 1fr;
-            }
-            .header {
-                padding: 18px;
-            }
-        }
-
+        @media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } .charts-grid { grid-template-columns: 1fr; } .cost-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 650px) { .container { padding: 0 12px 30px; } .kpi-grid { grid-template-columns: 1fr; } .header { padding: 18px; } }
     </style>
 </head>
-
 <body>
 
-<!-- =============================================================
-     ENCABEZADO
-============================================================= -->
-
+<!-- ENCABEZADO -->
 <div class="header">
     <div class="container" style="padding:0;">
-        <h1>
-            <i class="fa-brands fa-microsoft"></i>
-            MICROSOFT 365 - Entra ID
-        </h1>
+        <h1><i class="fa-brands fa-microsoft"></i> MICROSOFT 365 - Entra ID</h1>
     </div>
 </div>
 
 <div class="container">
+    <div id="errorMessage" class="error-msg">⚠️ No se encontró el archivo "MICROSOFT.csv" en GitHub. Asegúrate de haberlo subido.</div>
 
-<!-- =============================================================
-     KPIs
-============================================================= -->
-
+<!-- KPIs -->
 <section class="kpi-grid">
-
     <div class="kpi blue">
         <i class="fa-solid fa-users kpi-icon"></i>
         <div class="kpi-title">Total Usuarios</div>
         <div id="totalUsers" class="kpi-value">...</div>
         <div class="kpi-subtitle">Cuentas en el directorio</div>
     </div>
-
     <div class="kpi green">
         <i class="fa-solid fa-money-bill-wave kpi-icon"></i>
-        <div class="kpi-title">Costo Real Estimado (Mes)</div>
+        <div class="kpi-title">Costo Real Estimado</div>
         <div id="totalCost" class="kpi-value green-text">...</div>
-        <div class="kpi-subtitle">Valor total de licencias de pago activas</div>
+        <div class="kpi-subtitle">Valor total de las licencias asignadas</div>
     </div>
-
     <div class="kpi green">
         <i class="fa-solid fa-circle-check kpi-icon"></i>
         <div class="kpi-title">Cuentas Activas</div>
         <div id="activeUsers" class="kpi-value">...</div>
         <div class="kpi-subtitle">Usuarios habilitados</div>
     </div>
-
     <div class="kpi red">
         <i class="fa-solid fa-ban kpi-icon"></i>
         <div class="kpi-title">Cuentas Bloqueadas</div>
         <div id="blockedUsers" class="kpi-value">...</div>
         <div class="kpi-subtitle">Inicio de sesión bloqueado</div>
     </div>
-
     <div class="kpi yellow">
         <i class="fa-solid fa-key kpi-icon"></i>
         <div class="kpi-title">Pass Nunca Expira</div>
         <div id="passNeverExpires" class="kpi-value">...</div>
         <div class="kpi-subtitle">Sin caducidad de contraseña</div>
     </div>
-
 </section>
 
-<!-- =============================================================
-     GRÁFICAS
-============================================================= -->
-
+<!-- GRÁFICAS -->
 <section class="charts-grid">
-
-    <!-- ESTADO DE CUENTAS -->
     <div class="card">
         <div class="card-header">
             <h2 class="card-title">Estado de las cuentas</h2>
             <div class="card-description">Distribución entre usuarios activos y bloqueados</div>
         </div>
-        <div class="chart-container">
-            <canvas id="statusChart"></canvas>
-        </div>
+        <div class="chart-container"><canvas id="statusChart"></canvas></div>
     </div>
-
-    <!-- LICENCIAS (VOLUMEN) -->
     <div class="card">
         <div class="card-header">
             <h2 class="card-title">Licencias asignadas</h2>
             <div class="card-description">Cantidad de usuarios que utilizan cada producto</div>
         </div>
-        <div class="chart-container">
-            <canvas id="licenseChart"></canvas>
-        </div>
+        <div class="chart-container"><canvas id="licenseChart"></canvas></div>
     </div>
-
-    <!-- COSTOS POR LICENCIA (DINERO) -->
     <div class="card">
         <div class="card-header">
             <h2 class="card-title">Costo por Producto (USD)</h2>
-            <div class="card-description">Precio unitario de lista de cada licencia contratada</div>
+            <div class="card-description">Precio unitario oficial de cada licencia contratada</div>
         </div>
-        <div class="chart-container">
-            <canvas id="costChart"></canvas>
-        </div>
+        <div class="chart-container"><canvas id="costChart"></canvas></div>
     </div>
-
 </section>
 
-<!-- =============================================================
-     RESUMEN DE COSTOS
-============================================================= -->
-
+<!-- RESUMEN DE COSTOS Y ACLARACIÓN -->
 <section class="card cost-section">
-
     <div class="card-header">
-        <h2 class="card-title">Auditoría de Costos de Licencias</h2>
-        <div class="card-description">Comparación entre la facturación actual registrada y el costo total real de tus licencias según el precio de lista.</div>
+        <h2 class="card-title">Auditoría de Facturación vs Asignación Real</h2>
+        <div class="card-description">Aclaración de la discrepancia entre el cobro de la plataforma y el costo real de las licencias asignadas a los usuarios.</div>
     </div>
-
     <div class="cost-grid">
         <div class="cost-box gray">
-            <div class="cost-label">Facturado en pantalla (Agosto)</div>
+            <div class="cost-label">Facturado en Microsoft (Ej: Agosto)</div>
             <div class="cost-value">$432.60 USD</div>
-            <div class="cost-description">Cobro parcial (solo incluye 19 licencias de M365)</div>
+            <div class="cost-description"><strong>Cobro Parcial:</strong> Este valor ocurre porque en este ciclo de facturación Microsoft solo te está cobrando 19 de las 31 licencias de M365 Apps, y no incluyó Visio.</div>
         </div>
-
         <div class="cost-box green">
-            <div class="cost-label">Costo Real de tus Licencias</div>
+            <div class="cost-label">Costo Real de tus Licencias (Dashboard)</div>
             <div class="cost-value green-value">$637.35 USD</div>
-            <div class="cost-description">Suma total asumiendo 100% de licencias al precio de lista oficial</div>
+            <div class="cost-description"><strong>Gasto Total:</strong> Esta es la suma matemática exacta si se pagaran mensualmente las 59 licencias que tienes actualmente asignadas a los usuarios.</div>
         </div>
-
         <div class="cost-box yellow">
-            <div class="cost-label">Diferencia (Ahorro/Desfase)</div>
+            <div class="cost-label">Diferencia (Desfase)</div>
             <div class="cost-value yellow-value">$204.75 USD</div>
-            <div class="cost-description">Diferencia por licencias en otros ciclos de cobro, descuentos o anualidades.</div>
+            <div class="cost-description"><strong>La Diferencia:</strong> Representa las licencias de M365 y Visio que no se cobraron en la factura de $432.60 (por estar en otro ciclo de pago, descuento o anualidad).</div>
         </div>
     </div>
-
 </section>
 
-<!-- =============================================================
-     RESUMEN DE LICENCIAS (FIJO)
-============================================================= -->
-
+<!-- RESUMEN DE LICENCIAS -->
 <section class="card license-table-section">
-
     <div class="card-header">
         <h2 class="card-title">Inventario de Precios Base</h2>
-        <div class="card-description">Precios oficiales de lista según la consola de Microsoft</div>
+        <div class="card-description">Precios oficiales de lista según los contratos de Microsoft</div>
     </div>
-
     <table class="license-summary">
         <thead>
             <tr>
@@ -667,33 +257,22 @@
             </tr>
         </tbody>
     </table>
-
 </section>
 
-<!-- =============================================================
-     TABLA DE USUARIOS (DINÁMICA CSV)
-============================================================= -->
-
+<!-- TABLA DE USUARIOS DINÁMICA (Lee el CSV) -->
 <section class="card users-section">
-
     <div class="card-header">
         <h2 class="card-title">Usuarios y costos de licencias</h2>
-        <div class="card-description">Detalle de usuarios, licencias asignadas y costo mensual estimado. Los datos se leen del archivo CSV.</div>
+        <div class="card-description">Detalle de usuarios, licencias asignadas y costo mensual estimado basado en el archivo MICROSOFT.csv.</div>
     </div>
 
     <div class="table-toolbar">
-        <div class="user-count">
-            Usuarios mostrados:
-            <strong id="userCount">0</strong>
-        </div>
-
+        <div class="user-count">Usuarios mostrados: <strong id="userCount">0</strong></div>
         <div class="search-box">
             <i class="fa-solid fa-search"></i>
             <input type="text" id="userSearch" placeholder="Buscar usuario, correo o licencia...">
         </div>
     </div>
-
-    <div id="errorMessage" class="error-msg" style="display:none; margin:15px 0;">⚠️ No se encontró el archivo "MICROSOFT.csv" en GitHub.</div>
 
     <div class="table-wrapper">
         <table class="users-table">
@@ -701,34 +280,23 @@
                 <tr>
                     <th>Usuario</th>
                     <th>Correo (UPN)</th>
-                    <th>Estado</th>
                     <th>Licencias asignadas</th>
+                    <th>Estado</th>
                     <th>Costo mensual (USD)</th>
                 </tr>
             </thead>
             <tbody id="usersTableBody">
-                <!-- Llenado por JavaScript -->
+                <!-- Se llena automáticamente con JavaScript al leer MICROSOFT.csv -->
             </tbody>
         </table>
     </div>
-
 </section>
 
-<footer>
-    Dashboard Microsoft 365 · Entra ID · SERVIALCO SAS
-</footer>
-
+<footer>Dashboard Microsoft 365 · Entra ID · SERVIALCO SAS</footer>
 </div>
 
-<!-- =============================================================
-     JAVASCRIPT
-============================================================= -->
-
 <script>
-    // ========================================================
-    // PRECIOS UNITARIOS EXACTOS DE LISTA (En Dólares USD)
-    // Extraídos de las facturas individuales por producto
-    // ========================================================
+    // PRECIOS UNITARIOS EXACTOS
     const PRECIOS_LICENCIAS_USD = {
         "Aplicaciones de Microsoft 365 para negocios": 10.50, 
         "Planner y Project Plan 3": 31.50,
@@ -745,7 +313,7 @@
         complete: function(results) {
             let data = results.data;
             
-            // Arreglo automático si Excel guardó el CSV con punto y coma
+            // Arreglo para CSV separado por punto y coma
             if (data.length > 0 && !data[0]['User principal name'] && Object.keys(data[0])[0].includes(';')) {
                  const rawKeys = Object.keys(data[0])[0].split(';');
                  data = data.map(row => {
@@ -768,7 +336,7 @@
             let licensesCount = {}; 
             let userList = [];
 
-            // Normalización inteligente de los nombres del CSV
+            // Normalizador de licencias
             const normalizeLicenseName = (name) => {
                 const lower = name.toLowerCase();
                 if(lower.includes("aplicaciones de microsoft 365") || lower.includes("microsoft 365 apps")) return "Aplicaciones de Microsoft 365 para negocios";
@@ -783,14 +351,12 @@
 
             filteredData.forEach(user => {
                 totalUsers++;
-
                 const isBlocked = (user['Block credential'] || '').toLowerCase() === 'true';
                 if (isBlocked) bloqueados++; else activos++;
 
                 const passNoExp = (user['Password never expires'] || '').toLowerCase() === 'true';
                 if (passNoExp) passNeverExpires++;
 
-                // Análisis de Licencias
                 const rawLicenses = user['Licenses'] || 'Unlicensed';
                 const separators = ['+', ','];
                 let splitLicenses = [rawLicenses];
@@ -808,8 +374,6 @@
                     let cleanLic = lic.trim();
                     if (cleanLic) {
                         cleanLic = normalizeLicenseName(cleanLic);
-                        
-                        // Ignoramos la palabra Unlicensed en conteo
                         if(cleanLic === "Unlicensed" || cleanLic === "") return;
 
                         hasValidLicense = true;
@@ -841,100 +405,38 @@
                 });
             });
 
-            // 1. Pintar KPIs Dinámicos
+            // KPIs
             document.getElementById('totalUsers').innerText = totalUsers;
             document.getElementById('activeUsers').innerText = activos;
             document.getElementById('blockedUsers').innerText = bloqueados;
             document.getElementById('passNeverExpires').innerText = passNeverExpires;
             document.getElementById('totalCost').innerText = "$" + granTotalCostoUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " USD";
 
-            // 2. Gráfica 1: Estado de Cuentas (Doughnut)
+            // Gráficas
             new Chart(document.getElementById("statusChart"), {
                 type: "doughnut",
-                data: {
-                    labels: ["Activas", "Bloqueadas"],
-                    datasets: [{
-                        data: [activos, bloqueados],
-                        backgroundColor: ["#107c10", "#d83b01"],
-                        borderWidth: 0,
-                        hoverOffset: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: "67%",
-                    plugins: {
-                        legend: { position: "bottom", labels: { usePointStyle: true, padding: 20 } }
-                    }
-                }
+                data: { labels: ["Activas", "Bloqueadas"], datasets: [{ data: [activos, bloqueados], backgroundColor: ["#107c10", "#d83b01"], borderWidth: 0 }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: "67%", plugins: { legend: { position: "bottom", labels: { usePointStyle: true, padding: 20 } } } }
             });
 
-            // 3. Gráfica 2: Volumen de Licencias Asignadas
-            const sortedLicenses = Object.keys(licensesCount)
-                .map(key => ({ name: key, count: licensesCount[key] }))
-                .sort((a, b) => b.count - a.count); 
-
+            const sortedLicenses = Object.keys(licensesCount).map(key => ({ name: key, count: licensesCount[key] })).sort((a, b) => b.count - a.count); 
             new Chart(document.getElementById("licenseChart"), {
                 type: "bar",
-                data: {
-                    labels: sortedLicenses.map(l => l.name),
-                    datasets: [{
-                        label: "Usuarios asignados",
-                        data: sortedLicenses.map(l => l.count),
-                        backgroundColor: "#0078d4",
-                        borderRadius: 4,
-                        barThickness: 22
-                    }]
-                },
-                options: {
-                    indexAxis: "y",
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { beginAtZero: true, grid: { color: "#e5e5e5" }, title: { display: true, text: "Cantidad de usuarios" } },
-                        y: { grid: { display: false } }
-                    }
-                }
+                data: { labels: sortedLicenses.map(l => l.name), datasets: [{ label: "Usuarios asignados", data: sortedLicenses.map(l => l.count), backgroundColor: "#0078d4", borderRadius: 4, barThickness: 22 }] },
+                options: { indexAxis: "y", responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, grid: { color: "#e5e5e5" } }, y: { grid: { display: false } } } }
             });
 
-            // 4. Gráfica 3: Costo Unitario por Licencia
             new Chart(document.getElementById("costChart"), {
                 type: "bar",
                 data: {
-                    labels: [
-                        "Planner / Project Plan 3",
-                        "Visio Plan 2",
-                        "Microsoft 365 Apps",
-                        "Teams Essentials"
-                    ],
-                    datasets: [{
-                        label: "USD / mes",
-                        data: [31.50, 15.75, 10.50, 4.20],
-                        backgroundColor: "#107c10",
-                        borderRadius: 4,
-                        barThickness: 32
-                    }]
+                    labels: ["Planner / Project", "Visio Plan 2", "M365 Apps", "Teams Essentials"],
+                    datasets: [{ data: [31.50, 15.75, 10.50, 4.20], backgroundColor: "#107c10", borderRadius: 4, barThickness: 32 }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { callbacks: { label: function(context) { return `$${context.raw.toFixed(2)} USD por licencia`; } } }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, title: { display: true, text: "USD / mes" }, grid: { color: "#e5e5e5" } },
-                        x: { grid: { display: false }, ticks: { maxRotation: 25, minRotation: 15 } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(c) { return `$${c.raw.toFixed(2)} USD`; } } } }, scales: { y: { beginAtZero: true, grid: { color: "#e5e5e5" } }, x: { grid: { display: false }, ticks: { maxRotation: 25, minRotation: 15 } } } }
             });
 
-            // 5. Llenado de la Tabla de Usuarios
+            // Llenar Tabla
             const tableBody = document.getElementById("usersTableBody");
-            tableBody.innerHTML = ''; // Limpiar la estática
-
             userList.sort((a, b) => b.costo - a.costo);
 
             userList.forEach(u => {
@@ -958,14 +460,9 @@
 
             updateUserCount();
         },
-        error: function() {
-            document.getElementById('errorMessage').style.display = 'block';
-        }
+        error: function() { document.getElementById('errorMessage').style.display = 'block'; }
     });
 
-    /* =========================================================
-       BUSCADOR DE USUARIOS
-    ========================================================= */
     const searchInput = document.getElementById("userSearch");
     const tableBody = document.getElementById("usersTableBody");
     const userCount = document.getElementById("userCount");
@@ -979,19 +476,12 @@
     searchInput.addEventListener("input", function() {
         const search = this.value.toLowerCase().trim();
         const rows = tableBody.querySelectorAll("tr");
-
         rows.forEach(function(row) {
             const text = row.textContent.toLowerCase();
-            if (text.includes(search)) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
+            row.style.display = text.includes(search) ? "" : "none";
         });
         updateUserCount();
     });
-
 </script>
-
 </body>
 </html>
