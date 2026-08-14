@@ -8,6 +8,7 @@
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
@@ -396,6 +397,10 @@
         .status.active {
             color: #107c10;
         }
+        
+        .status.blocked {
+            color: #d83b01;
+        }
 
         .status i {
             font-size: 9px;
@@ -403,12 +408,27 @@
 
         .license-tag {
             display: inline-block;
-            background: #f1f1f1;
-            color: #444;
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            color: #0078D4;
             border-radius: 4px;
             padding: 4px 7px;
             margin: 2px;
             font-size: 10px;
+            font-weight: 500;
+        }
+        
+        .lic-free {
+            background: #f1f3f4; 
+            color: #5f6368; 
+            border-color: #dadce0;
+        }
+        
+        .lic-none { 
+            color: #D83B01; 
+            font-weight: 500; 
+            background: #fce8e6; 
+            border: 1px solid #fad2cf;
         }
 
         .cost-user {
@@ -428,7 +448,6 @@
             font-size: 11px;
             padding: 25px 0 5px;
         }
-
 
         /* =========================================================
            RESPONSIVE
@@ -487,35 +506,35 @@
     <div class="kpi blue">
         <i class="fa-solid fa-users kpi-icon"></i>
         <div class="kpi-title">Total Usuarios</div>
-        <div class="kpi-value">42</div>
-        <div class="kpi-subtitle">Cuentas registradas en el directorio</div>
+        <div id="totalUsers" class="kpi-value">...</div>
+        <div class="kpi-subtitle">Cuentas en el directorio</div>
     </div>
 
     <div class="kpi green">
         <i class="fa-solid fa-money-bill-wave kpi-icon"></i>
-        <div class="kpi-title">Facturado (Mes)</div>
-        <div class="kpi-value green-text">$432.60 USD</div>
-        <div class="kpi-subtitle">Facturación real registrada en Microsoft</div>
+        <div class="kpi-title">Costo Real Estimado (Mes)</div>
+        <div id="totalCost" class="kpi-value green-text">...</div>
+        <div class="kpi-subtitle">Valor total de licencias de pago activas</div>
     </div>
 
     <div class="kpi green">
         <i class="fa-solid fa-circle-check kpi-icon"></i>
         <div class="kpi-title">Cuentas Activas</div>
-        <div class="kpi-value">42</div>
+        <div id="activeUsers" class="kpi-value">...</div>
         <div class="kpi-subtitle">Usuarios habilitados</div>
     </div>
 
     <div class="kpi red">
         <i class="fa-solid fa-ban kpi-icon"></i>
         <div class="kpi-title">Cuentas Bloqueadas</div>
-        <div class="kpi-value">0</div>
+        <div id="blockedUsers" class="kpi-value">...</div>
         <div class="kpi-subtitle">Inicio de sesión bloqueado</div>
     </div>
 
     <div class="kpi yellow">
         <i class="fa-solid fa-key kpi-icon"></i>
         <div class="kpi-title">Pass Nunca Expira</div>
-        <div class="kpi-value">42</div>
+        <div id="passNeverExpires" class="kpi-value">...</div>
         <div class="kpi-subtitle">Sin caducidad de contraseña</div>
     </div>
 
@@ -538,7 +557,7 @@
         </div>
     </div>
 
-    <!-- LICENCIAS -->
+    <!-- LICENCIAS (VOLUMEN) -->
     <div class="card">
         <div class="card-header">
             <h2 class="card-title">Licencias asignadas</h2>
@@ -549,11 +568,11 @@
         </div>
     </div>
 
-    <!-- COSTOS -->
+    <!-- COSTOS POR LICENCIA (DINERO) -->
     <div class="card">
         <div class="card-header">
-            <h2 class="card-title">Costo mensual por licencia</h2>
-            <div class="card-description">Valor aproximado de cada licencia contratada</div>
+            <h2 class="card-title">Costo por Producto (USD)</h2>
+            <div class="card-description">Precio unitario de lista de cada licencia contratada</div>
         </div>
         <div class="chart-container">
             <canvas id="costChart"></canvas>
@@ -569,76 +588,82 @@
 <section class="card cost-section">
 
     <div class="card-header">
-        <h2 class="card-title">Resumen de costos</h2>
-        <div class="card-description">Comparación entre facturación real y costo estimado de las licencias asignadas</div>
+        <h2 class="card-title">Auditoría de Costos de Licencias</h2>
+        <div class="card-description">Comparación entre la facturación actual registrada y el costo total real de tus licencias según el precio de lista.</div>
     </div>
 
     <div class="cost-grid">
-        <div class="cost-box green">
-            <div class="cost-label">Facturación de agosto</div>
-            <div class="cost-value green-value">$432.60 USD</div>
-            <div class="cost-description">Valor facturado actualmente</div>
+        <div class="cost-box gray">
+            <div class="cost-label">Facturado en pantalla (Agosto)</div>
+            <div class="cost-value">$432.60 USD</div>
+            <div class="cost-description">Cobro parcial (solo incluye 19 licencias de M365)</div>
         </div>
 
-        <div class="cost-box gray">
-            <div class="cost-label">Licencias asignadas</div>
-            <div class="cost-value">$511.33 USD</div>
-            <div class="cost-description">Valor estimado según asignación</div>
+        <div class="cost-box green">
+            <div class="cost-label">Costo Real de tus Licencias</div>
+            <div class="cost-value green-value">$637.35 USD</div>
+            <div class="cost-description">Suma total asumiendo 100% de licencias al precio de lista oficial</div>
         </div>
 
         <div class="cost-box yellow">
-            <div class="cost-label">Diferencia</div>
-            <div class="cost-value yellow-value">$78.73 USD</div>
-            <div class="cost-description">Diferencia entre asignación y facturación</div>
+            <div class="cost-label">Diferencia (Ahorro/Desfase)</div>
+            <div class="cost-value yellow-value">$204.75 USD</div>
+            <div class="cost-description">Diferencia por licencias en otros ciclos de cobro, descuentos o anualidades.</div>
         </div>
     </div>
 
 </section>
 
 <!-- =============================================================
-     RESUMEN DE LICENCIAS
+     RESUMEN DE LICENCIAS (FIJO)
 ============================================================= -->
 
 <section class="card license-table-section">
 
     <div class="card-header">
-        <h2 class="card-title">Resumen de licencias</h2>
-        <div class="card-description">Detalle de productos, cantidades y valores mensuales</div>
+        <h2 class="card-title">Inventario de Precios Base</h2>
+        <div class="card-description">Precios oficiales de lista según la consola de Microsoft</div>
     </div>
 
     <table class="license-summary">
         <thead>
             <tr>
                 <th>Producto</th>
-                <th>Licencias</th>
-                <th>Costo mensual</th>
-                <th>Costo por licencia</th>
+                <th>Licencias Asignadas</th>
+                <th>Costo Unitario (Lista)</th>
+                <th>Costo Mensual Proyectado</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td class="license-name">Aplicaciones de Microsoft 365 para negocios</td>
                 <td>31</td>
-                <td class="amount">$199.50 USD</td>
-                <td>$6.44 USD</td>
+                <td>$10.50 USD</td>
+                <td class="amount">$325.50 USD</td>
             </tr>
             <tr>
                 <td class="license-name">Planner y Project Plan 3</td>
                 <td>5</td>
-                <td class="amount">$157.50 USD</td>
                 <td>$31.50 USD</td>
+                <td class="amount">$157.50 USD</td>
             </tr>
             <tr>
                 <td class="license-name">Microsoft Teams Essentials</td>
                 <td>18</td>
-                <td class="amount">$75.60 USD</td>
                 <td>$4.20 USD</td>
+                <td class="amount">$75.60 USD</td>
+            </tr>
+            <tr>
+                <td class="license-name">Visio Plan 2</td>
+                <td>5</td>
+                <td>$15.75 USD</td>
+                <td class="amount">$78.75 USD</td>
             </tr>
             <tr>
                 <td><strong>TOTAL</strong></td>
-                <td><strong>54</strong></td>
-                <td class="amount"><strong>$432.60 USD</strong></td>
+                <td><strong>59</strong></td>
                 <td>—</td>
+                <td class="amount"><strong>$637.35 USD</strong></td>
             </tr>
         </tbody>
     </table>
@@ -646,14 +671,14 @@
 </section>
 
 <!-- =============================================================
-     TABLA DE USUARIOS
+     TABLA DE USUARIOS (DINÁMICA CSV)
 ============================================================= -->
 
 <section class="card users-section">
 
     <div class="card-header">
         <h2 class="card-title">Usuarios y costos de licencias</h2>
-        <div class="card-description">Detalle de usuarios, licencias asignadas y costo mensual estimado</div>
+        <div class="card-description">Detalle de usuarios, licencias asignadas y costo mensual estimado. Los datos se leen del archivo CSV.</div>
     </div>
 
     <div class="table-toolbar">
@@ -668,541 +693,21 @@
         </div>
     </div>
 
+    <div id="errorMessage" class="error-msg" style="display:none; margin:15px 0;">⚠️ No se encontró el archivo "MICROSOFT.csv" en GitHub.</div>
+
     <div class="table-wrapper">
         <table class="users-table">
             <thead>
                 <tr>
                     <th>Usuario</th>
-                    <th>Nombre de usuario</th>
-                    <th>Licencias asignadas</th>
+                    <th>Correo (UPN)</th>
                     <th>Estado</th>
-                    <th>Costo mensual estimado</th>
+                    <th>Licencias asignadas</th>
+                    <th>Costo mensual (USD)</th>
                 </tr>
             </thead>
-
             <tbody id="usersTableBody">
-
-                <!-- ADMINISTRATIVO -->
-                <tr>
-                    <td class="user-name">administrativo</td>
-                    <td class="username">administrativos@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Power Automate Free</span>
-                        <span class="license-tag">Microsoft Fabric</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$6.44 USD</td>
-                </tr>
-
-                <!-- ADMINISTRATIVO 2 -->
-                <tr>
-                    <td class="user-name">administrativo</td>
-                    <td class="username">administrativo@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Power Automate Free</span>
-                        <span class="license-tag">Visio Plan 2</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$0.00 USD</td>
-                </tr>
-
-                <!-- ANDRÉS -->
-                <tr>
-                    <td class="user-name">Andrés Huertas</td>
-                    <td class="username">soporte@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD</td>
-                </tr>
-
-                <!-- BRANDON -->
-                <tr>
-                    <td class="user-name">Brandon Arias</td>
-                    <td class="username">pm@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft Fabric Gratis</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$0.00 USD</td>
-                </tr>
-
-                <!-- CARLOS -->
-                <tr>
-                    <td class="user-name">Carlos Camacho</td>
-                    <td class="username">admonlan1@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD</td>
-                </tr>
-
-                <!-- COMPRAS -->
-                <tr>
-                    <td class="user-name">Compras Servialco</td>
-                    <td class="username">compras@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$6.44 USD</td>
-                </tr>
-
-                <!-- CONTABILIDAD -->
-                <tr>
-                    <td class="user-name">Contabilidad</td>
-                    <td class="username">contabilidad@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD</td>
-                </tr>
-
-                <!-- DANIEL -->
-                <tr>
-                    <td class="user-name">Daniel Moreno</td>
-                    <td class="username">coordinador_mesaFNA@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD</td>
-                </tr>
-
-                <!-- DAVID -->
-                <tr>
-                    <td class="user-name">David Garcia</td>
-                    <td class="username">documentadorFNA@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD</td>
-                </tr>
-
-                <!-- DIEGO ANZOLA -->
-                <tr>
-                    <td class="user-name">Diego Anzola</td>
-                    <td class="username">admonlan2@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD</td>
-                </tr>
-
-                <!-- DIEGO BARRAGÁN -->
-                <tr>
-                    <td class="user-name">Diego Barragán</td>
-                    <td class="username">procesos@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Teams Essentials</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$4.20 USD</td>
-                </tr>
-
-                <!-- ERICK -->
-                <tr>
-                    <td class="user-name">Erick Leandro Pedraza Angel</td>
-                    <td class="username">cableado2@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                        <span class="license-tag">Visio Plan 2</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD*</td>
-                </tr>
-
-                <!-- FNA -->
-                <tr>
-                    <td class="user-name">fnaadministrativos</td>
-                    <td class="username">fnaadministrativos@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$6.44 USD</td>
-                </tr>
-
-                <!-- GUILLERMO -->
-                <tr>
-                    <td class="user-name">Guillerrmo Niño</td>
-                    <td class="username">admininfraestructura@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD</td>
-                </tr>
-
-                <!-- HARBEY -->
-                <tr>
-                    <td class="user-name">Harbey Cubides</td>
-                    <td class="username">gestormonitoreo@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD</td>
-                </tr>
-
-                <!-- JESSICA -->
-                <tr>
-                    <td class="user-name">Jessica Cardenas</td>
-                    <td class="username">pm_2@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$6.44 USD</td>
-                </tr>
-
-                <!-- JORGE -->
-                <tr>
-                    <td class="user-name">Jorge Morales</td>
-                    <td class="username">pm_1@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Planner / Project Plan 3</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$37.94 USD</td>
-                </tr>
-
-                <!-- JURIDICA -->
-                <tr>
-                    <td class="user-name">Jurídica</td>
-                    <td class="username">Juridica@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$6.44 USD</td>
-                </tr>
-
-                <!-- LIDERTI -->
-                <tr>
-                    <td class="user-name">liderti</td>
-                    <td class="username">liderti@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft Fabric Gratis</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$0.00 USD</td>
-                </tr>
-
-                <!-- MAURICIO -->
-                <tr>
-                    <td class="user-name">Mauricio Agudelo</td>
-                    <td class="username">pm_3@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Planner / Project Plan 3</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$31.50 USD</td>
-                </tr>
-
-                <!-- MAYCON -->
-                <tr>
-                    <td class="user-name">Maycon Acosta</td>
-                    <td class="username">arquitectoFNA@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                        <span class="license-tag">Visio Plan 2</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD*</td>
-                </tr>
-
-                <!-- MAYDA -->
-                <tr>
-                    <td class="user-name">Mayda Diaz</td>
-                    <td class="username">pmjunior1@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Planner / Project Plan 3</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$37.94 USD</td>
-                </tr>
-
-                <!-- MICHELLE -->
-                <tr>
-                    <td class="user-name">Michelle Rivera</td>
-                    <td class="username">admonlan3@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                        <span class="license-tag">Power Automate Free</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD</td>
-                </tr>
-
-                <!-- NICOLÁS -->
-                <tr>
-                    <td class="user-name">Nicolás Camargo</td>
-                    <td class="username">admonti1@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD</td>
-                </tr>
-
-                <!-- OFFICE 1 -->
-                <tr>
-                    <td class="user-name">office1</td>
-                    <td class="username">office1@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$6.44 USD</td>
-                </tr>
-
-                <!-- OFFICE 2 -->
-                <tr>
-                    <td class="user-name">office2</td>
-                    <td class="username">office2@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$6.44 USD</td>
-                </tr>
-
-                <!-- OFFICE 3 -->
-                <tr>
-                    <td class="user-name">office3</td>
-                    <td class="username">office3@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$6.44 USD</td>
-                </tr>
-
-                <!-- OFFICE 4 -->
-                <tr>
-                    <td class="user-name">office4</td>
-                    <td class="username">office4@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$6.44 USD</td>
-                </tr>
-
-                <!-- OPERACIONES -->
-                <tr>
-                    <td class="user-name">Operaciones</td>
-                    <td class="username">Operaciones@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Planner / Project Plan 3</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$37.94 USD</td>
-                </tr>
-
-                <!-- RAÚL DÍAZ -->
-                <tr>
-                    <td class="user-name">Raúl Díaz</td>
-                    <td class="username">lid servicios@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft Teams Essentials</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$4.20 USD</td>
-                </tr>
-
-                <!-- SANDRA -->
-                <tr>
-                    <td class="user-name">Sandra Bustos</td>
-                    <td class="username">proyectosFNA@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                        <span class="license-tag">Planner / Project Plan 3</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$42.14 USD</td>
-                </tr>
-
-                <!-- SERVIALCO -->
-                <tr>
-                    <td class="user-name">SERVIALCO SAS</td>
-                    <td class="username">servialco@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Power Automate Free</span>
-                        <span class="license-tag">Microsoft Fabric Gratis</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$6.44 USD</td>
-                </tr>
-
-                <!-- SERVIALCO SAS 1 -->
-                <tr>
-                    <td class="user-name">SERVIALCO SAS</td>
-                    <td class="username">SERVIALCOSAS1@servialcosas.onmicrosoft.com</td>
-                    <td>
-                        <span class="license-tag">Microsoft 365 Apps</span>
-                        <span class="license-tag">Teams Essentials</span>
-                    </td>
-                    <td>
-                        <span class="status active">
-                            <i class="fa-solid fa-circle"></i> Activo
-                        </span>
-                    </td>
-                    <td class="cost-user">$10.64 USD</td>
-                </tr>
-
+                <!-- Llenado por JavaScript -->
             </tbody>
         </table>
     </div>
@@ -1220,263 +725,271 @@
 ============================================================= -->
 
 <script>
+    // ========================================================
+    // PRECIOS UNITARIOS EXACTOS DE LISTA (En Dólares USD)
+    // Extraídos de las facturas individuales por producto
+    // ========================================================
+    const PRECIOS_LICENCIAS_USD = {
+        "Aplicaciones de Microsoft 365 para negocios": 10.50, 
+        "Planner y Project Plan 3": 31.50,
+        "Microsoft Teams Essentials": 4.20,
+        "Visio Plan 2": 15.75,
+        "Microsoft Fabric (Gratis)": 0,
+        "Microsoft Power Automate Free": 0
+    };
 
-    /* =========================================================
-       GRÁFICA 1 - ESTADO DE CUENTAS
-    ========================================================= */
-
-    new Chart(
-        document.getElementById("statusChart"),
-        {
-            type: "doughnut",
-            data: {
-                labels: [
-                    "Activas",
-                    "Bloqueadas"
-                ],
-                datasets: [{
-                    data: [
-                        42,
-                        0
-                    ],
-                    backgroundColor: [
-                        "#107c10",
-                        "#d83b01"
-                    ],
-                    borderWidth: 0,
-                    hoverOffset: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: "67%",
-                plugins: {
-                    legend: {
-                        position: "bottom",
-                        labels: {
-                            usePointStyle: true,
-                            padding: 20
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const total = 42;
-                                const value = context.raw;
-                                const percentage =
-                                    total > 0
-                                    ? ((value / total) * 100).toFixed(1)
-                                    : 0;
-                                return `${context.label}: ${value} (${percentage}%)`;
-                            }
-                        }
-                    }
-                }
+    Papa.parse("MICROSOFT.csv", {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            let data = results.data;
+            
+            // Arreglo automático si Excel guardó el CSV con punto y coma
+            if (data.length > 0 && !data[0]['User principal name'] && Object.keys(data[0])[0].includes(';')) {
+                 const rawKeys = Object.keys(data[0])[0].split(';');
+                 data = data.map(row => {
+                     const rawVals = row[Object.keys(row)[0]].split(';');
+                     let newRow = {};
+                     rawKeys.forEach((k, i) => newRow[k] = rawVals[i]);
+                     return newRow;
+                 });
             }
-        }
-    );
 
-    /* =========================================================
-       GRÁFICA 2 - LICENCIAS
-    ========================================================= */
+            const filteredData = data.filter(row => row['User principal name']); 
 
-    new Chart(
-        document.getElementById("licenseChart"),
-        {
-            type: "bar",
-            data: {
-                labels: [
-                    "Microsoft 365 Apps",
-                    "Teams Essentials",
-                    "Visio Plan 2",
-                    "Planner / Project Plan 3",
-                    "Power Automate Free",
-                    "Microsoft Fabric Gratis"
-                ],
-                datasets: [{
-                    label: "Usuarios asignados",
-                    data: [
-                        31,
-                        18,
-                        5,
-                        5,
-                        4,
-                        4
-                    ],
-                    backgroundColor: "#0078d4",
-                    borderRadius: 4,
-                    barThickness: 22
-                }]
-            },
-            options: {
-                indexAxis: "y",
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return ` ${context.raw} usuarios asignados`;
-                            }
+            if(filteredData.length === 0){
+                 document.getElementById('errorMessage').style.display = 'block';
+                 return;
+            }
+
+            let totalUsers = 0, activos = 0, bloqueados = 0, passNeverExpires = 0;
+            let granTotalCostoUSD = 0;
+            let licensesCount = {}; 
+            let userList = [];
+
+            // Normalización inteligente de los nombres del CSV
+            const normalizeLicenseName = (name) => {
+                const lower = name.toLowerCase();
+                if(lower.includes("aplicaciones de microsoft 365") || lower.includes("microsoft 365 apps")) return "Aplicaciones de Microsoft 365 para negocios";
+                if(lower.includes("planner") || lower.includes("project")) return "Planner y Project Plan 3";
+                if(lower.includes("teams essentials")) return "Microsoft Teams Essentials";
+                if(lower.includes("visio plan 2")) return "Visio Plan 2";
+                if(lower.includes("fabric")) return "Microsoft Fabric (Gratis)";
+                if(lower.includes("power automate free")) return "Microsoft Power Automate Free";
+                if(lower.includes("unlicensed") || lower.includes("sin licencia")) return "Unlicensed";
+                return name.trim();
+            };
+
+            filteredData.forEach(user => {
+                totalUsers++;
+
+                const isBlocked = (user['Block credential'] || '').toLowerCase() === 'true';
+                if (isBlocked) bloqueados++; else activos++;
+
+                const passNoExp = (user['Password never expires'] || '').toLowerCase() === 'true';
+                if (passNoExp) passNeverExpires++;
+
+                // Análisis de Licencias
+                const rawLicenses = user['Licenses'] || 'Unlicensed';
+                const separators = ['+', ','];
+                let splitLicenses = [rawLicenses];
+                separators.forEach(sep => {
+                    let newSplit = [];
+                    splitLicenses.forEach(part => newSplit.push(...part.split(sep)));
+                    splitLicenses = newSplit;
+                });
+                
+                let htmlLicencias = '';
+                let costoUsuarioMes = 0;
+                let hasValidLicense = false;
+
+                splitLicenses.forEach(lic => {
+                    let cleanLic = lic.trim();
+                    if (cleanLic) {
+                        cleanLic = normalizeLicenseName(cleanLic);
+                        
+                        // Ignoramos la palabra Unlicensed en conteo
+                        if(cleanLic === "Unlicensed" || cleanLic === "") return;
+
+                        hasValidLicense = true;
+                        licensesCount[cleanLic] = (licensesCount[cleanLic] || 0) + 1;
+                        
+                        const precio = PRECIOS_LICENCIAS_USD[cleanLic] || 0;
+                        costoUsuarioMes += precio;
+
+                        if(precio === 0) {
+                            htmlLicencias += `<span class="license-tag lic-free">${cleanLic}</span>`;
+                        } else {
+                            htmlLicencias += `<span class="license-tag">${cleanLic}</span>`;
                         }
                     }
+                });
+
+                if(!hasValidLicense) {
+                    htmlLicencias = '<span class="license-tag lic-none">Sin licencia asignada</span>';
+                }
+
+                granTotalCostoUSD += costoUsuarioMes;
+
+                userList.push({
+                    name: user['Display name'] || 'Sin nombre',
+                    email: user['User principal name'],
+                    status: isBlocked ? 'bloqueado' : 'activo',
+                    licensesHtml: htmlLicencias, 
+                    costo: costoUsuarioMes
+                });
+            });
+
+            // 1. Pintar KPIs Dinámicos
+            document.getElementById('totalUsers').innerText = totalUsers;
+            document.getElementById('activeUsers').innerText = activos;
+            document.getElementById('blockedUsers').innerText = bloqueados;
+            document.getElementById('passNeverExpires').innerText = passNeverExpires;
+            document.getElementById('totalCost').innerText = "$" + granTotalCostoUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " USD";
+
+            // 2. Gráfica 1: Estado de Cuentas (Doughnut)
+            new Chart(document.getElementById("statusChart"), {
+                type: "doughnut",
+                data: {
+                    labels: ["Activas", "Bloqueadas"],
+                    datasets: [{
+                        data: [activos, bloqueados],
+                        backgroundColor: ["#107c10", "#d83b01"],
+                        borderWidth: 0,
+                        hoverOffset: 8
+                    }]
                 },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 5
-                        },
-                        grid: {
-                            color: "#e5e5e5"
-                        },
-                        title: {
-                            display: true,
-                            text: "Cantidad de usuarios"
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: "67%",
+                    plugins: {
+                        legend: { position: "bottom", labels: { usePointStyle: true, padding: 20 } }
                     }
                 }
-            }
-        }
-    );
+            });
 
-    /* =========================================================
-       GRÁFICA 3 - COSTO POR LICENCIA
-    ========================================================= */
+            // 3. Gráfica 2: Volumen de Licencias Asignadas
+            const sortedLicenses = Object.keys(licensesCount)
+                .map(key => ({ name: key, count: licensesCount[key] }))
+                .sort((a, b) => b.count - a.count); 
 
-    new Chart(
-        document.getElementById("costChart"),
-        {
-            type: "bar",
-            data: {
-                labels: [
-                    "Microsoft 365 Apps",
-                    "Planner / Project Plan 3",
-                    "Visio Plan 2",
-                    "Teams Essentials"
-                ],
-                datasets: [{
-                    label: "USD / licencia / mes",
-                    data: [
-                        6.44,
-                        31.50,
-                        15.00,
-                        4.20
-                    ],
-                    backgroundColor: "#107c10",
-                    borderRadius: 4,
-                    barThickness: 32
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `$${context.raw.toFixed(2)} USD por licencia`;
-                            }
-                        }
-                    }
+            new Chart(document.getElementById("licenseChart"), {
+                type: "bar",
+                data: {
+                    labels: sortedLicenses.map(l => l.name),
+                    datasets: [{
+                        label: "Usuarios asignados",
+                        data: sortedLicenses.map(l => l.count),
+                        backgroundColor: "#0078d4",
+                        borderRadius: 4,
+                        barThickness: 22
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: "USD / mes"
-                        },
-                        grid: {
-                            color: "#e5e5e5"
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            maxRotation: 25,
-                            minRotation: 15
-                        }
+                options: {
+                    indexAxis: "y",
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, grid: { color: "#e5e5e5" }, title: { display: true, text: "Cantidad de usuarios" } },
+                        y: { grid: { display: false } }
                     }
                 }
-            }
+            });
+
+            // 4. Gráfica 3: Costo Unitario por Licencia
+            new Chart(document.getElementById("costChart"), {
+                type: "bar",
+                data: {
+                    labels: [
+                        "Planner / Project Plan 3",
+                        "Visio Plan 2",
+                        "Microsoft 365 Apps",
+                        "Teams Essentials"
+                    ],
+                    datasets: [{
+                        label: "USD / mes",
+                        data: [31.50, 15.75, 10.50, 4.20],
+                        backgroundColor: "#107c10",
+                        borderRadius: 4,
+                        barThickness: 32
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: function(context) { return `$${context.raw.toFixed(2)} USD por licencia`; } } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: "USD / mes" }, grid: { color: "#e5e5e5" } },
+                        x: { grid: { display: false }, ticks: { maxRotation: 25, minRotation: 15 } }
+                    }
+                }
+            });
+
+            // 5. Llenado de la Tabla de Usuarios
+            const tableBody = document.getElementById("usersTableBody");
+            tableBody.innerHTML = ''; // Limpiar la estática
+
+            userList.sort((a, b) => b.costo - a.costo);
+
+            userList.forEach(u => {
+                const statusBadge = u.status === 'activo' 
+                    ? '<span class="status active"><i class="fa-solid fa-circle"></i> Activo</span>' 
+                    : '<span class="status blocked"><i class="fa-solid fa-ban"></i> Bloqueado</span>';
+                
+                const costoStr = u.costo > 0 
+                    ? `$${u.costo.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD` 
+                    : '<span style="color:#777; font-weight:normal;">$0.00 USD</span>';
+
+                const row = `<tr>
+                    <td class="user-name">${u.name}</td>
+                    <td class="username">${u.email}</td>
+                    <td>${u.licensesHtml}</td>
+                    <td>${statusBadge}</td>
+                    <td class="cost-user">${costoStr}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+
+            updateUserCount();
+        },
+        error: function() {
+            document.getElementById('errorMessage').style.display = 'block';
         }
-    );
+    });
 
     /* =========================================================
        BUSCADOR DE USUARIOS
     ========================================================= */
-
-    const searchInput =
-        document.getElementById("userSearch");
-
-    const tableBody =
-        document.getElementById("usersTableBody");
-
-    const userCount =
-        document.getElementById("userCount");
+    const searchInput = document.getElementById("userSearch");
+    const tableBody = document.getElementById("usersTableBody");
+    const userCount = document.getElementById("userCount");
 
     function updateUserCount() {
-        const rows =
-            Array.from(
-                tableBody.querySelectorAll("tr")
-            );
-
-        const visibleRows =
-            rows.filter(
-                row => row.style.display !== "none"
-            );
-
-        userCount.textContent =
-            visibleRows.length;
+        const rows = Array.from(tableBody.querySelectorAll("tr"));
+        const visibleRows = rows.filter(row => row.style.display !== "none");
+        userCount.textContent = visibleRows.length;
     }
 
-    searchInput.addEventListener(
-        "input",
-        function() {
-            const search =
-                this.value
-                .toLowerCase()
-                .trim();
+    searchInput.addEventListener("input", function() {
+        const search = this.value.toLowerCase().trim();
+        const rows = tableBody.querySelectorAll("tr");
 
-            const rows =
-                tableBody.querySelectorAll("tr");
-
-            rows.forEach(
-                function(row) {
-                    const text =
-                        row.textContent.toLowerCase();
-
-                    if (
-                        text.includes(search)
-                    ) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
-                    }
-                }
-            );
-
-            updateUserCount();
-        }
-    );
-
-    /* Contador inicial */
-    updateUserCount();
+        rows.forEach(function(row) {
+            const text = row.textContent.toLowerCase();
+            if (text.includes(search)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+        updateUserCount();
+    });
 
 </script>
 
