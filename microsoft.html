@@ -61,8 +61,8 @@
         .badge-suspended { background: #fce8e6; color: var(--danger); }
         .text-small { font-size: 0.8rem; color: #5f6368; }
         
-        .lic-tag { background: #e3f2fd; color: #0d47a1; padding: 2px 6px; border-radius: 4px; display: inline-block; margin: 2px; font-size: 0.75rem;}
-        .lic-free { background: #f1f3f4; color: #5f6368; }
+        .lic-tag { background: #e3f2fd; color: #0078D4; padding: 3px 8px; border-radius: 4px; display: inline-block; margin: 2px; font-size: 0.75rem; border: 1px solid #bbdefb;}
+        .lic-free { background: #f1f3f4; color: #5f6368; border-color: #dadce0;}
     </style>
 </head>
 <body>
@@ -90,7 +90,7 @@
                     <span class="material-symbols-outlined" style="color: var(--money);">payments</span>
                 </div>
                 <div id="totalCost" class="kpi-value" style="color: var(--money); font-weight: bold;">...</div>
-                <div class="kpi-subtext">Suma de licencias asignadas (COP)</div>
+                <div class="kpi-subtext">Facturación de licencias en USD</div>
             </div>
 
             <div class="kpi-card kpi-green">
@@ -125,7 +125,7 @@
                 <div class="chart-container"><canvas id="statusChart"></canvas></div>
             </div>
             <div class="chart-card">
-                <h3>Licencias Asignadas vs Disponibles (Resumen)</h3>
+                <h3>Top Licencias Asignadas (Desglose)</h3>
                 <div class="chart-container"><canvas id="licensesChart"></canvas></div>
             </div>
         </div>
@@ -140,7 +140,7 @@
                             <th>Correo (UPN)</th>
                             <th>Estado</th>
                             <th>Licencias Asignadas</th>
-                            <th>Costo Usuario (Mes)</th>
+                            <th>Costo Usuario (USD)</th>
                         </tr>
                     </thead>
                     <tbody id="usersTableBody">
@@ -153,29 +153,26 @@
 
     <script>
         // ========================================================
-        // TABULADOR DE PRECIOS MICROSOFT (EN PESOS COLOMBIANOS)
-        // Por favor, cambia estos valores por los precios reales que pagas.
-        // Si la licencia dice "(Gratis)" o "Free", la dejamos en 0.
+        // TABULADOR EXACTO DE PRECIOS MICROSOFT (EN DÓLARES USD)
+        // Extraído matemáticamente del historial de facturación
         // ========================================================
-        const PRECIOS_LICENCIAS = {
-            "Aplicaciones de Microsoft 365 para negocios": 45000, 
-            "Microsoft Teams Essentials": 18000,
-            "Planner y Project Plan 3": 55000,
-            "Visio Plan 2": 70000,
+        const PRECIOS_LICENCIAS_USD = {
+            "Aplicaciones de Microsoft 365 para negocios": 199.50 / 31, // $6.435 USD
+            "Planner y Project Plan 3": 31.50,
+            "Microsoft Teams Essentials": 4.20,
+            "Visio Plan 2": 15.75, // Basado en factura de $78.75 / 5
             "Microsoft Fabric (Gratis)": 0,
             "Microsoft Power Automate Free": 0
         };
 
-        // Función para limpiar delimitadores si Excel ensucia el CSV
         Papa.parse("MICROSOFT.csv", {
             download: true,
             header: true,
             skipEmptyLines: true,
             complete: function(results) {
-                // Validación para CSV separado por punto y coma (;) o comas (,)
                 let data = results.data;
                 
-                // Si el parser no detectó bien las columnas, intentamos arreglarlo
+                // Arreglo automático si Excel guardó el CSV con punto y coma
                 if (data.length > 0 && !data[0]['User principal name'] && Object.keys(data[0])[0].includes(';')) {
                      const rawKeys = Object.keys(data[0])[0].split(';');
                      data = data.map(row => {
@@ -194,7 +191,7 @@
                 }
 
                 let totalUsers = 0, activos = 0, bloqueados = 0, passNeverExpires = 0;
-                let granTotalCostoCOP = 0;
+                let granTotalCostoUSD = 0;
                 let licensesCount = {};
                 let userList = [];
 
@@ -219,11 +216,11 @@
                         if (cleanLic) {
                             licensesCount[cleanLic] = (licensesCount[cleanLic] || 0) + 1;
                             
-                            // Buscar precio en nuestro diccionario
-                            const precio = PRECIOS_LICENCIAS[cleanLic] || 0;
+                            // Buscar precio en nuestro diccionario (USD)
+                            const precio = PRECIOS_LICENCIAS_USD[cleanLic] || 0;
                             costoUsuarioMes += precio;
 
-                            // Formato visual de la etiqueta
+                            // Formato visual: grises para las gratis, azules para las de cobro
                             if(precio === 0) {
                                 htmlLicencias += `<span class="lic-tag lic-free">${cleanLic}</span>`;
                             } else {
@@ -234,7 +231,8 @@
 
                     if(!htmlLicencias) htmlLicencias = '<span class="text-small">Sin Licencia</span>';
 
-                    granTotalCostoCOP += costoUsuarioMes;
+                    // Acumulamos el costo general
+                    granTotalCostoUSD += costoUsuarioMes;
 
                     userList.push({
                         name: user['Display name'] || 'Sin nombre',
@@ -251,8 +249,8 @@
                 document.getElementById('blockedUsers').innerText = bloqueados;
                 document.getElementById('passNeverExpires').innerText = passNeverExpires;
                 
-                // Pintar Costo Total Calculado
-                document.getElementById('totalCost').innerText = "$" + granTotalCostoCOP.toLocaleString('es-CO');
+                // Pintar Costo Total Calculado en USD
+                document.getElementById('totalCost').innerText = "$" + granTotalCostoUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " USD";
 
                 // Gráfica de Credenciales
                 new Chart(document.getElementById('statusChart'), {
@@ -294,7 +292,7 @@
                 // Pintar Tabla Detallada
                 const tableBody = document.getElementById('usersTableBody');
                 
-                // Ordenar por los que cuestan más dinero
+                // Ordenar para que los usuarios más caros salgan primero
                 userList.sort((a, b) => b.costo - a.costo);
 
                 userList.forEach(u => {
@@ -302,7 +300,9 @@
                         ? '<span class="badge badge-active">Activo</span>' 
                         : '<span class="badge badge-suspended">Bloqueado</span>';
                     
-                    const costoStr = u.costo > 0 ? `<strong style="color:var(--money)">$${u.costo.toLocaleString('es-CO')}</strong>` : '<span class="text-small">$0</span>';
+                    const costoStr = u.costo > 0 
+                        ? `<strong style="color:var(--money)">$${u.costo.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>` 
+                        : '<span class="text-small">$0.00</span>';
 
                     const row = `<tr>
                         <td><strong>${u.name}</strong></td>
