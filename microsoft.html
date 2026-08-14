@@ -4,12 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Microsoft 365 - Entra ID | Dashboard</title>
+    <title>Microsoft 365 - Entra ID | SERVIALCO</title>
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <style>
+
+        /* =========================================================
+           CONFIGURACIÓN GENERAL
+        ========================================================= */
+
         * {
             box-sizing: border-box;
         }
@@ -21,138 +30,125 @@
             color: #1f1f1f;
         }
 
+        .container {
+            width: 100%;
+            max-width: 1450px;
+            margin: auto;
+            padding: 0 28px 50px;
+        }
+
+
         /* =========================================================
            BARRA SUPERIOR
         ========================================================= */
 
-        .topbar {
-            height: 54px;
+        .top-nav {
+            height: 56px;
             background: #ffffff;
             border-bottom: 1px solid #d9d9d9;
             display: flex;
             align-items: center;
-            padding-left: 28px;
-            gap: 42px;
+            gap: 38px;
+            padding: 0 28px;
+            white-space: nowrap;
+            overflow-x: auto;
         }
 
-        .topbar-item {
-            height: 54px;
+        .top-nav a {
+            height: 56px;
             display: flex;
             align-items: center;
-            color: #4a4a4a;
+            color: #444;
+            text-decoration: none;
             font-size: 15px;
-            white-space: nowrap;
-            cursor: pointer;
+            padding: 0 5px;
             border-bottom: 3px solid transparent;
         }
 
-        .topbar-item:hover {
+        .top-nav a:hover {
             color: #0067b8;
         }
 
-        .topbar-item.active {
+        .top-nav a.active {
             color: #0067b8;
             border-bottom-color: #0078d4;
         }
 
+
         /* =========================================================
-           CABECERA
+           ENCABEZADO
         ========================================================= */
 
         .header {
-            height: 76px;
             background: #ffffff;
-            border-bottom: 1px solid #e1e1e1;
-            display: flex;
-            align-items: center;
-            padding: 0 32px;
+            border-bottom: 1px solid #e2e2e2;
+            padding: 20px 30px;
+            margin-bottom: 28px;
         }
 
-        .header-title {
-            font-size: 23px;
+        .header h1 {
+            margin: 0;
+            font-size: 25px;
             font-weight: 600;
             color: #171717;
         }
 
-        .header-title::before {
-            content: "";
-            display: inline-block;
-            width: 4px;
-            height: 24px;
-            background: #0078d4;
-            margin-right: 13px;
-            vertical-align: -4px;
-            border-radius: 2px;
+        .header i {
+            color: #0078d4;
+            margin-right: 8px;
         }
 
-        /* =========================================================
-           CONTENEDOR PRINCIPAL
-        ========================================================= */
-
-        .container {
-            width: calc(100% - 80px);
-            max-width: 1450px;
-            margin: 28px auto 50px auto;
-        }
 
         /* =========================================================
-           TARJETAS SUPERIORES
+           TARJETAS KPI
         ========================================================= */
 
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 18px;
+            gap: 20px;
             margin-bottom: 28px;
         }
 
-        .kpi-card {
+        .kpi {
             background: #ffffff;
-            border: 1px solid #dddddd;
-            border-radius: 9px;
-            min-height: 148px;
-            padding: 21px 20px 18px 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            min-height: 145px;
+            padding: 22px 20px;
             position: relative;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+            box-shadow: 0 1px 3px rgba(0,0,0,.08);
             overflow: hidden;
         }
 
-        .kpi-card::before {
+        .kpi::before {
             content: "";
             position: absolute;
-            top: 0;
             left: 0;
+            top: 0;
+            bottom: 0;
             width: 4px;
-            height: 100%;
         }
 
-        .kpi-blue::before {
+        .kpi.blue::before {
             background: #0078d4;
         }
 
-        .kpi-green::before {
+        .kpi.green::before {
             background: #107c10;
         }
 
-        .kpi-red::before {
+        .kpi.red::before {
             background: #d83b01;
         }
 
-        .kpi-yellow::before {
+        .kpi.yellow::before {
             background: #ffb900;
-        }
-
-        .kpi-icon {
-            position: absolute;
-            right: 18px;
-            top: 20px;
-            font-size: 23px;
-            color: #737373;
         }
 
         .kpi-title {
             font-size: 14px;
-            color: #555555;
+            color: #555;
             margin-bottom: 12px;
         }
 
@@ -160,24 +156,27 @@
             font-size: 31px;
             font-weight: 600;
             line-height: 1.1;
-            color: #171717;
-            margin-bottom: 7px;
+            color: #111;
         }
 
-        .kpi-value.green {
+        .kpi-value.green-text {
             color: #107c10;
         }
 
-        .kpi-description {
+        .kpi-subtitle {
+            margin-top: 8px;
             font-size: 12px;
-            color: #666666;
-            line-height: 1.35;
+            color: #666;
         }
 
-        .kpi-card.highlight {
-            background: #f2fbea;
-            border-color: #b7dfb0;
+        .kpi-icon {
+            position: absolute;
+            right: 20px;
+            top: 22px;
+            font-size: 21px;
+            color: #777;
         }
+
 
         /* =========================================================
            SECCIÓN DE GRÁFICAS
@@ -185,374 +184,302 @@
 
         .charts-grid {
             display: grid;
-            grid-template-columns: 1fr 1.08fr 1fr;
-            gap: 18px;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
             margin-bottom: 28px;
         }
 
-        .chart-card {
+        .card {
             background: #ffffff;
-            border: 1px solid #dddddd;
-            border-radius: 9px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.08);
             padding: 20px;
-            min-height: 410px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding-bottom: 14px;
-            border-bottom: 1px solid #dddddd;
-            margin-bottom: 18px;
-        }
-
-        .chart-title {
-            font-size: 17px;
+        .card-title {
+            font-size: 18px;
             font-weight: 600;
-            color: #171717;
             margin: 0;
+            color: #171717;
         }
 
-        .chart-subtitle {
-            margin-top: 5px;
+        .card-description {
             font-size: 12px;
-            color: #777777;
+            color: #666;
+            margin-top: 5px;
+            margin-bottom: 14px;
+        }
+
+        .card-header {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
         }
 
         .chart-container {
             position: relative;
-            height: 295px;
+            height: 285px;
         }
 
-        /* =========================================================
-           DONUT
-        ========================================================= */
-
-        .donut-wrapper {
-            position: relative;
-            height: 265px;
-        }
-
-        .donut-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            pointer-events: none;
-        }
-
-        .donut-number {
-            font-size: 34px;
-            font-weight: 600;
-            color: #107c10;
-        }
-
-        .donut-label {
-            font-size: 13px;
-            color: #666666;
-            margin-top: -3px;
-        }
-
-        .status-summary {
-            display: flex;
-            justify-content: center;
-            gap: 28px;
-            margin-top: 3px;
-        }
-
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 12px;
-            color: #555555;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
-        }
-
-        .status-dot.green {
-            background: #107c10;
-        }
-
-        .status-dot.red {
-            background: #d83b01;
-        }
-
-        /* =========================================================
-           LICENCIAS
-        ========================================================= */
-
-        .license-legend {
-            display: flex;
-            justify-content: space-between;
-            background: #f7f7f7;
-            border: 1px solid #e5e5e5;
-            border-radius: 5px;
-            padding: 10px 12px;
-            margin-bottom: 12px;
-            font-size: 12px;
-            color: #555555;
-        }
-
-        .license-legend strong {
-            color: #1f1f1f;
-        }
-
-        /* =========================================================
-           COSTOS
-        ========================================================= */
-
-        .cost-highlight {
-            background: #f2fbea;
-            border: 1px solid #b7dfb0;
-            border-radius: 6px;
-            padding: 10px 13px;
-            margin-bottom: 12px;
-            font-size: 12px;
-            color: #346834;
-        }
 
         /* =========================================================
            RESUMEN DE COSTOS
         ========================================================= */
 
-        .full-card {
-            background: #ffffff;
-            border: 1px solid #dddddd;
-            border-radius: 9px;
-            padding: 20px;
+        .cost-section {
             margin-bottom: 28px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-
-        .section-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin: 0;
-            color: #171717;
-        }
-
-        .section-subtitle {
-            color: #777777;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        .section-line {
-            height: 1px;
-            background: #dddddd;
-            margin: 14px 0 20px;
         }
 
         .cost-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
+            gap: 20px;
+            margin-top: 18px;
         }
 
         .cost-box {
-            border: 1px solid #dddddd;
             border-radius: 8px;
-            padding: 18px;
-            min-height: 115px;
+            padding: 20px;
+            border: 1px solid #ddd;
         }
 
         .cost-box.green {
-            background: #f4fbef;
-            border-color: #b9dfb3;
-        }
-
-        .cost-box.yellow {
-            background: #fff9e6;
-            border-color: #f4d47a;
+            background: #f3fbef;
+            border-color: #b7dfae;
         }
 
         .cost-box.gray {
             background: #fafafa;
         }
 
+        .cost-box.yellow {
+            background: #fff8df;
+            border-color: #f1d879;
+        }
+
         .cost-label {
             font-size: 13px;
-            color: #666666;
-            margin-bottom: 8px;
+            color: #666;
         }
 
         .cost-value {
-            font-size: 27px;
+            font-size: 28px;
             font-weight: 600;
-            color: #171717;
+            margin-top: 8px;
         }
 
-        .cost-value.green {
+        .green-value {
             color: #107c10;
         }
 
-        .cost-value.yellow {
-            color: #946c00;
+        .yellow-value {
+            color: #9a6a00;
         }
 
         .cost-description {
             font-size: 12px;
-            color: #777777;
-            margin-top: 7px;
+            color: #777;
+            margin-top: 5px;
         }
+
 
         /* =========================================================
            TABLA DE LICENCIAS
         ========================================================= */
 
-        .table-wrapper {
-            overflow-x: auto;
+        .license-table-section {
+            margin-bottom: 28px;
         }
 
-        table {
+        .license-summary {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .license-summary th {
+            background: #f5f5f5;
+            color: #444;
+            font-weight: 600;
+            font-size: 13px;
+            text-align: left;
+            padding: 13px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .license-summary td {
+            padding: 13px;
+            border-bottom: 1px solid #eee;
             font-size: 13px;
         }
 
-        thead th {
-            background: #f5f5f5;
-            color: #444444;
-            font-weight: 600;
-            text-align: left;
-            padding: 13px 12px;
-            border-bottom: 1px solid #d7d7d7;
-        }
-
-        tbody td {
-            padding: 13px 12px;
-            border-bottom: 1px solid #eeeeee;
-            color: #333333;
-        }
-
-        tbody tr:hover {
+        .license-summary tr:hover {
             background: #fafafa;
         }
 
-        .product-name {
+        .license-name {
             font-weight: 500;
-            color: #1a1a1a;
+            color: #333;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
+        .amount {
             font-weight: 600;
-        }
-
-        .badge-green {
-            background: #e6f4e6;
             color: #107c10;
         }
 
-        .badge-blue {
-            background: #e8f3fb;
-            color: #0067b8;
-        }
-
-        .money {
-            font-weight: 600;
-        }
 
         /* =========================================================
-           BARRA DE UTILIZACIÓN
+           TABLA DE USUARIOS
         ========================================================= */
 
-        .usage-bar {
+        .users-section {
+            margin-top: 28px;
+        }
+
+        .table-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin: 18px 0;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            width: 330px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 13px;
+            top: 11px;
+            color: #777;
+        }
+
+        .search-box input {
             width: 100%;
-            height: 8px;
-            background: #e6e6e6;
+            height: 38px;
+            border: 1px solid #bbb;
             border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .usage-fill {
-            height: 100%;
-            background: #107c10;
-            border-radius: 5px;
-        }
-
-        /* =========================================================
-           INFORMACIÓN FINAL
-        ========================================================= */
-
-        .info-box {
-            background: #f3f8fc;
-            border: 1px solid #c8e1f5;
-            border-left: 4px solid #0078d4;
-            border-radius: 6px;
-            padding: 16px 18px;
+            padding: 0 12px 0 38px;
+            outline: none;
             font-size: 13px;
-            color: #444444;
-            line-height: 1.5;
         }
 
-        .info-box strong {
-            color: #0067b8;
+        .search-box input:focus {
+            border-color: #0078d4;
+            box-shadow: 0 0 0 1px #0078d4;
         }
+
+        .user-count {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 950px;
+        }
+
+        .users-table thead {
+            background: #f5f5f5;
+        }
+
+        .users-table th {
+            padding: 13px 12px;
+            text-align: left;
+            font-size: 12px;
+            color: #444;
+            border-bottom: 1px solid #ddd;
+            white-space: nowrap;
+        }
+
+        .users-table td {
+            padding: 13px 12px;
+            font-size: 12px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .users-table tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #222;
+        }
+
+        .username {
+            color: #666;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .status.active {
+            color: #107c10;
+        }
+
+        .status i {
+            font-size: 9px;
+        }
+
+        .license-tag {
+            display: inline-block;
+            background: #f1f1f1;
+            color: #444;
+            border-radius: 4px;
+            padding: 4px 7px;
+            margin: 2px;
+            font-size: 10px;
+        }
+
+        .cost-user {
+            font-weight: 600;
+            color: #107c10;
+            white-space: nowrap;
+        }
+
 
         /* =========================================================
            FOOTER
         ========================================================= */
 
-        .footer {
+        footer {
             text-align: center;
-            color: #888888;
+            color: #777;
             font-size: 11px;
-            padding: 10px 0 20px;
+            padding: 25px 0 5px;
         }
+
 
         /* =========================================================
            RESPONSIVE
         ========================================================= */
 
-        @media (max-width: 1200px) {
+        @media (max-width: 1100px) {
 
             .kpi-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .charts-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .chart-card:last-child {
-                grid-column: 1 / -1;
-            }
-        }
-
-        @media (max-width: 800px) {
-
-            .topbar {
-                gap: 20px;
-                overflow-x: auto;
-                padding-left: 15px;
-            }
-
-            .container {
-                width: calc(100% - 30px);
-            }
-
-            .kpi-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .charts-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .chart-card:last-child {
-                grid-column: auto;
             }
 
             .cost-grid {
@@ -560,1215 +487,1919 @@
             }
         }
 
-        @media (max-width: 520px) {
+        @media (max-width: 650px) {
+
+            .container {
+                padding: 0 12px 30px;
+            }
 
             .kpi-grid {
                 grid-template-columns: 1fr;
             }
 
-            .header {
+            .top-nav {
                 padding: 0 15px;
+                gap: 20px;
             }
 
-            .header-title {
-                font-size: 19px;
+            .header {
+                padding: 18px;
             }
         }
+
     </style>
 </head>
 
+
 <body>
 
-<!-- ============================================================
-     MENÚ SUPERIOR
+<!-- =============================================================
+     NAVEGACIÓN
 ============================================================= -->
 
-<div class="topbar">
+<nav class="top-nav">
 
-    <div class="topbar-item">
-        SERVIALCO
-    </div>
+    <a href="#">SERVIALCO</a>
 
-    <div class="topbar-item">
-        CONSTRUSALCO
-    </div>
+    <a href="#">CONSTRUSALCO</a>
 
-    <div class="topbar-item">
-        UTINNOVAFNA
-    </div>
+    <a href="#">UTINNOVAFNA</a>
 
-    <div class="topbar-item active">
+    <a href="#" class="active">
         Microsoft 365
-    </div>
+    </a>
 
-    <div class="topbar-item">
+    <a href="#">
         Consolidado Facturación
-    </div>
+    </a>
 
-</div>
+</nav>
 
 
-<!-- ============================================================
-     CABECERA
+<!-- =============================================================
+     ENCABEZADO
 ============================================================= -->
 
 <div class="header">
 
-    <div class="header-title">
-        MICROSOFT 365 - Entra ID
+    <div class="container" style="padding:0;">
+
+        <h1>
+            <i class="fa-brands fa-microsoft"></i>
+            MICROSOFT 365 - Entra ID
+        </h1>
+
     </div>
 
 </div>
 
-
-<!-- ============================================================
-     CONTENIDO
-============================================================= -->
 
 <div class="container">
 
 
-    <!-- ========================================================
-         INDICADORES PRINCIPALES
-    ========================================================= -->
+<!-- =============================================================
+     KPIs
+============================================================= -->
 
-    <div class="kpi-grid">
+<section class="kpi-grid">
 
-        <!-- Total usuarios -->
+    <div class="kpi blue">
 
-        <div class="kpi-card kpi-blue">
+        <i class="fa-solid fa-users kpi-icon"></i>
 
-            <div class="kpi-icon">
-                👥
-            </div>
-
-            <div class="kpi-title">
-                Total Usuarios
-            </div>
-
-            <div class="kpi-value">
-                42
-            </div>
-
-            <div class="kpi-description">
-                Cuentas registradas en el directorio
-            </div>
-
+        <div class="kpi-title">
+            Total Usuarios
         </div>
 
-
-        <!-- Facturación -->
-
-        <div class="kpi-card kpi-green highlight">
-
-            <div class="kpi-icon">
-                💳
-            </div>
-
-            <div class="kpi-title">
-                <strong>Facturado (Mes)</strong>
-            </div>
-
-            <div class="kpi-value green">
-                $432.60 USD
-            </div>
-
-            <div class="kpi-description">
-                Facturación real registrada en Microsoft
-            </div>
-
+        <div class="kpi-value">
+            42
         </div>
 
-
-        <!-- Activas -->
-
-        <div class="kpi-card kpi-green">
-
-            <div class="kpi-icon">
-                ✓
-            </div>
-
-            <div class="kpi-title">
-                Cuentas Activas
-            </div>
-
-            <div class="kpi-value">
-                42
-            </div>
-
-            <div class="kpi-description">
-                Usuarios habilitados para iniciar sesión
-            </div>
-
-        </div>
-
-
-        <!-- Bloqueadas -->
-
-        <div class="kpi-card kpi-red">
-
-            <div class="kpi-icon">
-                ⊘
-            </div>
-
-            <div class="kpi-title">
-                Cuentas Bloqueadas
-            </div>
-
-            <div class="kpi-value">
-                0
-            </div>
-
-            <div class="kpi-description">
-                Usuarios con inicio de sesión bloqueado
-            </div>
-
-        </div>
-
-
-        <!-- Contraseña -->
-
-        <div class="kpi-card kpi-yellow">
-
-            <div class="kpi-icon">
-                🔑
-            </div>
-
-            <div class="kpi-title">
-                Pass Nunca Expira
-            </div>
-
-            <div class="kpi-value">
-                42
-            </div>
-
-            <div class="kpi-description">
-                Cuentas configuradas sin caducidad de contraseña
-            </div>
-
+        <div class="kpi-subtitle">
+            Cuentas registradas en el directorio
         </div>
 
     </div>
 
 
-    <!-- ========================================================
-         GRÁFICAS
-    ========================================================= -->
+    <div class="kpi green">
 
-    <div class="charts-grid">
+        <i class="fa-solid fa-money-bill-wave kpi-icon"></i>
 
-
-        <!-- ====================================================
-             ESTADO DE CREDENCIALES
-        ===================================================== -->
-
-        <div class="chart-card">
-
-            <div class="chart-header">
-
-                <div>
-
-                    <h2 class="chart-title">
-                        Estado de Credenciales
-                    </h2>
-
-                    <div class="chart-subtitle">
-                        Estado de las cuentas de Entra ID
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="donut-wrapper">
-
-                <canvas id="credentialsChart"></canvas>
-
-                <div class="donut-center">
-
-                    <div class="donut-number">
-                        42
-                    </div>
-
-                    <div class="donut-label">
-                        Usuarios activos
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="status-summary">
-
-                <div class="status-item">
-
-                    <span class="status-dot green"></span>
-
-                    Activos: <strong>42</strong>
-
-                </div>
-
-                <div class="status-item">
-
-                    <span class="status-dot red"></span>
-
-                    Bloqueados: <strong>0</strong>
-
-                </div>
-
-            </div>
-
+        <div class="kpi-title">
+            Facturado (Mes)
         </div>
 
-
-        <!-- ====================================================
-             LICENCIAS
-        ===================================================== -->
-
-        <div class="chart-card">
-
-            <div class="chart-header">
-
-                <div>
-
-                    <h2 class="chart-title">
-                        Licencias Asignadas
-                    </h2>
-
-                    <div class="chart-subtitle">
-                        Cantidad de usuarios por producto Microsoft 365
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="license-legend">
-
-                <span>
-                    Total de asignaciones
-                </span>
-
-                <strong>
-                    67
-                </strong>
-
-            </div>
-
-
-            <div class="chart-container">
-
-                <canvas id="licensesChart"></canvas>
-
-            </div>
-
+        <div class="kpi-value green-text">
+            $432.60 USD
         </div>
 
-
-        <!-- ====================================================
-             COSTOS
-        ===================================================== -->
-
-        <div class="chart-card">
-
-            <div class="chart-header">
-
-                <div>
-
-                    <h2 class="chart-title">
-                        Costo Mensual por Producto
-                    </h2>
-
-                    <div class="chart-subtitle">
-                        Valor mensual estimado en USD
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="cost-highlight">
-
-                <strong>
-                    ¿Qué muestra esta gráfica?
-                </strong>
-
-                <br>
-
-                El costo mensual estimado de cada producto,
-                no el precio individual de una licencia.
-
-            </div>
-
-
-            <div class="chart-container">
-
-                <canvas id="costChart"></canvas>
-
-            </div>
-
+        <div class="kpi-subtitle">
+            Facturación real registrada en Microsoft
         </div>
 
     </div>
 
 
-    <!-- ========================================================
-         RESUMEN DE COSTOS
-    ========================================================= -->
+    <div class="kpi green">
 
-    <div class="full-card">
+        <i class="fa-solid fa-circle-check kpi-icon"></i>
 
-        <h2 class="section-title">
-            Resumen de Costos
+        <div class="kpi-title">
+            Cuentas Activas
+        </div>
+
+        <div class="kpi-value">
+            42
+        </div>
+
+        <div class="kpi-subtitle">
+            Usuarios habilitados
+        </div>
+
+    </div>
+
+
+    <div class="kpi red">
+
+        <i class="fa-solid fa-ban kpi-icon"></i>
+
+        <div class="kpi-title">
+            Cuentas Bloqueadas
+        </div>
+
+        <div class="kpi-value">
+            0
+        </div>
+
+        <div class="kpi-subtitle">
+            Inicio de sesión bloqueado
+        </div>
+
+    </div>
+
+
+    <div class="kpi yellow">
+
+        <i class="fa-solid fa-key kpi-icon"></i>
+
+        <div class="kpi-title">
+            Pass Nunca Expira
+        </div>
+
+        <div class="kpi-value">
+            42
+        </div>
+
+        <div class="kpi-subtitle">
+            Sin caducidad de contraseña
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =============================================================
+     GRÁFICAS
+============================================================= -->
+
+<section class="charts-grid">
+
+
+    <!-- ESTADO DE CUENTAS -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h2 class="card-title">
+                Estado de las cuentas
+            </h2>
+
+            <div class="card-description">
+                Distribución entre usuarios activos y bloqueados
+            </div>
+
+        </div>
+
+        <div class="chart-container">
+            <canvas id="statusChart"></canvas>
+        </div>
+
+    </div>
+
+
+    <!-- LICENCIAS -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h2 class="card-title">
+                Licencias asignadas
+            </h2>
+
+            <div class="card-description">
+                Cantidad de usuarios que utilizan cada producto
+            </div>
+
+        </div>
+
+        <div class="chart-container">
+            <canvas id="licenseChart"></canvas>
+        </div>
+
+    </div>
+
+
+    <!-- COSTOS -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h2 class="card-title">
+                Costo mensual por licencia
+            </h2>
+
+            <div class="card-description">
+                Valor aproximado de cada licencia contratada
+            </div>
+
+        </div>
+
+        <div class="chart-container">
+            <canvas id="costChart"></canvas>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =============================================================
+     RESUMEN DE COSTOS
+============================================================= -->
+
+<section class="card cost-section">
+
+    <div class="card-header">
+
+        <h2 class="card-title">
+            Resumen de costos
         </h2>
 
-        <div class="section-subtitle">
+        <div class="card-description">
             Comparación entre facturación real y costo estimado de las licencias asignadas
         </div>
 
-        <div class="section-line"></div>
+    </div>
 
 
-        <div class="cost-grid">
+    <div class="cost-grid">
 
+        <div class="cost-box green">
 
-            <!-- Facturación -->
-
-            <div class="cost-box green">
-
-                <div class="cost-label">
-                    Facturación de agosto
-                </div>
-
-                <div class="cost-value green">
-                    $432.60 USD
-                </div>
-
-                <div class="cost-description">
-                    Valor realmente cobrado por Microsoft
-                </div>
-
+            <div class="cost-label">
+                Facturación de agosto
             </div>
 
-
-            <!-- Estimado -->
-
-            <div class="cost-box gray">
-
-                <div class="cost-label">
-                    Licencias asignadas
-                </div>
-
-                <div class="cost-value">
-                    $511.33 USD
-                </div>
-
-                <div class="cost-description">
-                    Costo mensual estimado según las licencias asignadas
-                </div>
-
+            <div class="cost-value green-value">
+                $432.60 USD
             </div>
 
-
-            <!-- Diferencia -->
-
-            <div class="cost-box yellow">
-
-                <div class="cost-label">
-                    Diferencia estimada
-                </div>
-
-                <div class="cost-value yellow">
-                    $78.73 USD
-                </div>
-
-                <div class="cost-description">
-                    Diferencia entre costo estimado y facturación real
-                </div>
-
+            <div class="cost-description">
+                Valor facturado actualmente
             </div>
 
+        </div>
+
+
+        <div class="cost-box gray">
+
+            <div class="cost-label">
+                Licencias asignadas
+            </div>
+
+            <div class="cost-value">
+                $511.33 USD
+            </div>
+
+            <div class="cost-description">
+                Valor estimado según asignación
+            </div>
+
+        </div>
+
+
+        <div class="cost-box yellow">
+
+            <div class="cost-label">
+                Diferencia
+            </div>
+
+            <div class="cost-value yellow-value">
+                $78.73 USD
+            </div>
+
+            <div class="cost-description">
+                Diferencia entre asignación y facturación
+            </div>
 
         </div>
 
     </div>
 
+</section>
 
-    <!-- ========================================================
-         DETALLE DE LICENCIAS
-    ========================================================= -->
 
-    <div class="full-card">
+<!-- =============================================================
+     RESUMEN DE LICENCIAS
+============================================================= -->
 
-        <h2 class="section-title">
-            Detalle de Licencias Microsoft 365
+<section class="card license-table-section">
+
+    <div class="card-header">
+
+        <h2 class="card-title">
+            Resumen de licencias
         </h2>
 
-        <div class="section-subtitle">
-            Licencias disponibles, asignadas y costo mensual estimado
+        <div class="card-description">
+            Detalle de productos, cantidades y valores mensuales
         </div>
 
-        <div class="section-line"></div>
+    </div>
 
 
-        <div class="table-wrapper">
+    <table class="license-summary">
 
-            <table>
+        <thead>
 
-                <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Licencias</th>
+                <th>Costo mensual</th>
+                <th>Costo por licencia</th>
+            </tr>
 
-                    <tr>
+        </thead>
 
-                        <th>
-                            Producto
-                        </th>
 
-                        <th>
-                            Asignadas
-                        </th>
+        <tbody>
 
-                        <th>
-                            Disponibles
-                        </th>
+            <tr>
 
-                        <th>
-                            Utilización
-                        </th>
+                <td class="license-name">
+                    Aplicaciones de Microsoft 365 para negocios
+                </td>
 
-                        <th>
-                            Costo mensual
-                        </th>
+                <td>
+                    31
+                </td>
 
-                        <th>
-                            Costo por licencia
-                        </th>
+                <td class="amount">
+                    $199.50 USD
+                </td>
 
-                    </tr>
+                <td>
+                    $6.44 USD
+                </td>
 
-                </thead>
+            </tr>
 
 
-                <tbody>
+            <tr>
 
+                <td class="license-name">
+                    Planner y Project Plan 3
+                </td>
 
-                    <!-- Microsoft 365 Apps -->
+                <td>
+                    5
+                </td>
 
-                    <tr>
+                <td class="amount">
+                    $157.50 USD
+                </td>
 
-                        <td class="product-name">
-                            Aplicaciones de Microsoft 365 para negocios
-                        </td>
+                <td>
+                    $31.50 USD
+                </td>
 
-                        <td>
-                            <span class="badge badge-green">
-                                31
-                            </span>
-                        </td>
+            </tr>
 
-                        <td>
-                            0
-                        </td>
 
-                        <td style="min-width:180px;">
+            <tr>
 
-                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:11px;">
+                <td class="license-name">
+                    Microsoft Teams Essentials
+                </td>
 
-                                <span>
-                                    31 / 31
-                                </span>
+                <td>
+                    18
+                </td>
 
-                                <strong>
-                                    100%
-                                </strong>
+                <td class="amount">
+                    $75.60 USD
+                </td>
 
-                            </div>
+                <td>
+                    $4.20 USD
+                </td>
 
-                            <div class="usage-bar">
+            </tr>
 
-                                <div
-                                    class="usage-fill"
-                                    style="width:100%;">
-                                </div>
 
-                            </div>
+            <tr>
 
-                        </td>
+                <td>
+                    <strong>TOTAL</strong>
+                </td>
 
-                        <td class="money">
-                            $199.50
-                        </td>
+                <td>
+                    <strong>54</strong>
+                </td>
 
-                        <td>
-                            $6.44
-                        </td>
+                <td class="amount">
+                    <strong>$432.60 USD</strong>
+                </td>
 
-                    </tr>
+                <td>
+                    —
+                </td>
 
+            </tr>
 
-                    <!-- Planner -->
+        </tbody>
 
-                    <tr>
+    </table>
 
-                        <td class="product-name">
-                            Planner y Project Plan 3
-                        </td>
+</section>
 
-                        <td>
 
-                            <span class="badge badge-green">
-                                5
-                            </span>
+<!-- =============================================================
+     TABLA DE USUARIOS
+============================================================= -->
 
-                        </td>
+<section class="card users-section">
 
-                        <td>
-                            0
-                        </td>
+    <div class="card-header">
 
-                        <td>
+        <h2 class="card-title">
+            Usuarios y costos de licencias
+        </h2>
 
-                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:11px;">
+        <div class="card-description">
+            Detalle de usuarios, licencias asignadas y costo mensual estimado
+        </div>
 
-                                <span>
-                                    5 / 5
-                                </span>
+    </div>
 
-                                <strong>
-                                    100%
-                                </strong>
 
-                            </div>
+    <div class="table-toolbar">
 
-                            <div class="usage-bar">
+        <div class="user-count">
+            Usuarios mostrados:
+            <strong id="userCount">0</strong>
+        </div>
 
-                                <div
-                                    class="usage-fill"
-                                    style="width:100%;">
-                                </div>
 
-                            </div>
+        <div class="search-box">
 
-                        </td>
+            <i class="fa-solid fa-search"></i>
 
-                        <td class="money">
-                            $157.50
-                        </td>
+            <input
+                type="text"
+                id="userSearch"
+                placeholder="Buscar usuario, correo o licencia..."
+            >
 
-                        <td>
-                            $31.50
-                        </td>
+        </div>
 
-                    </tr>
+    </div>
 
 
-                    <!-- Teams -->
+    <div class="table-wrapper">
 
-                    <tr>
+        <table class="users-table">
 
-                        <td class="product-name">
-                            Microsoft Teams Essentials
-                        </td>
+            <thead>
 
-                        <td>
+                <tr>
 
-                            <span class="badge badge-green">
-                                18
-                            </span>
+                    <th>Usuario</th>
 
-                        </td>
+                    <th>Nombre de usuario</th>
 
-                        <td>
-                            0
-                        </td>
+                    <th>Licencias asignadas</th>
 
-                        <td>
+                    <th>Estado</th>
 
-                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:11px;">
+                    <th>Costo mensual estimado</th>
 
-                                <span>
-                                    18 / 18
-                                </span>
+                </tr>
 
-                                <strong>
-                                    100%
-                                </strong>
+            </thead>
 
-                            </div>
 
-                            <div class="usage-bar">
+            <tbody id="usersTableBody">
 
-                                <div
-                                    class="usage-fill"
-                                    style="width:100%;">
-                                </div>
 
-                            </div>
+                <!-- ADMINISTRATIVO -->
 
-                        </td>
+                <tr>
 
-                        <td class="money">
-                            $75.60
-                        </td>
+                    <td class="user-name">
+                        administrativo
+                    </td>
 
-                        <td>
-                            $4.20
-                        </td>
+                    <td class="username">
+                        administrativos@servialcosas.onmicrosoft.com
+                    </td>
 
-                    </tr>
+                    <td>
 
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
 
-                    <!-- Visio -->
+                        <span class="license-tag">
+                            Power Automate Free
+                        </span>
 
-                    <tr>
+                        <span class="license-tag">
+                            Microsoft Fabric
+                        </span>
 
-                        <td class="product-name">
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $6.44 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- ADMINISTRATIVO 2 -->
+
+                <tr>
+
+                    <td class="user-name">
+                        administrativo
+                    </td>
+
+                    <td class="username">
+                        administrativo@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Power Automate Free
+                        </span>
+
+                        <span class="license-tag">
                             Visio Plan 2
-                        </td>
+                        </span>
 
-                        <td>
+                    </td>
 
-                            <span class="badge badge-green">
-                                5
-                            </span>
+                    <td>
 
-                        </td>
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
 
-                        <td>
-                            0
-                        </td>
+                    </td>
 
-                        <td>
+                    <td class="cost-user">
+                        $0.00 USD
+                    </td>
 
-                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:11px;">
-
-                                <span>
-                                    5 / 5
-                                </span>
-
-                                <strong>
-                                    100%
-                                </strong>
-
-                            </div>
-
-                            <div class="usage-bar">
-
-                                <div
-                                    class="usage-fill"
-                                    style="width:100%;">
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td class="money">
-                            $78.75
-                        </td>
-
-                        <td>
-                            $15.75
-                        </td>
-
-                    </tr>
+                </tr>
 
 
-                    <!-- Power Automate -->
+                <!-- ANDRÉS -->
 
-                    <tr>
+                <tr>
 
-                        <td class="product-name">
-                            Microsoft Power Automate Free
-                        </td>
+                    <td class="user-name">
+                        Andrés Huertas
+                    </td>
 
-                        <td>
+                    <td class="username">
+                        soporte@servialcosas.onmicrosoft.com
+                    </td>
 
-                            <span class="badge badge-blue">
-                                4
-                            </span>
+                    <td>
 
-                        </td>
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
 
-                        <td>
-                            9,996
-                        </td>
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
 
-                        <td>
+                    </td>
 
-                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:11px;">
+                    <td>
 
-                                <span>
-                                    4 / 10,000
-                                </span>
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
 
-                                <strong>
-                                    0.04%
-                                </strong>
+                    </td>
 
-                            </div>
+                    <td class="cost-user">
+                        $10.64 USD
+                    </td>
 
-                            <div class="usage-bar">
-
-                                <div
-                                    class="usage-fill"
-                                    style="width:1%;">
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td class="money">
-                            $0.00
-                        </td>
-
-                        <td>
-                            Gratis
-                        </td>
-
-                    </tr>
+                </tr>
 
 
-                    <!-- Fabric -->
+                <!-- BRANDON -->
 
-                    <tr>
+                <tr>
 
-                        <td class="product-name">
-                            Microsoft Fabric (Gratis)
-                        </td>
+                    <td class="user-name">
+                        Brandon Arias
+                    </td>
 
-                        <td>
+                    <td class="username">
+                        pm@servialcosas.onmicrosoft.com
+                    </td>
 
-                            <span class="badge badge-blue">
-                                4
-                            </span>
+                    <td>
 
-                        </td>
+                        <span class="license-tag">
+                            Microsoft Fabric Gratis
+                        </span>
 
-                        <td>
-                            999,996
-                        </td>
+                    </td>
 
-                        <td>
+                    <td>
 
-                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:11px;">
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
 
-                                <span>
-                                    4 / 1,000,000
-                                </span>
+                    </td>
 
-                                <strong>
-                                    0.0004%
-                                </strong>
+                    <td class="cost-user">
+                        $0.00 USD
+                    </td>
 
-                            </div>
-
-                            <div class="usage-bar">
-
-                                <div
-                                    class="usage-fill"
-                                    style="width:1%;">
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td class="money">
-                            $0.00
-                        </td>
-
-                        <td>
-                            Gratis
-                        </td>
-
-                    </tr>
+                </tr>
 
 
-                </tbody>
+                <!-- CARLOS -->
 
-            </table>
+                <tr>
 
-        </div>
+                    <td class="user-name">
+                        Carlos Camacho
+                    </td>
+
+                    <td class="username">
+                        admonlan1@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $10.64 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- COMPRAS -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Compras Servialco
+                    </td>
+
+                    <td class="username">
+                        compras@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $6.44 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- CONTABILIDAD -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Contabilidad
+                    </td>
+
+                    <td class="username">
+                        contabilidad@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $10.64 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- DANIEL -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Daniel Moreno
+                    </td>
+
+                    <td class="username">
+                        coordinador_mesaFNA@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $10.64 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- DAVID -->
+
+                <tr>
+
+                    <td class="user-name">
+                        David Garcia
+                    </td>
+
+                    <td class="username">
+                        documentadorFNA@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $10.64 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- DIEGO ANZOLA -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Diego Anzola
+                    </td>
+
+                    <td class="username">
+                        admonlan2@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $10.64 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- DIEGO BARRAGÁN -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Diego Barragán
+                    </td>
+
+                    <td class="username">
+                        procesos@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $4.20 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- ERICK -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Erick Leandro Pedraza Angel
+                    </td>
+
+                    <td class="username">
+                        cableado2@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                        <span class="license-tag">
+                            Visio Plan 2
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $10.64 USD*
+                    </td>
+
+                </tr>
+
+
+                <!-- FNA -->
+
+                <tr>
+
+                    <td class="user-name">
+                        fnaadministrativos
+                    </td>
+
+                    <td class="username">
+                        fnaadministrativos@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $6.44 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- GUILLERMO -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Guillermo Niño
+                    </td>
+
+                    <td class="username">
+                        admininfraestructura@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $10.64 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- HARBEY -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Harbey Cubides
+                    </td>
+
+                    <td class="username">
+                        gestormonitoreo@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $10.64 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- JESSICA -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Jessica Cardenas
+                    </td>
+
+                    <td class="username">
+                        pm_2@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $6.44 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- JORGE -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Jorge Morales
+                    </td>
+
+                    <td class="username">
+                        pm_1@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Planner / Project Plan 3
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $37.94 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- JURIDICA -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Jurídica
+                    </td>
+
+                    <td class="username">
+                        Juridica@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $6.44 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- LIDERTI -->
+
+                <tr>
+
+                    <td class="user-name">
+                        liderti
+                    </td>
+
+                    <td class="username">
+                        liderti@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft Fabric Gratis
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $0.00 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- MAURICIO -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Mauricio Agudelo
+                    </td>
+
+                    <td class="username">
+                        pm_3@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Planner / Project Plan 3
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $31.50 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- MAYCON -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Maycon Acosta
+                    </td>
+
+                    <td class="username">
+                        arquitectoFNA@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                        <span class="license-tag">
+                            Visio Plan 2
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $10.64 USD*
+                    </td>
+
+                </tr>
+
+
+                <!-- MAYDA -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Mayda Diaz
+                    </td>
+
+                    <td class="username">
+                        pmjunior1@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Planner / Project Plan 3
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $37.94 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- MICHELLE -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Michelle Rivera
+                    </td>
+
+                    <td class="username">
+                        admonlan3@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                        <span class="license-tag">
+                            Power Automate Free
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $10.64 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- NICOLÁS -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Nicolás Camargo
+                    </td>
+
+                    <td class="username">
+                        admonti1@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $10.64 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- OFFICE 1 -->
+
+                <tr>
+
+                    <td class="user-name">
+                        office1
+                    </td>
+
+                    <td class="username">
+                        office1@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $6.44 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- OFFICE 2 -->
+
+                <tr>
+
+                    <td class="user-name">
+                        office2
+                    </td>
+
+                    <td class="username">
+                        office2@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $6.44 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- OFFICE 3 -->
+
+                <tr>
+
+                    <td class="user-name">
+                        office3
+                    </td>
+
+                    <td class="username">
+                        office3@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $6.44 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- OFFICE 4 -->
+
+                <tr>
+
+                    <td class="user-name">
+                        office4
+                    </td>
+
+                    <td class="username">
+                        office4@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $6.44 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- OPERACIONES -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Operaciones
+                    </td>
+
+                    <td class="username">
+                        Operaciones@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Planner / Project Plan 3
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $37.94 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- RAÚL DÍAZ -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Raúl Díaz
+                    </td>
+
+                    <td class="username">
+                        lid servicios@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft Teams Essentials
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $4.20 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- SANDRA -->
+
+                <tr>
+
+                    <td class="user-name">
+                        Sandra Bustos
+                    </td>
+
+                    <td class="username">
+                        proyectosFNA@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                        <span class="license-tag">
+                            Planner / Project Plan 3
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $42.14 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- SERVIALCO -->
+
+                <tr>
+
+                    <td class="user-name">
+                        SERVIALCO SAS
+                    </td>
+
+                    <td class="username">
+                        servialco@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Power Automate Free
+                        </span>
+
+                        <span class="license-tag">
+                            Microsoft Fabric Gratis
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $6.44 USD
+                    </td>
+
+                </tr>
+
+
+                <!-- SERVIALCO SAS 1 -->
+
+                <tr>
+
+                    <td class="user-name">
+                        SERVIALCO SAS
+                    </td>
+
+                    <td class="username">
+                        SERVIALCOSAS1@servialcosas.onmicrosoft.com
+                    </td>
+
+                    <td>
+
+                        <span class="license-tag">
+                            Microsoft 365 Apps
+                        </span>
+
+                        <span class="license-tag">
+                            Teams Essentials
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="status active">
+                            <i class="fa-solid fa-circle"></i>
+                            Activo
+                        </span>
+
+                    </td>
+
+                    <td class="cost-user">
+                        $10.64 USD
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+        </table>
 
     </div>
 
-
-    <!-- ========================================================
-         EXPLICACIÓN
-    ========================================================= -->
-
-    <div class="info-box">
-
-        <strong>Interpretación del dashboard:</strong>
-
-        Actualmente existen <strong>42 usuarios activos</strong> en Entra ID y
-        no se observan cuentas bloqueadas.
-
-        Todas las licencias de pago mostradas se encuentran asignadas en su
-        totalidad.
-
-        La facturación real registrada para agosto es de
-        <strong>$432.60 USD</strong>, mientras que el valor estimado de las
-        licencias asignadas es de aproximadamente
-        <strong>$511.33 USD</strong>.
-
-        La diferencia estimada es de
-        <strong>$78.73 USD</strong>.
-
-    </div>
+</section>
 
 
-    <!-- ========================================================
-         FOOTER
-    ========================================================= -->
+<footer>
 
-    <div class="footer">
+    Dashboard Microsoft 365 · Entra ID · SERVIALCO SAS
 
-        Dashboard de administración Microsoft 365 · Entra ID
+</footer>
 
-    </div>
 
 </div>
 
 
-<!-- ============================================================
-     JAVASCRIPT - GRÁFICAS
+<!-- =============================================================
+     JAVASCRIPT
 ============================================================= -->
 
 <script>
 
+    /* =========================================================
+       GRÁFICA 1 - ESTADO DE CUENTAS
+    ========================================================= */
 
-/* =============================================================
-   GRÁFICA 1
-   ESTADO DE CREDENCIALES
-============================================================= */
+    new Chart(
+        document.getElementById("statusChart"),
+        {
+            type: "doughnut",
 
-const credentialsCtx =
-    document.getElementById("credentialsChart");
+            data: {
 
-new Chart(credentialsCtx, {
+                labels: [
+                    "Activas",
+                    "Bloqueadas"
+                ],
 
-    type: "doughnut",
+                datasets: [{
 
-    data: {
+                    data: [
+                        42,
+                        0
+                    ],
 
-        labels: [
-            "Activos",
-            "Bloqueados"
-        ],
+                    backgroundColor: [
+                        "#107c10",
+                        "#d83b01"
+                    ],
 
-        datasets: [{
+                    borderWidth: 0,
 
-            data: [
-                42,
-                0
-            ],
+                    hoverOffset: 8
 
-            backgroundColor: [
-                "#107c10",
-                "#d83b01"
-            ],
-
-            borderWidth: 0,
-
-            hoverOffset: 5
-
-        }]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        maintainAspectRatio: false,
-
-        cutout: "67%",
-
-        plugins: {
-
-            legend: {
-                display: false
-            },
-
-            tooltip: {
-
-                callbacks: {
-
-                    label: function(context) {
-
-                        return " " +
-                            context.label +
-                            ": " +
-                            context.raw +
-                            " usuarios";
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    }
-
-});
-
-
-/* =============================================================
-   GRÁFICA 2
-   LICENCIAS ASIGNADAS
-============================================================= */
-
-const licensesCtx =
-    document.getElementById("licensesChart");
-
-new Chart(licensesCtx, {
-
-    type: "bar",
-
-    data: {
-
-        labels: [
-
-            "Microsoft 365 Apps",
-            "Teams Essentials",
-            "Planner / Project Plan 3",
-            "Visio Plan 2",
-            "Power Automate Free",
-            "Fabric (Gratis)"
-
-        ],
-
-        datasets: [{
-
-            label: "Usuarios asignados",
-
-            data: [
-                31,
-                18,
-                5,
-                5,
-                4,
-                4
-            ],
-
-            backgroundColor: "#0078d4",
-
-            borderRadius: 4,
-
-            barThickness: 23
-
-        }]
-
-    },
-
-    options: {
-
-        indexAxis: "y",
-
-        responsive: true,
-
-        maintainAspectRatio: false,
-
-        scales: {
-
-            x: {
-
-                beginAtZero: true,
-
-                max: 35,
-
-                ticks: {
-                    stepSize: 5
-                },
-
-                grid: {
-                    color: "#e5e5e5"
-                },
-
-                title: {
-
-                    display: true,
-
-                    text: "Usuarios asignados"
-
-                }
+                }]
 
             },
 
-            y: {
+            options: {
 
-                grid: {
-                    display: false
-                },
+                responsive: true,
 
-                ticks: {
-                    font: {
-                        size: 11
-                    }
-                }
+                maintainAspectRatio: false,
 
-            }
+                cutout: "67%",
 
-        },
+                plugins: {
 
-        plugins: {
+                    legend: {
 
-            legend: {
-                display: false
-            },
+                        position: "bottom",
 
-            tooltip: {
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
 
-                callbacks: {
-
-                    label: function(context) {
-
-                        return " " +
-                            context.raw +
-                            " usuarios asignados";
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    }
-
-});
-
-
-/* =============================================================
-   GRÁFICA 3
-   COSTOS POR PRODUCTO
-============================================================= */
-
-const costCtx =
-    document.getElementById("costChart");
-
-new Chart(costCtx, {
-
-    type: "bar",
-
-    data: {
-
-        labels: [
-
-            "Microsoft 365 Apps",
-            "Planner / Project Plan 3",
-            "Visio Plan 2",
-            "Teams Essentials"
-
-        ],
-
-        datasets: [{
-
-            label: "Costo mensual (USD)",
-
-            data: [
-
-                199.50,
-                157.50,
-                78.75,
-                75.60
-
-            ],
-
-            backgroundColor: "#107c10",
-
-            borderRadius: 4,
-
-            barThickness: 34
-
-        }]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        maintainAspectRatio: false,
-
-        scales: {
-
-            y: {
-
-                beginAtZero: true,
-
-                max: 220,
-
-                ticks: {
-
-                    callback: function(value) {
-
-                        return "$" + value;
-
-                    }
-
-                },
-
-                grid: {
-                    color: "#e5e5e5"
-                },
-
-                title: {
-
-                    display: true,
-
-                    text: "USD / mes"
-
-                }
-
-            },
-
-            x: {
-
-                grid: {
-                    display: false
-                },
-
-                ticks: {
-
-                    font: {
-                        size: 10
                     },
 
-                    maxRotation: 35,
+                    tooltip: {
 
-                    minRotation: 25
+                        callbacks: {
 
-                }
+                            label: function(context) {
 
-            }
+                                const total = 42;
 
-        },
+                                const value = context.raw;
 
-        plugins: {
+                                const percentage =
+                                    total > 0
+                                    ? ((value / total) * 100).toFixed(1)
+                                    : 0;
 
-            legend: {
-                display: false
-            },
+                                return `${context.label}: ${value} (${percentage}%)`;
+                            }
 
-            tooltip: {
-
-                callbacks: {
-
-                    label: function(context) {
-
-                        return " $" +
-                            context.raw.toFixed(2) +
-                            " USD / mes";
+                        }
 
                     }
 
@@ -1777,10 +2408,324 @@ new Chart(costCtx, {
             }
 
         }
+    );
+
+
+    /* =========================================================
+       GRÁFICA 2 - LICENCIAS
+    ========================================================= */
+
+    new Chart(
+        document.getElementById("licenseChart"),
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels: [
+
+                    "Microsoft 365 Apps",
+
+                    "Teams Essentials",
+
+                    "Visio Plan 2",
+
+                    "Planner / Project Plan 3",
+
+                    "Power Automate Free",
+
+                    "Microsoft Fabric Gratis"
+
+                ],
+
+                datasets: [{
+
+                    label: "Usuarios asignados",
+
+                    data: [
+
+                        31,
+                        18,
+                        5,
+                        5,
+                        4,
+                        4
+
+                    ],
+
+                    backgroundColor: "#0078d4",
+
+                    borderRadius: 4,
+
+                    barThickness: 22
+
+                }]
+
+            },
+
+            options: {
+
+                indexAxis: "y",
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+
+                        callbacks: {
+
+                            label: function(context) {
+
+                                return ` ${context.raw} usuarios asignados`;
+
+                            }
+
+                        }
+
+                    }
+
+                },
+
+                scales: {
+
+                    x: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+                            stepSize: 5
+                        },
+
+                        grid: {
+                            color: "#e5e5e5"
+                        },
+
+                        title: {
+                            display: true,
+                            text: "Cantidad de usuarios"
+                        }
+
+                    },
+
+                    y: {
+
+                        grid: {
+                            display: false
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       GRÁFICA 3 - COSTO POR LICENCIA
+    ========================================================= */
+
+    new Chart(
+        document.getElementById("costChart"),
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels: [
+
+                    "Microsoft 365 Apps",
+
+                    "Planner / Project Plan 3",
+
+                    "Visio Plan 2",
+
+                    "Teams Essentials"
+
+                ],
+
+                datasets: [{
+
+                    label: "USD / licencia / mes",
+
+                    data: [
+
+                        6.44,
+                        31.50,
+                        15.00,
+                        4.20
+
+                    ],
+
+                    backgroundColor: "#107c10",
+
+                    borderRadius: 4,
+
+                    barThickness: 32
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+
+                        callbacks: {
+
+                            label: function(context) {
+
+                                return `$${context.raw.toFixed(2)} USD por licencia`;
+
+                            }
+
+                        }
+
+                    }
+
+                },
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        title: {
+
+                            display: true,
+
+                            text: "USD / mes"
+
+                        },
+
+                        grid: {
+                            color: "#e5e5e5"
+                        }
+
+                    },
+
+                    x: {
+
+                        grid: {
+                            display: false
+                        },
+
+                        ticks: {
+
+                            maxRotation: 25,
+
+                            minRotation: 15
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       BUSCADOR DE USUARIOS
+    ========================================================= */
+
+    const searchInput =
+        document.getElementById("userSearch");
+
+    const tableBody =
+        document.getElementById("usersTableBody");
+
+    const userCount =
+        document.getElementById("userCount");
+
+
+    function updateUserCount() {
+
+        const rows =
+            Array.from(
+                tableBody.querySelectorAll("tr")
+            );
+
+        const visibleRows =
+            rows.filter(
+                row => row.style.display !== "none"
+            );
+
+        userCount.textContent =
+            visibleRows.length;
 
     }
 
-});
+
+    searchInput.addEventListener(
+        "input",
+        function() {
+
+            const search =
+                this.value
+                .toLowerCase()
+                .trim();
+
+            const rows =
+                tableBody.querySelectorAll("tr");
+
+
+            rows.forEach(
+                function(row) {
+
+                    const text =
+                        row.textContent.toLowerCase();
+
+                    if (
+                        text.includes(search)
+                    ) {
+
+                        row.style.display = "";
+
+                    } else {
+
+                        row.style.display = "none";
+
+                    }
+
+                }
+            );
+
+
+            updateUserCount();
+
+        }
+    );
+
+
+    /* Contador inicial */
+
+    updateUserCount();
 
 </script>
 
