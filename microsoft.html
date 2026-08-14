@@ -1,2387 +1,1788 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Dashboard MICROSOFT 365</title>
+    <title>Microsoft 365 - Entra ID | Dashboard</title>
 
-    <!-- =========================================================
-         LIBRERÍAS
-    ========================================================== -->
-
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-
-    <!-- Google Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap"
-        rel="stylesheet">
-
-    <!-- Material Symbols -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
-
-
     <style>
-
-        /* =========================================================
-           COLORES PRINCIPALES
-        ========================================================== */
-
-        :root {
-
-            --primary: #0078D4;
-            --success: #107C10;
-            --danger: #D83B01;
-            --warning: #FFB900;
-
-            --money: #0d652d;
-
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-
-            --text-main: #202124;
-            --text-muted: #5f6368;
-
-            --border: #dadce0;
-
-        }
-
-
-        /* =========================================================
-           GENERAL
-        ========================================================== */
-
         * {
             box-sizing: border-box;
         }
 
         body {
-
-            font-family: 'Google Sans', Arial, sans-serif;
-
-            background-color: var(--bg-color);
-
             margin: 0;
-
-            padding: 0;
-
-            color: var(--text-main);
-
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f5f6f8;
+            color: #1f1f1f;
         }
-
 
         /* =========================================================
-           NAVBAR
-        ========================================================== */
+           BARRA SUPERIOR
+        ========================================================= */
 
-        .navbar {
-
-            background-color: white;
-
-            padding: 15px 30px;
-
-            box-shadow:
-                0 1px 2px 0 rgba(60,64,67,0.1);
-
+        .topbar {
+            height: 54px;
+            background: #ffffff;
+            border-bottom: 1px solid #d9d9d9;
             display: flex;
-
             align-items: center;
-
-            margin-bottom: 30px;
-
-            border-bottom: 1px solid var(--border);
-
+            padding-left: 28px;
+            gap: 42px;
         }
 
-
-        .navbar h1 {
-
-            margin: 0;
-
-            font-size: 1.4rem;
-
-            color: var(--text-main);
-
-            font-weight: 500;
-
+        .topbar-item {
+            height: 54px;
             display: flex;
-
             align-items: center;
-
-            gap: 12px;
-
+            color: #4a4a4a;
+            font-size: 15px;
+            white-space: nowrap;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
         }
 
-
-        .navbar .material-symbols-outlined {
-
-            color: var(--primary);
-
-            font-size: 28px;
-
+        .topbar-item:hover {
+            color: #0067b8;
         }
 
+        .topbar-item.active {
+            color: #0067b8;
+            border-bottom-color: #0078d4;
+        }
 
         /* =========================================================
-           CONTENEDOR
-        ========================================================== */
+           CABECERA
+        ========================================================= */
+
+        .header {
+            height: 76px;
+            background: #ffffff;
+            border-bottom: 1px solid #e1e1e1;
+            display: flex;
+            align-items: center;
+            padding: 0 32px;
+        }
+
+        .header-title {
+            font-size: 23px;
+            font-weight: 600;
+            color: #171717;
+        }
+
+        .header-title::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: #0078d4;
+            margin-right: 13px;
+            vertical-align: -4px;
+            border-radius: 2px;
+        }
+
+        /* =========================================================
+           CONTENEDOR PRINCIPAL
+        ========================================================= */
 
         .container {
-
-            max-width: 1400px;
-
-            margin: 0 auto;
-
-            padding: 0 20px 40px 20px;
-
+            width: calc(100% - 80px);
+            max-width: 1450px;
+            margin: 28px auto 50px auto;
         }
 
-
         /* =========================================================
-           MENSAJE DE ERROR
-        ========================================================== */
-
-        .error-msg {
-
-            background: #fce8e6;
-
-            color: var(--danger);
-
-            padding: 15px;
-
-            border-radius: 8px;
-
-            text-align: center;
-
-            margin-bottom: 20px;
-
-            display: none;
-
-            font-weight: 500;
-
-            border: 1px solid #fad2cf;
-
-        }
-
-
-        /* =========================================================
-           KPIs
-        ========================================================== */
+           TARJETAS SUPERIORES
+        ========================================================= */
 
         .kpi-grid {
-
             display: grid;
-
-            grid-template-columns:
-                repeat(auto-fit, minmax(200px, 1fr));
-
-            gap: 20px;
-
-            margin-bottom: 30px;
-
+            grid-template-columns: repeat(5, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
         }
-
 
         .kpi-card {
-
-            background: var(--card-bg);
-
-            border-radius: 8px;
-
-            padding: 20px;
-
-            box-shadow:
-                0 1px 2px 0 rgba(60,64,67,0.3);
-
-            display: flex;
-
-            flex-direction: column;
-
+            background: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 9px;
+            min-height: 148px;
+            padding: 21px 20px 18px 20px;
             position: relative;
-
+            box-shadow: 0 1px 2px rgba(0,0,0,0.06);
             overflow: hidden;
-
         }
-
 
         .kpi-card::before {
-
-            content: '';
-
+            content: "";
             position: absolute;
-
             top: 0;
-
             left: 0;
-
             width: 4px;
-
             height: 100%;
-
         }
-
 
         .kpi-blue::before {
-            background-color: var(--primary);
+            background: #0078d4;
         }
-
 
         .kpi-green::before {
-            background-color: var(--success);
+            background: #107c10;
         }
-
-
-        .kpi-money::before {
-            background-color: var(--money);
-        }
-
-
-        .kpi-warning::before {
-            background-color: var(--warning);
-        }
-
 
         .kpi-red::before {
-            background-color: var(--danger);
+            background: #d83b01;
         }
 
-
-        .kpi-header {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            margin-bottom: 10px;
-
-            color: var(--text-muted);
-
-            font-size: 0.9rem;
-
-            font-weight: 500;
-
+        .kpi-yellow::before {
+            background: #ffb900;
         }
 
-
-        .kpi-header .material-symbols-outlined {
-
-            font-size: 24px;
-
-            opacity: 0.8;
-
+        .kpi-icon {
+            position: absolute;
+            right: 18px;
+            top: 20px;
+            font-size: 23px;
+            color: #737373;
         }
 
+        .kpi-title {
+            font-size: 14px;
+            color: #555555;
+            margin-bottom: 12px;
+        }
 
         .kpi-value {
-
-            font-size: 2rem;
-
-            font-weight: 400;
-
-            color: var(--text-main);
-
-            line-height: 1.2;
-
+            font-size: 31px;
+            font-weight: 600;
+            line-height: 1.1;
+            color: #171717;
+            margin-bottom: 7px;
         }
 
-
-        .kpi-subtext {
-
-            font-size: 0.75rem;
-
-            color: var(--text-muted);
-
-            margin-top: 5px;
-
+        .kpi-value.green {
+            color: #107c10;
         }
 
+        .kpi-description {
+            font-size: 12px;
+            color: #666666;
+            line-height: 1.35;
+        }
+
+        .kpi-card.highlight {
+            background: #f2fbea;
+            border-color: #b7dfb0;
+        }
 
         /* =========================================================
-           GRÁFICAS
-        ========================================================== */
+           SECCIÓN DE GRÁFICAS
+        ========================================================= */
 
         .charts-grid {
-
             display: grid;
-
-            grid-template-columns:
-                repeat(auto-fit, minmax(350px, 1fr));
-
-            gap: 20px;
-
-            margin-bottom: 30px;
-
+            grid-template-columns: 1fr 1.08fr 1fr;
+            gap: 18px;
+            margin-bottom: 28px;
         }
-
 
         .chart-card {
-
-            background: var(--card-bg);
-
-            border-radius: 8px;
-
+            background: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 9px;
             padding: 20px;
-
-            box-shadow:
-                0 1px 2px 0 rgba(60,64,67,0.3);
-
+            min-height: 410px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
-
-        .chart-card h3 {
-
-            margin: 0 0 20px 0;
-
-            font-size: 1.1rem;
-
-            color: var(--text-main);
-
-            font-weight: 500;
-
-            border-bottom: 1px solid var(--border);
-
-            padding-bottom: 12px;
-
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #dddddd;
+            margin-bottom: 18px;
         }
 
+        .chart-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #171717;
+            margin: 0;
+        }
+
+        .chart-subtitle {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #777777;
+        }
 
         .chart-container {
-
             position: relative;
-
-            height: 280px;
-
-            width: 100%;
-
+            height: 295px;
         }
-
 
         /* =========================================================
-           TABLA
-        ========================================================== */
+           DONUT
+        ========================================================= */
 
-        .table-container {
-
-            overflow-x: auto;
-
-            max-height: 500px;
-
-            border: 1px solid var(--border);
-
-            border-radius: 6px;
-
+        .donut-wrapper {
+            position: relative;
+            height: 265px;
         }
 
-
-        table {
-
-            width: 100%;
-
-            border-collapse: collapse;
-
-            text-align: left;
-
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
         }
 
-
-        th,
-        td {
-
-            padding: 12px 15px;
-
-            border-bottom: 1px solid var(--border);
-
-            font-size: 0.9rem;
-
+        .donut-number {
+            font-size: 34px;
+            font-weight: 600;
+            color: #107c10;
         }
 
-
-        th {
-
-            background-color: #f8f9fa;
-
-            color: var(--text-muted);
-
-            font-weight: 500;
-
-            text-transform: uppercase;
-
-            font-size: 0.8rem;
-
-            letter-spacing: 0.5px;
-
-            position: sticky;
-
-            top: 0;
-
-            z-index: 1;
-
-            box-shadow:
-                0 2px 2px -1px rgba(0,0,0,0.1);
-
+        .donut-label {
+            font-size: 13px;
+            color: #666666;
+            margin-top: -3px;
         }
 
-
-        tr:hover {
-
-            background-color: #f1f3f4;
-
+        .status-summary {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            margin-top: 3px;
         }
 
-
-        /* =========================================================
-           BADGES
-        ========================================================== */
-
-        .badge {
-
-            padding: 4px 10px;
-
-            border-radius: 12px;
-
-            font-size: 0.75rem;
-
-            font-weight: 500;
-
-            display: inline-block;
-
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 12px;
+            color: #555555;
         }
 
-
-        .badge-active {
-
-            background: #e6f4ea;
-
-            color: var(--success);
-
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
         }
 
-
-        .badge-suspended {
-
-            background: #fce8e6;
-
-            color: var(--danger);
-
+        .status-dot.green {
+            background: #107c10;
         }
 
-
-        .text-small {
-
-            font-size: 0.8rem;
-
-            color: #5f6368;
-
+        .status-dot.red {
+            background: #d83b01;
         }
-
 
         /* =========================================================
            LICENCIAS
-        ========================================================== */
+        ========================================================= */
 
-        .lic-tag {
-
-            background: #e3f2fd;
-
-            color: #0078D4;
-
-            padding: 3px 8px;
-
-            border-radius: 4px;
-
-            display: inline-block;
-
-            margin: 2px;
-
-            font-size: 0.75rem;
-
-            border: 1px solid #bbdefb;
-
+        .license-legend {
+            display: flex;
+            justify-content: space-between;
+            background: #f7f7f7;
+            border: 1px solid #e5e5e5;
+            border-radius: 5px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: #555555;
         }
 
-
-        .lic-free {
-
-            background: #f1f3f4;
-
-            color: #5f6368;
-
-            border-color: #dadce0;
-
+        .license-legend strong {
+            color: #1f1f1f;
         }
 
+        /* =========================================================
+           COSTOS
+        ========================================================= */
 
-        .lic-none {
+        .cost-highlight {
+            background: #f2fbea;
+            border: 1px solid #b7dfb0;
+            border-radius: 6px;
+            padding: 10px 13px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: #346834;
+        }
 
-            color: #D83B01;
+        /* =========================================================
+           RESUMEN DE COSTOS
+        ========================================================= */
 
+        .full-card {
+            background: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 9px;
+            padding: 20px;
+            margin-bottom: 28px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 0;
+            color: #171717;
+        }
+
+        .section-subtitle {
+            color: #777777;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .section-line {
+            height: 1px;
+            background: #dddddd;
+            margin: 14px 0 20px;
+        }
+
+        .cost-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .cost-box {
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            padding: 18px;
+            min-height: 115px;
+        }
+
+        .cost-box.green {
+            background: #f4fbef;
+            border-color: #b9dfb3;
+        }
+
+        .cost-box.yellow {
+            background: #fff9e6;
+            border-color: #f4d47a;
+        }
+
+        .cost-box.gray {
+            background: #fafafa;
+        }
+
+        .cost-label {
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 8px;
+        }
+
+        .cost-value {
+            font-size: 27px;
+            font-weight: 600;
+            color: #171717;
+        }
+
+        .cost-value.green {
+            color: #107c10;
+        }
+
+        .cost-value.yellow {
+            color: #946c00;
+        }
+
+        .cost-description {
+            font-size: 12px;
+            color: #777777;
+            margin-top: 7px;
+        }
+
+        /* =========================================================
+           TABLA DE LICENCIAS
+        ========================================================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead th {
+            background: #f5f5f5;
+            color: #444444;
+            font-weight: 600;
+            text-align: left;
+            padding: 13px 12px;
+            border-bottom: 1px solid #d7d7d7;
+        }
+
+        tbody td {
+            padding: 13px 12px;
+            border-bottom: 1px solid #eeeeee;
+            color: #333333;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .product-name {
             font-weight: 500;
-
-            font-size: 0.8rem;
-
-            background: #fce8e6;
-
-            padding: 3px 8px;
-
-            border-radius: 4px;
-
-            display: inline-block;
-
+            color: #1a1a1a;
         }
 
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-green {
+            background: #e6f4e6;
+            color: #107c10;
+        }
+
+        .badge-blue {
+            background: #e8f3fb;
+            color: #0067b8;
+        }
+
+        .money {
+            font-weight: 600;
+        }
+
+        /* =========================================================
+           BARRA DE UTILIZACIÓN
+        ========================================================= */
+
+        .usage-bar {
+            width: 100%;
+            height: 8px;
+            background: #e6e6e6;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .usage-fill {
+            height: 100%;
+            background: #107c10;
+            border-radius: 5px;
+        }
+
+        /* =========================================================
+           INFORMACIÓN FINAL
+        ========================================================= */
+
+        .info-box {
+            background: #f3f8fc;
+            border: 1px solid #c8e1f5;
+            border-left: 4px solid #0078d4;
+            border-radius: 6px;
+            padding: 16px 18px;
+            font-size: 13px;
+            color: #444444;
+            line-height: 1.5;
+        }
+
+        .info-box strong {
+            color: #0067b8;
+        }
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .footer {
+            text-align: center;
+            color: #888888;
+            font-size: 11px;
+            padding: 10px 0 20px;
+        }
 
         /* =========================================================
            RESPONSIVE
-        ========================================================== */
+        ========================================================= */
 
-        @media (max-width: 700px) {
+        @media (max-width: 1200px) {
 
-            .navbar {
-
-                padding: 15px;
-
-            }
-
-            .navbar h1 {
-
-                font-size: 1.1rem;
-
-            }
-
-            .container {
-
-                padding: 0 10px 30px 10px;
-
+            .kpi-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
 
             .charts-grid {
-
-                grid-template-columns: 1fr;
-
+                grid-template-columns: 1fr 1fr;
             }
 
+            .chart-card:last-child {
+                grid-column: 1 / -1;
+            }
         }
 
+        @media (max-width: 800px) {
+
+            .topbar {
+                gap: 20px;
+                overflow-x: auto;
+                padding-left: 15px;
+            }
+
+            .container {
+                width: calc(100% - 30px);
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-card:last-child {
+                grid-column: auto;
+            }
+
+            .cost-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 520px) {
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 0 15px;
+            }
+
+            .header-title {
+                font-size: 19px;
+            }
+        }
     </style>
-
 </head>
-
 
 <body>
 
+<!-- ============================================================
+     MENÚ SUPERIOR
+============================================================= -->
 
-    <!-- =========================================================
-         ENCABEZADO
-    ========================================================== -->
+<div class="topbar">
 
-    <div class="navbar">
+    <div class="topbar-item">
+        SERVIALCO
+    </div>
 
-        <h1>
+    <div class="topbar-item">
+        CONSTRUSALCO
+    </div>
 
-            <span class="material-symbols-outlined">
-                window
-            </span>
+    <div class="topbar-item">
+        UTINNOVAFNA
+    </div>
 
-            MICROSOFT 365 - Entra ID
+    <div class="topbar-item active">
+        Microsoft 365
+    </div>
 
-        </h1>
+    <div class="topbar-item">
+        Consolidado Facturación
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     CABECERA
+============================================================= -->
+
+<div class="header">
+
+    <div class="header-title">
+        MICROSOFT 365 - Entra ID
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     CONTENIDO
+============================================================= -->
+
+<div class="container">
+
+
+    <!-- ========================================================
+         INDICADORES PRINCIPALES
+    ========================================================= -->
+
+    <div class="kpi-grid">
+
+        <!-- Total usuarios -->
+
+        <div class="kpi-card kpi-blue">
+
+            <div class="kpi-icon">
+                👥
+            </div>
+
+            <div class="kpi-title">
+                Total Usuarios
+            </div>
+
+            <div class="kpi-value">
+                42
+            </div>
+
+            <div class="kpi-description">
+                Cuentas registradas en el directorio
+            </div>
+
+        </div>
+
+
+        <!-- Facturación -->
+
+        <div class="kpi-card kpi-green highlight">
+
+            <div class="kpi-icon">
+                💳
+            </div>
+
+            <div class="kpi-title">
+                <strong>Facturado (Mes)</strong>
+            </div>
+
+            <div class="kpi-value green">
+                $432.60 USD
+            </div>
+
+            <div class="kpi-description">
+                Facturación real registrada en Microsoft
+            </div>
+
+        </div>
+
+
+        <!-- Activas -->
+
+        <div class="kpi-card kpi-green">
+
+            <div class="kpi-icon">
+                ✓
+            </div>
+
+            <div class="kpi-title">
+                Cuentas Activas
+            </div>
+
+            <div class="kpi-value">
+                42
+            </div>
+
+            <div class="kpi-description">
+                Usuarios habilitados para iniciar sesión
+            </div>
+
+        </div>
+
+
+        <!-- Bloqueadas -->
+
+        <div class="kpi-card kpi-red">
+
+            <div class="kpi-icon">
+                ⊘
+            </div>
+
+            <div class="kpi-title">
+                Cuentas Bloqueadas
+            </div>
+
+            <div class="kpi-value">
+                0
+            </div>
+
+            <div class="kpi-description">
+                Usuarios con inicio de sesión bloqueado
+            </div>
+
+        </div>
+
+
+        <!-- Contraseña -->
+
+        <div class="kpi-card kpi-yellow">
+
+            <div class="kpi-icon">
+                🔑
+            </div>
+
+            <div class="kpi-title">
+                Pass Nunca Expira
+            </div>
+
+            <div class="kpi-value">
+                42
+            </div>
+
+            <div class="kpi-description">
+                Cuentas configuradas sin caducidad de contraseña
+            </div>
+
+        </div>
 
     </div>
 
 
-    <div class="container">
+    <!-- ========================================================
+         GRÁFICAS
+    ========================================================= -->
 
+    <div class="charts-grid">
 
-        <!-- =====================================================
-             ERROR CSV
-        ====================================================== -->
 
-        <div id="errorMessage" class="error-msg">
-
-            ⚠️ No se encontró el archivo
-            <strong>"MICROSOFT.csv"</strong>
-            o el archivo no tiene el formato esperado.
-
-        </div>
-
-
-        <!-- =====================================================
-             KPIs
-        ====================================================== -->
-
-        <div class="kpi-grid">
-
-
-            <!-- TOTAL USUARIOS -->
-
-            <div class="kpi-card kpi-blue">
-
-                <div class="kpi-header">
-
-                    <span>
-                        Total Usuarios
-                    </span>
-
-                    <span class="material-symbols-outlined">
-                        group
-                    </span>
-
-                </div>
-
-                <div id="totalUsers"
-                     class="kpi-value">
-
-                    ...
-
-                </div>
-
-                <div class="kpi-subtext">
-
-                    Cuentas en directorio
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 FACTURACIÓN REAL
-            ================================================== -->
-
-            <div class="kpi-card kpi-money"
-                 style="background-color:#f6feef;
-                        border:1px solid #cce8d6;">
-
-                <div class="kpi-header">
-
-                    <span style="
-                        color:var(--money);
-                        font-weight:bold;">
-
-                        Facturado (Mes)
-
-                    </span>
-
-                    <span class="material-symbols-outlined"
-                          style="color:var(--money);">
-
-                        payments
-
-                    </span>
-
-                </div>
-
-
-                <div id="totalCost"
-                     class="kpi-value"
-                     style="
-                        color:var(--money);
-                        font-weight:bold;">
-
-                    ...
-
-                </div>
-
-
-                <div class="kpi-subtext">
-
-                    Facturación real registrada en Microsoft
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 ACTIVOS
-            ================================================== -->
-
-            <div class="kpi-card kpi-green">
-
-                <div class="kpi-header">
-
-                    <span>
-                        Cuentas Activas
-                    </span>
-
-                    <span class="material-symbols-outlined">
-                        check_circle
-                    </span>
-
-                </div>
-
-
-                <div id="activeUsers"
-                     class="kpi-value">
-
-                    ...
-
-                </div>
-
-
-                <div class="kpi-subtext">
-
-                    Habilitadas
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 BLOQUEADOS
-            ================================================== -->
-
-            <div class="kpi-card kpi-red">
-
-                <div class="kpi-header">
-
-                    <span>
-                        Cuentas Bloqueadas
-                    </span>
-
-                    <span class="material-symbols-outlined">
-                        block
-                    </span>
-
-                </div>
-
-
-                <div id="blockedUsers"
-                     class="kpi-value">
-
-                    ...
-
-                </div>
-
-
-                <div class="kpi-subtext">
-
-                    Inicio de sesión bloqueado
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 PASSWORD
-            ================================================== -->
-
-            <div class="kpi-card kpi-warning">
-
-                <div class="kpi-header">
-
-                    <span>
-                        Pass Nunca Expira
-                    </span>
-
-                    <span class="material-symbols-outlined">
-                        key
-                    </span>
-
-                </div>
-
-
-                <div id="passNeverExpires"
-                     class="kpi-value">
-
-                    ...
-
-                </div>
-
-
-                <div class="kpi-subtext">
-
-                    Sin caducidad
-
-                </div>
-
-            </div>
-
-
-        </div>
-
-
-
-        <!-- =====================================================
-             GRÁFICAS
-        ====================================================== -->
-
-        <div class="charts-grid">
-
-
-            <!-- =================================================
-                 GRÁFICA 1
-            ================================================== -->
-
-            <div class="chart-card">
-
-                <h3>
-                    Estado de Credenciales
-                </h3>
-
-                <div class="chart-container">
-
-                    <canvas id="statusChart"></canvas>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 GRÁFICA 2
-            ================================================== -->
-
-            <div class="chart-card">
-
-                <h3>
-                    Volumen de Licencias Asignadas
-                </h3>
-
-                <div class="chart-container">
-
-                    <canvas id="licensesChart"></canvas>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================================
-                 GRÁFICA 3
-            ================================================== -->
-
-            <div class="chart-card">
-
-                <h3>
-                    Costo Mensual Estimado por Licencia (USD)
-                </h3>
-
-                <div class="chart-container">
-
-                    <canvas id="costBreakdownChart"></canvas>
-
-                </div>
-
-            </div>
-
-
-        </div>
-
-
-
-        <!-- =====================================================
-             INFORMACIÓN DE COSTOS
-        ====================================================== -->
-
-        <div class="chart-card"
-             style="margin-bottom:30px;">
-
-            <h3>
-                Resumen de Costos
-            </h3>
-
-
-            <div style="
-                display:grid;
-                grid-template-columns:
-                    repeat(auto-fit,minmax(220px,1fr));
-                gap:20px;
-            ">
-
-
-                <!-- FACTURADO -->
-
-                <div style="
-                    background:#f6feef;
-                    border:1px solid #cce8d6;
-                    border-radius:8px;
-                    padding:18px;
-                ">
-
-                    <div style="
-                        color:var(--text-muted);
-                        font-size:.85rem;
-                    ">
-
-                        Facturación de agosto
-
-                    </div>
-
-
-                    <div id="billingAmount"
-                         style="
-                            color:var(--money);
-                            font-size:1.7rem;
-                            font-weight:bold;
-                            margin-top:8px;
-                         ">
-
-                        $432.60 USD
-
-                    </div>
-
-
-                    <div style="
-                        color:var(--text-muted);
-                        font-size:.75rem;
-                        margin-top:5px;
-                    ">
-
-                        Cargos registrados
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- ESTIMADO -->
-
-                <div style="
-                    background:#f8f9fa;
-                    border:1px solid var(--border);
-                    border-radius:8px;
-                    padding:18px;
-                ">
-
-                    <div style="
-                        color:var(--text-muted);
-                        font-size:.85rem;
-                    ">
-
-                        Licencias asignadas
-
-                    </div>
-
-
-                    <div id="assignedCost"
-                         style="
-                            color:var(--text-main);
-                            font-size:1.7rem;
-                            font-weight:bold;
-                            margin-top:8px;
-                         ">
-
-                        $0.00 USD
-
-                    </div>
-
-
-                    <div style="
-                        color:var(--text-muted);
-                        font-size:.75rem;
-                        margin-top:5px;
-                    ">
-
-                        Costo mensual estimado
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- DIFERENCIA -->
-
-                <div style="
-                    background:#fff8e1;
-                    border:1px solid #ffe082;
-                    border-radius:8px;
-                    padding:18px;
-                ">
-
-                    <div style="
-                        color:var(--text-muted);
-                        font-size:.85rem;
-                    ">
-
-                        Diferencia
-
-                    </div>
-
-
-                    <div id="costDifference"
-                         style="
-                            color:#8a6500;
-                            font-size:1.7rem;
-                            font-weight:bold;
-                            margin-top:8px;
-                         ">
-
-                        $0.00 USD
-
-                    </div>
-
-
-                    <div style="
-                        color:var(--text-muted);
-                        font-size:.75rem;
-                        margin-top:5px;
-                    ">
-
-                        Estimado vs facturado
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =====================================================
-             TABLA DE USUARIOS
-        ====================================================== -->
+        <!-- ====================================================
+             ESTADO DE CREDENCIALES
+        ===================================================== -->
 
         <div class="chart-card">
 
-            <h3>
-                Directorio de Usuarios y Costo Individual
-            </h3>
+            <div class="chart-header">
+
+                <div>
+
+                    <h2 class="chart-title">
+                        Estado de Credenciales
+                    </h2>
+
+                    <div class="chart-subtitle">
+                        Estado de las cuentas de Entra ID
+                    </div>
+
+                </div>
+
+            </div>
 
 
-            <div class="table-container">
+            <div class="donut-wrapper">
 
-                <table>
+                <canvas id="credentialsChart"></canvas>
 
-                    <thead>
+                <div class="donut-center">
 
-                        <tr>
+                    <div class="donut-number">
+                        42
+                    </div>
 
-                            <th>
-                                Nombre Completo
-                            </th>
+                    <div class="donut-label">
+                        Usuarios activos
+                    </div>
 
-                            <th>
-                                Correo (UPN)
-                            </th>
+                </div>
 
-                            <th>
-                                Estado
-                            </th>
-
-                            <th>
-                                Licencias Asignadas
-                            </th>
-
-                            <th>
-                                Costo Usuario (USD)
-                            </th>
-
-                        </tr>
-
-                    </thead>
+            </div>
 
 
-                    <tbody id="usersTableBody">
+            <div class="status-summary">
 
-                        <!-- JavaScript -->
+                <div class="status-item">
 
-                    </tbody>
+                    <span class="status-dot green"></span>
 
-                </table>
+                    Activos: <strong>42</strong>
+
+                </div>
+
+                <div class="status-item">
+
+                    <span class="status-dot red"></span>
+
+                    Bloqueados: <strong>0</strong>
+
+                </div>
 
             </div>
 
         </div>
 
 
+        <!-- ====================================================
+             LICENCIAS
+        ===================================================== -->
+
+        <div class="chart-card">
+
+            <div class="chart-header">
+
+                <div>
+
+                    <h2 class="chart-title">
+                        Licencias Asignadas
+                    </h2>
+
+                    <div class="chart-subtitle">
+                        Cantidad de usuarios por producto Microsoft 365
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="license-legend">
+
+                <span>
+                    Total de asignaciones
+                </span>
+
+                <strong>
+                    67
+                </strong>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="licensesChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <!-- ====================================================
+             COSTOS
+        ===================================================== -->
+
+        <div class="chart-card">
+
+            <div class="chart-header">
+
+                <div>
+
+                    <h2 class="chart-title">
+                        Costo Mensual por Producto
+                    </h2>
+
+                    <div class="chart-subtitle">
+                        Valor mensual estimado en USD
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="cost-highlight">
+
+                <strong>
+                    ¿Qué muestra esta gráfica?
+                </strong>
+
+                <br>
+
+                El costo mensual estimado de cada producto,
+                no el precio individual de una licencia.
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="costChart"></canvas>
+
+            </div>
+
+        </div>
+
     </div>
 
 
+    <!-- ========================================================
+         RESUMEN DE COSTOS
+    ========================================================= -->
 
-    <!-- =========================================================
-         JAVASCRIPT
-    ========================================================== -->
+    <div class="full-card">
 
-    <script>
+        <h2 class="section-title">
+            Resumen de Costos
+        </h2>
 
+        <div class="section-subtitle">
+            Comparación entre facturación real y costo estimado de las licencias asignadas
+        </div>
 
-        /* =========================================================
-           PRECIOS UNITARIOS
-        ========================================================== */
+        <div class="section-line"></div>
 
-        const PRECIOS_LICENCIAS_USD = {
 
-            "Aplicaciones de Microsoft 365 para negocios": 6.435,
+        <div class="cost-grid">
 
-            "Planner y Project Plan 3": 31.50,
 
-            "Microsoft Teams Essentials": 4.20,
+            <!-- Facturación -->
 
-            "Visio Plan 2": 15.75,
+            <div class="cost-box green">
 
-            "Microsoft Fabric (Gratis)": 0,
+                <div class="cost-label">
+                    Facturación de agosto
+                </div>
 
-            "Microsoft Power Automate Free": 0
+                <div class="cost-value green">
+                    $432.60 USD
+                </div>
 
-        };
+                <div class="cost-description">
+                    Valor realmente cobrado por Microsoft
+                </div>
 
+            </div>
 
 
-        /* =========================================================
-           FACTURACIÓN REAL
-           
-           IMPORTANTE:
-           Estos valores vienen de las capturas proporcionadas.
-        ========================================================== */
+            <!-- Estimado -->
 
-        const FACTURACION_MENSUAL = {
+            <div class="cost-box gray">
 
-            "2026-08": {
+                <div class="cost-label">
+                    Licencias asignadas
+                </div>
 
-                microsoft365:
-                    199.50,
+                <div class="cost-value">
+                    $511.33 USD
+                </div>
 
-                planner:
-                    157.50,
+                <div class="cost-description">
+                    Costo mensual estimado según las licencias asignadas
+                </div>
 
-                teams:
-                    75.60,
+            </div>
 
-                total:
-                    432.60
 
-            }
+            <!-- Diferencia -->
 
-        };
+            <div class="cost-box yellow">
 
+                <div class="cost-label">
+                    Diferencia estimada
+                </div>
 
+                <div class="cost-value yellow">
+                    $78.73 USD
+                </div>
 
-        /* =========================================================
-           MES DEL DASHBOARD
-        ========================================================== */
+                <div class="cost-description">
+                    Diferencia entre costo estimado y facturación real
+                </div>
 
-        const MES_ACTUAL = "2026-08";
+            </div>
 
 
+        </div>
 
-        /* =========================================================
-           FUNCIÓN DE NORMALIZACIÓN
-        ========================================================== */
+    </div>
 
-        function normalizeLicenseName(name) {
 
-            if (!name) {
-                return "";
-            }
+    <!-- ========================================================
+         DETALLE DE LICENCIAS
+    ========================================================= -->
 
+    <div class="full-card">
 
-            const lower =
-                name
-                    .toLowerCase()
-                    .trim();
+        <h2 class="section-title">
+            Detalle de Licencias Microsoft 365
+        </h2>
 
+        <div class="section-subtitle">
+            Licencias disponibles, asignadas y costo mensual estimado
+        </div>
 
-            if (
-                lower.includes(
-                    "aplicaciones de microsoft 365"
-                )
-                ||
-                lower.includes(
-                    "microsoft 365 apps"
-                )
-            ) {
+        <div class="section-line"></div>
 
-                return "Aplicaciones de Microsoft 365 para negocios";
 
-            }
+        <div class="table-wrapper">
 
+            <table>
 
-            if (
-                lower.includes("planner")
-                ||
-                lower.includes("project")
-            ) {
+                <thead>
 
-                return "Planner y Project Plan 3";
+                    <tr>
 
-            }
+                        <th>
+                            Producto
+                        </th>
 
+                        <th>
+                            Asignadas
+                        </th>
 
-            if (
-                lower.includes(
-                    "teams essentials"
-                )
-            ) {
+                        <th>
+                            Disponibles
+                        </th>
 
-                return "Microsoft Teams Essentials";
+                        <th>
+                            Utilización
+                        </th>
 
-            }
+                        <th>
+                            Costo mensual
+                        </th>
 
+                        <th>
+                            Costo por licencia
+                        </th>
 
-            if (
-                lower.includes(
-                    "visio plan 2"
-                )
-            ) {
+                    </tr>
 
-                return "Visio Plan 2";
+                </thead>
 
-            }
 
+                <tbody>
 
-            if (
-                lower.includes("fabric")
-            ) {
 
-                return "Microsoft Fabric (Gratis)";
+                    <!-- Microsoft 365 Apps -->
 
-            }
+                    <tr>
 
+                        <td class="product-name">
+                            Aplicaciones de Microsoft 365 para negocios
+                        </td>
 
-            if (
-                lower.includes(
-                    "power automate free"
-                )
-            ) {
+                        <td>
+                            <span class="badge badge-green">
+                                31
+                            </span>
+                        </td>
 
-                return "Microsoft Power Automate Free";
+                        <td>
+                            0
+                        </td>
 
-            }
+                        <td style="min-width:180px;">
 
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:11px;">
 
-            if (
-                lower.includes("unlicensed")
-                ||
-                lower.includes("sin licencia")
-            ) {
+                                <span>
+                                    31 / 31
+                                </span>
 
-                return "Unlicensed";
+                                <strong>
+                                    100%
+                                </strong>
 
-            }
+                            </div>
 
+                            <div class="usage-bar">
 
-            return name.trim();
+                                <div
+                                    class="usage-fill"
+                                    style="width:100%;">
+                                </div>
 
-        }
+                            </div>
 
+                        </td>
 
+                        <td class="money">
+                            $199.50
+                        </td>
 
-        /* =========================================================
-           ESCAPE HTML
-           
-           Evita que datos provenientes del CSV
-           sean interpretados como HTML.
-        ========================================================== */
+                        <td>
+                            $6.44
+                        </td>
 
-        function escapeHTML(value) {
+                    </tr>
 
-            return String(value ?? "")
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
 
-        }
+                    <!-- Planner -->
 
+                    <tr>
 
+                        <td class="product-name">
+                            Planner y Project Plan 3
+                        </td>
 
-        /* =========================================================
-           FORMATO MONEDA
-        ========================================================== */
+                        <td>
 
-        function formatUSD(value) {
+                            <span class="badge badge-green">
+                                5
+                            </span>
 
-            return "$" +
-                Number(value || 0)
-                    .toLocaleString(
-                        "en-US",
-                        {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        }
-                    )
-                +
-                " USD";
+                        </td>
 
-        }
+                        <td>
+                            0
+                        </td>
 
+                        <td>
 
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:11px;">
 
-        /* =========================================================
-           OBTENER FACTURACIÓN
-        ========================================================== */
+                                <span>
+                                    5 / 5
+                                </span>
 
-        const billing =
-            FACTURACION_MENSUAL[MES_ACTUAL]
-            ||
-            {
-                microsoft365: 0,
-                planner: 0,
-                teams: 0,
-                total: 0
-            };
+                                <strong>
+                                    100%
+                                </strong>
 
+                            </div>
 
+                            <div class="usage-bar">
 
-        /* =========================================================
-           CARGAR CSV
-        ========================================================== */
+                                <div
+                                    class="usage-fill"
+                                    style="width:100%;">
+                                </div>
 
-        Papa.parse(
-            "MICROSOFT.csv",
-            {
+                            </div>
 
-                download: true,
+                        </td>
 
-                header: true,
+                        <td class="money">
+                            $157.50
+                        </td>
 
-                skipEmptyLines: true,
+                        <td>
+                            $31.50
+                        </td>
 
+                    </tr>
 
-                complete: function(results) {
 
+                    <!-- Teams -->
 
-                    let data =
-                        results.data;
+                    <tr>
 
+                        <td class="product-name">
+                            Microsoft Teams Essentials
+                        </td>
 
+                        <td>
 
-                    /* =============================================
-                       SOPORTE CSV SEPARADO POR ;
-                    ============================================== */
+                            <span class="badge badge-green">
+                                18
+                            </span>
 
-                    if (
+                        </td>
 
-                        data.length > 0
+                        <td>
+                            0
+                        </td>
 
-                        &&
+                        <td>
 
-                        !data[0][
-                            "User principal name"
-                        ]
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:11px;">
 
-                        &&
+                                <span>
+                                    18 / 18
+                                </span>
 
-                        Object.keys(data[0])[0]
-                            .includes(";")
+                                <strong>
+                                    100%
+                                </strong>
 
-                    ) {
+                            </div>
 
+                            <div class="usage-bar">
 
-                        const rawKeys =
-                            Object.keys(data[0])[0]
-                                .split(";");
+                                <div
+                                    class="usage-fill"
+                                    style="width:100%;">
+                                </div>
 
+                            </div>
 
-                        data = data.map(row => {
+                        </td>
 
+                        <td class="money">
+                            $75.60
+                        </td>
 
-                            const firstKey =
-                                Object.keys(row)[0];
+                        <td>
+                            $4.20
+                        </td>
 
+                    </tr>
 
-                            const rawVals =
-                                String(
-                                    row[firstKey] || ""
-                                ).split(";");
 
+                    <!-- Visio -->
 
-                            let newRow = {};
+                    <tr>
 
+                        <td class="product-name">
+                            Visio Plan 2
+                        </td>
 
-                            rawKeys.forEach(
-                                (key, index) => {
+                        <td>
 
-                                    newRow[
-                                        key.trim()
-                                    ] =
-                                        (
-                                            rawVals[index]
-                                            || ""
-                                        ).trim();
+                            <span class="badge badge-green">
+                                5
+                            </span>
 
-                                }
-                            );
+                        </td>
 
+                        <td>
+                            0
+                        </td>
 
-                            return newRow;
+                        <td>
 
-                        });
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:11px;">
+
+                                <span>
+                                    5 / 5
+                                </span>
+
+                                <strong>
+                                    100%
+                                </strong>
+
+                            </div>
+
+                            <div class="usage-bar">
+
+                                <div
+                                    class="usage-fill"
+                                    style="width:100%;">
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td class="money">
+                            $78.75
+                        </td>
+
+                        <td>
+                            $15.75
+                        </td>
+
+                    </tr>
+
+
+                    <!-- Power Automate -->
+
+                    <tr>
+
+                        <td class="product-name">
+                            Microsoft Power Automate Free
+                        </td>
+
+                        <td>
+
+                            <span class="badge badge-blue">
+                                4
+                            </span>
+
+                        </td>
+
+                        <td>
+                            9,996
+                        </td>
+
+                        <td>
+
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:11px;">
+
+                                <span>
+                                    4 / 10,000
+                                </span>
+
+                                <strong>
+                                    0.04%
+                                </strong>
+
+                            </div>
+
+                            <div class="usage-bar">
+
+                                <div
+                                    class="usage-fill"
+                                    style="width:1%;">
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td class="money">
+                            $0.00
+                        </td>
+
+                        <td>
+                            Gratis
+                        </td>
+
+                    </tr>
+
+
+                    <!-- Fabric -->
+
+                    <tr>
+
+                        <td class="product-name">
+                            Microsoft Fabric (Gratis)
+                        </td>
+
+                        <td>
+
+                            <span class="badge badge-blue">
+                                4
+                            </span>
+
+                        </td>
+
+                        <td>
+                            999,996
+                        </td>
+
+                        <td>
+
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:11px;">
+
+                                <span>
+                                    4 / 1,000,000
+                                </span>
+
+                                <strong>
+                                    0.0004%
+                                </strong>
+
+                            </div>
+
+                            <div class="usage-bar">
+
+                                <div
+                                    class="usage-fill"
+                                    style="width:1%;">
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td class="money">
+                            $0.00
+                        </td>
+
+                        <td>
+                            Gratis
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================
+         EXPLICACIÓN
+    ========================================================= -->
+
+    <div class="info-box">
+
+        <strong>Interpretación del dashboard:</strong>
+
+        Actualmente existen <strong>42 usuarios activos</strong> en Entra ID y
+        no se observan cuentas bloqueadas.
+
+        Todas las licencias de pago mostradas se encuentran asignadas en su
+        totalidad.
+
+        La facturación real registrada para agosto es de
+        <strong>$432.60 USD</strong>, mientras que el valor estimado de las
+        licencias asignadas es de aproximadamente
+        <strong>$511.33 USD</strong>.
+
+        La diferencia estimada es de
+        <strong>$78.73 USD</strong>.
+
+    </div>
+
+
+    <!-- ========================================================
+         FOOTER
+    ========================================================= -->
+
+    <div class="footer">
+
+        Dashboard de administración Microsoft 365 · Entra ID
+
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     JAVASCRIPT - GRÁFICAS
+============================================================= -->
+
+<script>
+
+
+/* =============================================================
+   GRÁFICA 1
+   ESTADO DE CREDENCIALES
+============================================================= */
+
+const credentialsCtx =
+    document.getElementById("credentialsChart");
+
+new Chart(credentialsCtx, {
+
+    type: "doughnut",
+
+    data: {
+
+        labels: [
+            "Activos",
+            "Bloqueados"
+        ],
+
+        datasets: [{
+
+            data: [
+                42,
+                0
+            ],
+
+            backgroundColor: [
+                "#107c10",
+                "#d83b01"
+            ],
+
+            borderWidth: 0,
+
+            hoverOffset: 5
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        cutout: "67%",
+
+        plugins: {
+
+            legend: {
+                display: false
+            },
+
+            tooltip: {
+
+                callbacks: {
+
+                    label: function(context) {
+
+                        return " " +
+                            context.label +
+                            ": " +
+                            context.raw +
+                            " usuarios";
 
                     }
-
-
-
-                    /* =============================================
-                       FILTRAR USUARIOS VÁLIDOS
-                    ============================================== */
-
-                    const filteredData =
-                        data.filter(
-                            row =>
-                                row[
-                                    "User principal name"
-                                ]
-                        );
-
-
-
-                    if (
-                        filteredData.length === 0
-                    ) {
-
-                        document
-                            .getElementById(
-                                "errorMessage"
-                            )
-                            .style.display =
-                            "block";
-
-                        return;
-
-                    }
-
-
-
-                    /* =============================================
-                       VARIABLES
-                    ============================================== */
-
-                    let totalUsers = 0;
-
-                    let activos = 0;
-
-                    let bloqueados = 0;
-
-                    let passNeverExpires = 0;
-
-
-                    let granTotalCostoUSD = 0;
-
-
-                    let licensesCount = {};
-
-                    let licensesCost = {};
-
-                    let userList = [];
-
-
-
-                    /* =============================================
-                       PROCESAR USUARIOS
-                    ============================================== */
-
-                    filteredData.forEach(
-                        user => {
-
-
-                            totalUsers++;
-
-
-
-                            /* =====================================
-                               ESTADO
-                            ====================================== */
-
-                            const isBlocked =
-                                String(
-                                    user[
-                                        "Block credential"
-                                    ] || ""
-                                )
-                                .toLowerCase()
-                                .trim()
-                                === "true";
-
-
-                            if (isBlocked) {
-
-                                bloqueados++;
-
-                            } else {
-
-                                activos++;
-
-                            }
-
-
-
-                            /* =====================================
-                               PASSWORD
-                            ====================================== */
-
-                            const passNoExp =
-                                String(
-                                    user[
-                                        "Password never expires"
-                                    ] || ""
-                                )
-                                .toLowerCase()
-                                .trim()
-                                === "true";
-
-
-                            if (passNoExp) {
-
-                                passNeverExpires++;
-
-                            }
-
-
-
-                            /* =====================================
-                               LICENCIAS
-                            ====================================== */
-
-                            const rawLicenses =
-                                user["Licenses"]
-                                ||
-                                "Unlicensed";
-
-
-                            let splitLicenses =
-                                [rawLicenses];
-
-
-                            const separators =
-                                ["+", ",", ";"];
-
-
-                            separators.forEach(
-                                separator => {
-
-
-                                    let newSplit = [];
-
-
-                                    splitLicenses.forEach(
-                                        part => {
-
-                                            newSplit.push(
-                                                ...String(part)
-                                                    .split(separator)
-                                            );
-
-                                        }
-                                    );
-
-
-                                    splitLicenses =
-                                        newSplit;
-
-                                }
-                            );
-
-
-
-                            let htmlLicencias = "";
-
-                            let costoUsuarioMes = 0;
-
-                            let hasValidLicense = false;
-
-
-
-                            /* =====================================
-                               PROCESAR CADA LICENCIA
-                            ====================================== */
-
-                            splitLicenses.forEach(
-                                lic => {
-
-
-                                    let cleanLic =
-                                        lic.trim();
-
-
-                                    if (!cleanLic) {
-                                        return;
-                                    }
-
-
-                                    cleanLic =
-                                        normalizeLicenseName(
-                                            cleanLic
-                                        );
-
-
-
-                                    /* =============================
-                                       IGNORAR UNLICENSED
-                                    ============================== */
-
-                                    if (
-                                        cleanLic ===
-                                        "Unlicensed"
-                                        ||
-                                        cleanLic === ""
-                                    ) {
-
-                                        return;
-
-                                    }
-
-
-
-                                    hasValidLicense =
-                                        true;
-
-
-
-                                    /* =============================
-                                       CONTADOR
-                                    ============================== */
-
-                                    licensesCount[
-                                        cleanLic
-                                    ] =
-                                        (
-                                            licensesCount[
-                                                cleanLic
-                                            ]
-                                            ||
-                                            0
-                                        )
-                                        +
-                                        1;
-
-
-
-                                    /* =============================
-                                       COSTO
-                                    ============================== */
-
-                                    const precio =
-                                        PRECIOS_LICENCIAS_USD[
-                                            cleanLic
-                                        ]
-                                        ||
-                                        0;
-
-
-                                    costoUsuarioMes +=
-                                        precio;
-
-
-                                    licensesCost[
-                                        cleanLic
-                                    ] =
-                                        (
-                                            licensesCost[
-                                                cleanLic
-                                            ]
-                                            ||
-                                            0
-                                        )
-                                        +
-                                        precio;
-
-
-
-                                    /* =============================
-                                       HTML LICENCIA
-                                    ============================== */
-
-                                    const safeLicense =
-                                        escapeHTML(
-                                            cleanLic
-                                        );
-
-
-                                    if (
-                                        precio === 0
-                                    ) {
-
-                                        htmlLicencias +=
-                                            `<span class="lic-tag lic-free">
-                                                ${safeLicense}
-                                            </span>`;
-
-                                    } else {
-
-                                        htmlLicencias +=
-                                            `<span class="lic-tag">
-                                                ${safeLicense}
-                                            </span>`;
-
-                                    }
-
-                                }
-                            );
-
-
-
-                            /* =====================================
-                               SIN LICENCIA
-                            ====================================== */
-
-                            if (!hasValidLicense) {
-
-                                htmlLicencias =
-                                    '<span class="lic-none">' +
-                                    'Sin licencia asignada' +
-                                    '</span>';
-
-                            }
-
-
-
-                            /* =====================================
-                               COSTO TOTAL ASIGNADO
-                            ====================================== */
-
-                            granTotalCostoUSD +=
-                                costoUsuarioMes;
-
-
-
-                            /* =====================================
-                               AGREGAR USUARIO
-                            ====================================== */
-
-                            userList.push({
-
-                                name:
-                                    user[
-                                        "Display name"
-                                    ]
-                                    ||
-                                    "Sin nombre",
-
-                                email:
-                                    user[
-                                        "User principal name"
-                                    ],
-
-                                status:
-                                    isBlocked
-                                    ?
-                                    "bloqueado"
-                                    :
-                                    "activo",
-
-                                licensesHtml:
-                                    htmlLicencias,
-
-                                costo:
-                                    costoUsuarioMes
-
-                            });
-
-                        }
-                    );
-
-
-
-                    /* =================================================
-                       ACTUALIZAR KPIs
-                    ================================================== */
-
-                    document
-                        .getElementById(
-                            "totalUsers"
-                        )
-                        .innerText =
-                        totalUsers;
-
-
-
-                    document
-                        .getElementById(
-                            "activeUsers"
-                        )
-                        .innerText =
-                        activos;
-
-
-
-                    document
-                        .getElementById(
-                            "blockedUsers"
-                        )
-                        .innerText =
-                        bloqueados;
-
-
-
-                    document
-                        .getElementById(
-                            "passNeverExpires"
-                        )
-                        .innerText =
-                        passNeverExpires;
-
-
-
-                    /* =================================================
-                       FACTURACIÓN REAL
-                       
-                       $432.60
-                    ================================================== */
-
-                    document
-                        .getElementById(
-                            "totalCost"
-                        )
-                        .innerText =
-                        formatUSD(
-                            billing.total
-                        );
-
-
-
-                    document
-                        .getElementById(
-                            "billingAmount"
-                        )
-                        .innerText =
-                        formatUSD(
-                            billing.total
-                        );
-
-
-
-                    /* =================================================
-                       COSTO ESTIMADO DE LICENCIAS
-                    ================================================== */
-
-                    document
-                        .getElementById(
-                            "assignedCost"
-                        )
-                        .innerText =
-                        formatUSD(
-                            granTotalCostoUSD
-                        );
-
-
-
-                    /* =================================================
-                       DIFERENCIA
-                    ================================================== */
-
-                    const difference =
-                        granTotalCostoUSD
-                        -
-                        billing.total;
-
-
-                    document
-                        .getElementById(
-                            "costDifference"
-                        )
-                        .innerText =
-                        formatUSD(
-                            difference
-                        );
-
-
-
-                    /* =================================================
-                       GRÁFICA 1
-                       ESTADO DE USUARIOS
-                    ================================================== */
-
-                    new Chart(
-
-                        document
-                            .getElementById(
-                                "statusChart"
-                            ),
-
-                        {
-
-                            type: "doughnut",
-
-
-                            data: {
-
-                                labels: [
-                                    "Activos",
-                                    "Bloqueados"
-                                ],
-
-
-                                datasets: [{
-
-                                    data: [
-                                        activos,
-                                        bloqueados
-                                    ],
-
-
-                                    backgroundColor: [
-                                        "#107C10",
-                                        "#D83B01"
-                                    ],
-
-
-                                    borderWidth: 0
-
-                                }]
-
-                            },
-
-
-                            options: {
-
-                                responsive: true,
-
-                                maintainAspectRatio: false,
-
-                                cutout: "65%",
-
-                                plugins: {
-
-                                    legend: {
-
-                                        position: "bottom"
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                    );
-
-
-
-                    /* =================================================
-                       GRÁFICA 2
-                       VOLUMEN DE LICENCIAS
-                    ================================================== */
-
-                    const sortedLicenses =
-
-                        Object.keys(
-                            licensesCount
-                        )
-
-                        .map(
-                            key => ({
-
-                                name: key,
-
-                                count:
-                                    licensesCount[
-                                        key
-                                    ]
-
-                            })
-                        )
-
-                        .sort(
-                            (a, b) =>
-                                b.count - a.count
-                        );
-
-
-
-                    new Chart(
-
-                        document
-                            .getElementById(
-                                "licensesChart"
-                            ),
-
-                        {
-
-                            type: "bar",
-
-
-                            data: {
-
-                                labels:
-                                    sortedLicenses.map(
-                                        l => l.name
-                                    ),
-
-
-                                datasets: [{
-
-                                    label:
-                                        "Usuarios asignados",
-
-
-                                    data:
-                                        sortedLicenses.map(
-                                            l => l.count
-                                        ),
-
-
-                                    backgroundColor:
-                                        "#0078D4",
-
-
-                                    borderRadius: 4
-
-                                }]
-
-                            },
-
-
-                            options: {
-
-                                indexAxis: "y",
-
-                                responsive: true,
-
-                                maintainAspectRatio:
-                                    false,
-
-
-                                plugins: {
-
-                                    legend: {
-
-                                        display: false
-
-                                    }
-
-                                },
-
-
-                                scales: {
-
-                                    x: {
-
-                                        beginAtZero:
-                                            true,
-
-                                        ticks: {
-
-                                            precision: 0
-
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                    );
-
-
-
-                    /* =================================================
-                       GRÁFICA 3
-                       COSTO ESTIMADO POR LICENCIA
-                    ================================================== */
-
-                    const costLabels =
-
-                        Object.keys(
-                            licensesCost
-                        )
-
-                        .filter(
-                            key =>
-                                licensesCost[key]
-                                > 0
-                        )
-
-                        .sort(
-                            (a, b) =>
-                                licensesCost[b]
-                                -
-                                licensesCost[a]
-                        );
-
-
-
-                    const costData =
-                        costLabels.map(
-                            license =>
-                                licensesCost[
-                                    license
-                                ]
-                        );
-
-
-
-                    new Chart(
-
-                        document
-                            .getElementById(
-                                "costBreakdownChart"
-                            ),
-
-                        {
-
-                            type: "bar",
-
-
-                            data: {
-
-                                labels:
-                                    costLabels,
-
-
-                                datasets: [{
-
-                                    label:
-                                        "Costo estimado (USD)",
-
-
-                                    data:
-                                        costData,
-
-
-                                    backgroundColor:
-                                        "#0d652d",
-
-
-                                    borderRadius: 4
-
-                                }]
-
-                            },
-
-
-                            options: {
-
-                                responsive: true,
-
-                                maintainAspectRatio:
-                                    false,
-
-
-                                plugins: {
-
-                                    legend: {
-
-                                        display: false
-
-                                    },
-
-
-                                    tooltip: {
-
-                                        callbacks: {
-
-                                            label:
-                                                function(
-                                                    context
-                                                ) {
-
-                                                    return (
-                                                        "$" +
-                                                        Number(
-                                                            context.raw
-                                                        )
-                                                        .toLocaleString(
-                                                            "en-US",
-                                                            {
-                                                                minimumFractionDigits: 2,
-                                                                maximumFractionDigits: 2
-                                                            }
-                                                        )
-                                                        +
-                                                        " USD"
-                                                    );
-
-                                                }
-
-                                        }
-
-                                    }
-
-                                },
-
-
-                                scales: {
-
-                                    y: {
-
-                                        beginAtZero: true,
-
-
-                                        ticks: {
-
-                                            callback:
-                                                function(
-                                                    value
-                                                ) {
-
-                                                    return (
-                                                        "$" +
-                                                        value
-                                                    );
-
-                                                }
-
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                    );
-
-
-
-                    /* =================================================
-                       TABLA
-                    ================================================== */
-
-                    const tableBody =
-                        document
-                            .getElementById(
-                                "usersTableBody"
-                            );
-
-
-
-                    /* =================================================
-                       ORDENAR POR COSTO
-                    ================================================== */
-
-                    userList.sort(
-                        (a, b) =>
-                            b.costo - a.costo
-                    );
-
-
-
-                    /* =================================================
-                       PINTAR TABLA
-                    ================================================== */
-
-                    userList.forEach(
-                        user => {
-
-
-                            const statusBadge =
-
-                                user.status ===
-                                "activo"
-
-                                ?
-
-                                '<span class="badge badge-active">' +
-                                'Activo' +
-                                '</span>'
-
-                                :
-
-                                '<span class="badge badge-suspended">' +
-                                'Bloqueado' +
-                                '</span>';
-
-
-
-                            const costoStr =
-
-                                user.costo > 0
-
-                                ?
-
-                                `<strong style="color:var(--money)">
-                                    ${formatUSD(user.costo)}
-                                </strong>`
-
-                                :
-
-                                '<span class="text-small">' +
-                                '$0.00 USD' +
-                                '</span>';
-
-
-
-                            const safeName =
-                                escapeHTML(
-                                    user.name
-                                );
-
-
-                            const safeEmail =
-                                escapeHTML(
-                                    user.email
-                                );
-
-
-
-                            const row =
-
-                                `<tr>
-
-                                    <td>
-                                        <strong>
-                                            ${safeName}
-                                        </strong>
-                                    </td>
-
-                                    <td>
-                                        ${safeEmail}
-                                    </td>
-
-                                    <td>
-                                        ${statusBadge}
-                                    </td>
-
-                                    <td>
-                                        ${user.licensesHtml}
-                                    </td>
-
-                                    <td>
-                                        ${costoStr}
-                                    </td>
-
-                                </tr>`;
-
-
-                            tableBody.innerHTML +=
-                                row;
-
-                        }
-                    );
-
-
-                },
-
-
-                /* =====================================================
-                   ERROR
-                ====================================================== */
-
-                error: function() {
-
-                    document
-                        .getElementById(
-                            "errorMessage"
-                        )
-                        .style.display =
-                        "block";
 
                 }
 
             }
-        );
+
+        }
+
+    }
+
+});
 
 
-    </script>
+/* =============================================================
+   GRÁFICA 2
+   LICENCIAS ASIGNADAS
+============================================================= */
 
+const licensesCtx =
+    document.getElementById("licensesChart");
+
+new Chart(licensesCtx, {
+
+    type: "bar",
+
+    data: {
+
+        labels: [
+
+            "Microsoft 365 Apps",
+            "Teams Essentials",
+            "Planner / Project Plan 3",
+            "Visio Plan 2",
+            "Power Automate Free",
+            "Fabric (Gratis)"
+
+        ],
+
+        datasets: [{
+
+            label: "Usuarios asignados",
+
+            data: [
+                31,
+                18,
+                5,
+                5,
+                4,
+                4
+            ],
+
+            backgroundColor: "#0078d4",
+
+            borderRadius: 4,
+
+            barThickness: 23
+
+        }]
+
+    },
+
+    options: {
+
+        indexAxis: "y",
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        scales: {
+
+            x: {
+
+                beginAtZero: true,
+
+                max: 35,
+
+                ticks: {
+                    stepSize: 5
+                },
+
+                grid: {
+                    color: "#e5e5e5"
+                },
+
+                title: {
+
+                    display: true,
+
+                    text: "Usuarios asignados"
+
+                }
+
+            },
+
+            y: {
+
+                grid: {
+                    display: false
+                },
+
+                ticks: {
+                    font: {
+                        size: 11
+                    }
+                }
+
+            }
+
+        },
+
+        plugins: {
+
+            legend: {
+                display: false
+            },
+
+            tooltip: {
+
+                callbacks: {
+
+                    label: function(context) {
+
+                        return " " +
+                            context.raw +
+                            " usuarios asignados";
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+});
+
+
+/* =============================================================
+   GRÁFICA 3
+   COSTOS POR PRODUCTO
+============================================================= */
+
+const costCtx =
+    document.getElementById("costChart");
+
+new Chart(costCtx, {
+
+    type: "bar",
+
+    data: {
+
+        labels: [
+
+            "Microsoft 365 Apps",
+            "Planner / Project Plan 3",
+            "Visio Plan 2",
+            "Teams Essentials"
+
+        ],
+
+        datasets: [{
+
+            label: "Costo mensual (USD)",
+
+            data: [
+
+                199.50,
+                157.50,
+                78.75,
+                75.60
+
+            ],
+
+            backgroundColor: "#107c10",
+
+            borderRadius: 4,
+
+            barThickness: 34
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true,
+
+                max: 220,
+
+                ticks: {
+
+                    callback: function(value) {
+
+                        return "$" + value;
+
+                    }
+
+                },
+
+                grid: {
+                    color: "#e5e5e5"
+                },
+
+                title: {
+
+                    display: true,
+
+                    text: "USD / mes"
+
+                }
+
+            },
+
+            x: {
+
+                grid: {
+                    display: false
+                },
+
+                ticks: {
+
+                    font: {
+                        size: 10
+                    },
+
+                    maxRotation: 35,
+
+                    minRotation: 25
+
+                }
+
+            }
+
+        },
+
+        plugins: {
+
+            legend: {
+                display: false
+            },
+
+            tooltip: {
+
+                callbacks: {
+
+                    label: function(context) {
+
+                        return " $" +
+                            context.raw.toFixed(2) +
+                            " USD / mes";
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
 
 </body>
-
 </html>
