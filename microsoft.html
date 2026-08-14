@@ -3,33 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Microsoft 365 - Entra ID | SERVIALCO</title>
 
-    <!-- Chart.js y PapaParse -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
-        /* =========================================================
-           CONFIGURACIÓN GENERAL
-        ========================================================= */
         * { box-sizing: border-box; }
         body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: #f5f6f8; color: #1f1f1f; }
         .container { width: 100%; max-width: 1450px; margin: auto; padding: 0 28px 50px; }
 
-        /* =========================================================
-           ENCABEZADO
-        ========================================================= */
         .header { background: #ffffff; border-bottom: 1px solid #e2e2e2; padding: 20px 30px; margin-bottom: 28px; }
         .header h1 { margin: 0; font-size: 25px; font-weight: 600; color: #171717; }
         .header i { color: #0078d4; margin-right: 8px; }
 
-        /* =========================================================
-           TARJETAS KPI
-        ========================================================= */
         .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 28px; }
         .kpi { background: #ffffff; border: 1px solid #ddd; border-radius: 8px; min-height: 145px; padding: 22px 20px; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,.08); overflow: hidden; }
         .kpi::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
@@ -43,9 +32,6 @@
         .kpi-subtitle { margin-top: 8px; font-size: 12px; color: #666; }
         .kpi-icon { position: absolute; right: 20px; top: 22px; font-size: 21px; color: #777; }
 
-        /* =========================================================
-           SECCIÓN DE GRÁFICAS
-        ========================================================= */
         .charts-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 28px; }
         .card { background: #ffffff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 20px; }
         .card-title { font-size: 18px; font-weight: 600; margin: 0; color: #171717; }
@@ -53,24 +39,20 @@
         .card-header { border-bottom: 1px solid #ddd; padding-bottom: 12px; margin-bottom: 15px; }
         .chart-container { position: relative; height: 285px; }
 
-        /* =========================================================
-           RESUMEN DE COSTOS (ACLARACIÓN)
-        ========================================================= */
         .cost-section { margin-bottom: 28px; }
         .cost-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 18px; }
         .cost-box { border-radius: 8px; padding: 20px; border: 1px solid #ddd; }
         .cost-box.green { background: #f3fbef; border-color: #b7dfae; }
         .cost-box.gray { background: #fafafa; }
         .cost-box.yellow { background: #fff8df; border-color: #f1d879; }
-        .cost-label { font-size: 13px; color: #666; font-weight: 600;}
+        .cost-label { font-size: 14px; color: #333; font-weight: 600;}
         .cost-value { font-size: 28px; font-weight: 600; margin-top: 8px; }
         .green-value { color: #107c10; }
         .yellow-value { color: #9a6a00; }
-        .cost-description { font-size: 12px; color: #555; margin-top: 8px; line-height: 1.4; }
+        .cost-description { font-size: 12px; color: #555; margin-top: 12px; line-height: 1.5; }
+        
+        .alert-box { background: #fff4ce; border-left: 4px solid #ffb900; padding: 15px; margin-top: 15px; font-size: 13px; color: #333; border-radius: 4px;}
 
-        /* =========================================================
-           TABLA DE LICENCIAS
-        ========================================================= */
         .license-table-section { margin-bottom: 28px; }
         .license-summary { width: 100%; border-collapse: collapse; margin-top: 15px; }
         .license-summary th { background: #f5f5f5; color: #444; font-weight: 600; font-size: 13px; text-align: left; padding: 13px; border-bottom: 1px solid #ddd; }
@@ -79,9 +61,6 @@
         .license-name { font-weight: 500; color: #333; }
         .amount { font-weight: 600; color: #107c10; }
 
-        /* =========================================================
-           TABLA DE USUARIOS
-        ========================================================= */
         .users-section { margin-top: 28px; }
         .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin: 18px 0; flex-wrap: wrap; }
         .search-box { position: relative; width: 330px; }
@@ -115,7 +94,6 @@
 </head>
 <body>
 
-<!-- ENCABEZADO -->
 <div class="header">
     <div class="container" style="padding:0;">
         <h1><i class="fa-brands fa-microsoft"></i> MICROSOFT 365 - Entra ID</h1>
@@ -125,7 +103,6 @@
 <div class="container">
     <div id="errorMessage" class="error-msg">⚠️ No se encontró el archivo "MICROSOFT.csv" en GitHub. Asegúrate de haberlo subido.</div>
 
-<!-- KPIs -->
 <section class="kpi-grid">
     <div class="kpi blue">
         <i class="fa-solid fa-users kpi-icon"></i>
@@ -159,7 +136,6 @@
     </div>
 </section>
 
-<!-- GRÁFICAS -->
 <section class="charts-grid">
     <div class="card">
         <div class="card-header">
@@ -184,28 +160,37 @@
     </div>
 </section>
 
-<!-- RESUMEN DE COSTOS Y ACLARACIÓN -->
+<!-- RESUMEN DE COSTOS Y ACLARACIÓN DE CICLOS -->
 <section class="card cost-section">
     <div class="card-header">
         <h2 class="card-title">Auditoría de Facturación vs Asignación Real</h2>
-        <div class="card-description">Aclaración de la discrepancia entre el cobro de la plataforma y el costo real de las licencias asignadas a los usuarios.</div>
+        <div class="card-description">Análisis de los ciclos de facturación de Microsoft y el valor real de la nómina digital.</div>
     </div>
+    
     <div class="cost-grid">
         <div class="cost-box gray">
-            <div class="cost-label">Facturado en Microsoft (Ej: Agosto)</div>
+            <div class="cost-label">Corte de Factura (Agosto)</div>
             <div class="cost-value">$432.60 USD</div>
-            <div class="cost-description"><strong>Cobro Parcial:</strong> Este valor ocurre porque en este ciclo de facturación Microsoft solo te está cobrando 19 de las 31 licencias de M365 Apps, y no incluyó Visio.</div>
+            <div class="cost-description">Este es el cobro parcial que emitió Microsoft en este corte específico.</div>
         </div>
         <div class="cost-box green">
-            <div class="cost-label">Costo Real de tus Licencias (Dashboard)</div>
+            <div class="cost-label">Valor Real de Nómina Digital</div>
             <div class="cost-value green-value">$637.35 USD</div>
-            <div class="cost-description"><strong>Gasto Total:</strong> Esta es la suma matemática exacta si se pagaran mensualmente las 59 licencias que tienes actualmente asignadas a los usuarios.</div>
+            <div class="cost-description">Este es el costo real asumiendo que se cobraran mensualmente el 100% de las licencias asignadas a los usuarios.</div>
         </div>
         <div class="cost-box yellow">
-            <div class="cost-label">Diferencia (Desfase)</div>
+            <div class="cost-label">Diferencia de Ciclos</div>
             <div class="cost-value yellow-value">$204.75 USD</div>
-            <div class="cost-description"><strong>La Diferencia:</strong> Representa las licencias de M365 y Visio que no se cobraron en la factura de $432.60 (por estar en otro ciclo de pago, descuento o anualidad).</div>
+            <div class="cost-description">Diferencia monetaria debido a los distintos ciclos de facturación.</div>
         </div>
+    </div>
+
+    <div class="alert-box">
+        <strong><i class="fa-solid fa-circle-info"></i> ¿Por qué hay una diferencia entre la factura y el valor real?</strong><br><br>
+        En Microsoft 365, si compras licencias en fechas distintas, se crean "Suscripciones" separadas y se cobran en días o meses diferentes. <br><br>
+        • Tienes <strong>31</strong> licencias de M365 Apps asignadas, pero la factura de $432.60 <strong>solo te está cobrando 19</strong> (19 x $10.50 = $199.50). Faltan 12 licencias por cobrar en otro corte.<br>
+        • Tienes <strong>5</strong> licencias de Visio Plan 2 asignadas, las cuales generan una factura totalmente independiente de <strong>$78.75 USD</strong> que no se sumó en ese corte de agosto.<br>
+        • Por lo tanto, el Dashboard calcula el <strong>Valor Real ($637.35)</strong> basándose en el total de licencias que tus usuarios realmente están consumiendo, para darte una auditoría precisa de tu gasto.
     </div>
 </section>
 
@@ -250,7 +235,7 @@
                 <td class="amount">$78.75 USD</td>
             </tr>
             <tr>
-                <td><strong>TOTAL</strong></td>
+                <td><strong>TOTAL GENERAL</strong></td>
                 <td><strong>59</strong></td>
                 <td>—</td>
                 <td class="amount"><strong>$637.35 USD</strong></td>
@@ -259,7 +244,7 @@
     </table>
 </section>
 
-<!-- TABLA DE USUARIOS DINÁMICA (Lee el CSV) -->
+<!-- TABLA DE USUARIOS DINÁMICA -->
 <section class="card users-section">
     <div class="card-header">
         <h2 class="card-title">Usuarios y costos de licencias</h2>
@@ -286,7 +271,6 @@
                 </tr>
             </thead>
             <tbody id="usersTableBody">
-                <!-- Se llena automáticamente con JavaScript al leer MICROSOFT.csv -->
             </tbody>
         </table>
     </div>
@@ -296,7 +280,7 @@
 </div>
 
 <script>
-    // PRECIOS UNITARIOS EXACTOS
+    // PRECIOS UNITARIOS
     const PRECIOS_LICENCIAS_USD = {
         "Aplicaciones de Microsoft 365 para negocios": 10.50, 
         "Planner y Project Plan 3": 31.50,
@@ -313,7 +297,6 @@
         complete: function(results) {
             let data = results.data;
             
-            // Arreglo para CSV separado por punto y coma
             if (data.length > 0 && !data[0]['User principal name'] && Object.keys(data[0])[0].includes(';')) {
                  const rawKeys = Object.keys(data[0])[0].split(';');
                  data = data.map(row => {
@@ -336,7 +319,6 @@
             let licensesCount = {}; 
             let userList = [];
 
-            // Normalizador de licencias
             const normalizeLicenseName = (name) => {
                 const lower = name.toLowerCase();
                 if(lower.includes("aplicaciones de microsoft 365") || lower.includes("microsoft 365 apps")) return "Aplicaciones de Microsoft 365 para negocios";
@@ -405,14 +387,12 @@
                 });
             });
 
-            // KPIs
             document.getElementById('totalUsers').innerText = totalUsers;
             document.getElementById('activeUsers').innerText = activos;
             document.getElementById('blockedUsers').innerText = bloqueados;
             document.getElementById('passNeverExpires').innerText = passNeverExpires;
             document.getElementById('totalCost').innerText = "$" + granTotalCostoUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " USD";
 
-            // Gráficas
             new Chart(document.getElementById("statusChart"), {
                 type: "doughnut",
                 data: { labels: ["Activas", "Bloqueadas"], datasets: [{ data: [activos, bloqueados], backgroundColor: ["#107c10", "#d83b01"], borderWidth: 0 }] },
@@ -435,7 +415,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(c) { return `$${c.raw.toFixed(2)} USD`; } } } }, scales: { y: { beginAtZero: true, grid: { color: "#e5e5e5" } }, x: { grid: { display: false }, ticks: { maxRotation: 25, minRotation: 15 } } } }
             });
 
-            // Llenar Tabla
             const tableBody = document.getElementById("usersTableBody");
             userList.sort((a, b) => b.costo - a.costo);
 
