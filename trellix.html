@@ -82,6 +82,7 @@
         tr:hover { background-color: #f8fbff; }
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
         .badge-active { color: var(--success); background: #e6f4ea;}
+        .badge-warning { color: var(--warning); background: #fef0d9;}
         
         footer { text-align: center; color: #777; font-size: 11px; padding: 25px 0 5px; }
 
@@ -181,30 +182,30 @@
         <!-- GRÁFICAS -->
         <div class="charts-grid">
             <div class="chart-card">
-                <h3>Estado de Despliegue de Licencias</h3>
-                <div class="card-desc">Monitoreo de instalación de agentes Trellix en la red</div>
+                <h3>Estado de Despliegue de Licencias <span style="color:#d93025; font-size:12px;">(Datos Simulados)</span></h3>
+                <div class="card-desc">Ejemplo visual del monitoreo de instalación de agentes Trellix en la red.</div>
                 <div class="chart-container"><canvas id="deploymentChart"></canvas></div>
             </div>
             <div class="chart-card">
                 <h3>Distribución de Presupuesto de Seguridad</h3>
-                <div class="card-desc">Impacto del costo de Trellix en el licenciamiento global</div>
+                <div class="card-desc">Inversión generada por el licenciamiento Trellix en el año.</div>
                 <div class="chart-container"><canvas id="budgetChart"></canvas></div>
             </div>
         </div>
 
         <!-- TABLA INFORMATIVA -->
         <div class="chart-card">
-            <h3>Inventario de Dispositivos Protegidos (Simulación)</h3>
-            <div class="card-desc">Esta tabla simula los equipos que actualmente tienen instalado el agente Trellix EDR & EPP. <em>(Requiere conexión a consola Trellix ePO o exportación CSV)</em>.</div>
+            <h3>Inventario de Dispositivos Protegidos <span style="color:#f9ab00; font-size:14px;"><i class="fa-solid fa-triangle-exclamation"></i> Requiere archivo CSV</span></h3>
+            <div class="card-desc">Esta tabla simula los equipos que actualmente tienen instalado el agente Trellix EDR & EPP. Para ver los datos reales, se debe conectar el dashboard a un reporte extraído de la consola Trellix ePO.</div>
             
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>Hostname</th>
+                            <th>Hostname (Equipo)</th>
                             <th>Usuario Asignado</th>
                             <th>Sistema Operativo</th>
-                            <th>Agente Trellix</th>
+                            <th>Versión del Agente</th>
                             <th>Estado de Protección</th>
                             <th>Costo Anual</th>
                         </tr>
@@ -220,13 +221,14 @@
     </div>
 
     <script>
-        // Gráfica 1: Despliegue de Licencias
+        // Gráfica 1: Despliegue de Licencias (DATOS SIMULADOS ACLARADOS)
+        // Aquí puedes cambiar el 32 y el 4 por los datos reales cuando los tengas
         new Chart(document.getElementById('deploymentChart'), {
             type: 'doughnut',
             data: {
                 labels: ['Instaladas / En uso', 'Disponibles en Consola'],
                 datasets: [{
-                    data: [32, 4], // Datos simulados para 36 licencias
+                    data: [32, 4], // <--- DATOS SIMULADOS PARA EJEMPLO VISUAL
                     backgroundColor: ['#C62828', '#e0e0e0'], 
                     borderWidth: 0,
                     hoverOffset: 4
@@ -242,7 +244,7 @@
             }
         });
 
-        // Gráfica 2: Presupuesto (Trellix vs Otros) - Simulado para visualización
+        // Gráfica 2: Presupuesto (Valor Real según OC)
         new Chart(document.getElementById('budgetChart'), {
             type: 'bar',
             data: {
@@ -265,18 +267,23 @@
             }
         });
 
-        // Llenar Tabla Simulada de Endpoints
+        // Llenar Tabla Simulada de Endpoints para Mostrar la Maqueta
         const tableBody = document.getElementById('devicesTableBody');
         const mockUsers = [
             { host: 'SVR-BOG-01', user: 'admininfraestructura', os: 'Windows Server 2022', agent: 'v5.7.9', status: 'Activo' },
             { host: 'LAP-GER-05', user: 'pm_1', os: 'Windows 11 Pro', agent: 'v5.7.9', status: 'Activo' },
             { host: 'LAP-SOP-12', user: 'soporte', os: 'Windows 11 Pro', agent: 'v5.7.9', status: 'Activo' },
-            { host: 'DESK-CON-03', user: 'contabilidad', os: 'Windows 10 Pro', agent: 'v5.7.8', status: 'Activo' },
+            { host: 'DESK-CON-03', user: 'contabilidad', os: 'Windows 10 Pro', agent: 'v5.7.8', status: 'Desactualizado' },
             { host: 'LAP-OPE-08', user: 'Operaciones', os: 'Windows 11 Pro', agent: 'v5.7.9', status: 'Activo' }
         ];
 
         mockUsers.forEach(device => {
-            const statusBadge = `<span class="badge badge-active" style="background:#fce8e6; color:#C62828;"><i class="fa-solid fa-shield-virus"></i> Protegido</span>`;
+            let statusBadge = '';
+            if(device.status === 'Activo'){
+                statusBadge = `<span class="badge badge-active" style="background:#fce8e6; color:#C62828;"><i class="fa-solid fa-shield-virus"></i> Protegido</span>`;
+            } else {
+                statusBadge = `<span class="badge badge-warning" style="background:#fef0d9; color:#d93025;"><i class="fa-solid fa-triangle-exclamation"></i> ${device.status}</span>`;
+            }
             
             const row = `<tr>
                 <td style="font-weight:600; color:#222;">${device.host}</td>
