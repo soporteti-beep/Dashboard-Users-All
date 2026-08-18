@@ -125,7 +125,6 @@
                     <span style="color: var(--money); font-weight: 600;">Dominio (Año)</span>
                     <i class="fa-solid fa-globe" style="color: var(--money);"></i>
                 </div>
-                <!-- ASUMIMOS QUE LA RENOVACIÓN ES IGUAL A LAS DEMÁS CUENTAS SECUNDARIAS. SI TIENES LA FECHA, LA PUEDES CAMBIAR AQUÍ -->
                 <div class="kpi-value" style="color: var(--money);">$45.377</div>
                 <div class="kpi-subtext">Renovación construsalco.com</div>
             </div>
@@ -304,14 +303,14 @@
                 const costoTotalMes = activos * COSTO_POR_USUARIO_COP;
                 document.getElementById('totalCost').innerText = "$" + costoTotalMes.toLocaleString('es-CO');
 
-                // Gráfica 1: Almacenamiento
+                // Gráfica 1: Almacenamiento (COLORES ACTUALIZADOS DE ALTO CONTRASTE)
                 new Chart(document.getElementById('storageBreakdownChart'), {
                     type: 'doughnut',
                     data: {
                         labels: ['Google Drive', 'Gmail', 'Google Photos'],
                         datasets: [{
                             data: [totalDriveGB.toFixed(2), totalEmailGB.toFixed(2), totalPhotosGB.toFixed(2)],
-                            backgroundColor: ['#E65100', '#ea4335', '#f9ab00'], // Naranja para Construsalco
+                            backgroundColor: ['#E65100', '#1a73e8', '#5f6368'], // Naranja, Azul, Gris
                             borderWidth: 2,
                             hoverOffset: 4
                         }]
