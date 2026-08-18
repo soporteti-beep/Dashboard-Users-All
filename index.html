@@ -3,34 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Multi-Consolas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <title>Portal Multi-Consolas de TI</title>
+    
+    <!-- Fuentes e Íconos -->
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
     <style>
-        body { margin: 0; font-family: 'Google Sans', sans-serif; background: #f8f9fa; overflow: hidden; }
+        body { 
+            margin: 0; 
+            font-family: 'Google Sans', sans-serif; 
+            background: #f8f9fa; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh;
+        }
         
-        .tabs-container { background: #ffffff; border-bottom: 1px solid #dadce0; display: flex; padding: 0 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); overflow-x: auto; white-space: nowrap; }
-        .tab-btn { background: none; border: none; padding: 18px 24px; font-size: 15px; font-weight: 500; color: #5f6368; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
-        .tab-btn:hover { background: #f1f3f4; color: #202124; }
-        .tab-btn.active { color: #1a73e8; border-bottom-color: #1a73e8; }
+        /* =========================================
+           1. BARRA DE NAVEGACIÓN PRIMARIA (CATEGORÍAS)
+        ========================================= */
+        .primary-nav { 
+            background: #1a73e8; /* Azul corporativo principal */
+            display: flex; 
+            padding: 0 20px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            z-index: 10;
+        }
+        .primary-btn { 
+            background: none; 
+            border: none; 
+            padding: 16px 24px; 
+            font-size: 15px; 
+            font-weight: 500; 
+            color: rgba(255,255,255,0.7); 
+            cursor: pointer; 
+            border-bottom: 3px solid transparent; 
+            transition: all 0.2s; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+        }
+        .primary-btn:hover { color: #ffffff; }
+        .primary-btn.active { color: #ffffff; border-bottom-color: #ffffff; }
+
+        /* =========================================
+           2. BARRA DE NAVEGACIÓN SECUNDARIA (SUB-PESTAÑAS)
+        ========================================= */
+        .secondary-nav { 
+            background: #ffffff; 
+            display: flex; 
+            padding: 0 20px; 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
+            overflow-x: auto; 
+            white-space: nowrap; 
+            z-index: 5;
+        }
         
-        .iframe-container { width: 100%; height: calc(100vh - 57px); border: none; display: none; }
+        /* Ocultar grupos de sub-pestañas por defecto */
+        .sub-nav-group { display: none; width: 100%; gap: 5px; }
+        .sub-nav-group.active { display: flex; }
+        
+        .sub-btn { 
+            background: none; 
+            border: none; 
+            padding: 12px 20px; 
+            font-size: 14px; 
+            font-weight: 500; 
+            color: #5f6368; 
+            cursor: pointer; 
+            border-bottom: 3px solid transparent; 
+            transition: all 0.2s; 
+        }
+        .sub-btn:hover { background: #f1f3f4; color: #202124; }
+        .sub-btn.active { color: #1a73e8; border-bottom-color: #1a73e8; }
+
+        /* =========================================
+           3. ÁREA DEL DASHBOARD (IFRAMES)
+        ========================================= */
+        .iframe-container { 
+            flex-grow: 1; 
+            width: 100%; 
+            border: none; 
+            display: none; 
+            background: #f8f9fa;
+        }
         .iframe-container.active { display: block; }
     </style>
 </head>
 <body>
 
-    <div class="tabs-container">
-        <button class="tab-btn active" onclick="openTab(event, 'vista-servialco')">SERVIALCO</button>
-        <button class="tab-btn" onclick="openTab(event, 'vista-construsalco')">CONSTRUSALCO</button>
-        <button class="tab-btn" onclick="openTab(event, 'vista-utinnovafna')">UTINNOVAFNA</button> 
-        <button class="tab-btn" onclick="openTab(event, 'vista-artecsas')">ARTECSAS</button> 
-        <button class="tab-btn" onclick="openTab(event, 'vista-microsoft')">Microsoft 365</button>
-        
-        <!-- EL BOTÓN RENOMBRADO A "Cuentas Secundarias" -->
-        <button class="tab-btn" onclick="openTab(event, 'vista-financiero')">Cuentas Secundarias</button>
+    <!-- Nivel 1: Categorías Principales -->
+    <div class="primary-nav">
+        <button class="primary-btn active" onclick="switchCategory(event, 'grupo-consolas')">
+            <i class="fa-solid fa-cloud"></i> Consolas y Correos
+        </button>
+        <button class="primary-btn" onclick="switchCategory(event, 'grupo-antivirus')">
+            <i class="fa-solid fa-shield-halved"></i> Seguridad Antivirus
+        </button>
     </div>
 
-    <!-- Iframes -->
+    <!-- Nivel 2: Sub-pestañas -->
+    <div class="secondary-nav">
+        
+        <!-- Grupo 1: Consolas (Activo por defecto) -->
+        <div id="grupo-consolas" class="sub-nav-group active">
+            <button class="sub-btn active" onclick="openDashboard(event, 'vista-servialco')">SERVIALCO</button>
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-construsalco')">CONSTRUSALCO</button>
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-utinnovafna')">UTINNOVAFNA</button> 
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-artecsas')">ARTECSAS</button> 
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-microsoft')">Microsoft 365</button>
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-financiero')">Cuentas Secundarias</button>
+        </div>
+
+        <!-- Grupo 2: Antivirus (Oculto por defecto) -->
+        <div id="grupo-antivirus" class="sub-nav-group">
+            <!-- Renombra "Antivirus 1" y "Antivirus 2" por las marcas reales cuando quieras -->
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-antivirus1')">Antivirus 1</button>
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-antivirus2')">Antivirus 2</button>
+        </div>
+
+    </div>
+
+    <!-- ÁREA DE CARGA DE DASHBOARDS (Iframes) -->
+    
+    <!-- Iframes de Consolas -->
     <iframe id="vista-servialco" class="iframe-container active" src="servialco.html"></iframe>
     <iframe id="vista-construsalco" class="iframe-container" src="construsalco.html"></iframe>
     <iframe id="vista-utinnovafna" class="iframe-container" src="utinnovafna.html"></iframe>
@@ -38,17 +135,53 @@
     <iframe id="vista-microsoft" class="iframe-container" src="microsoft.html"></iframe>
     <iframe id="vista-financiero" class="iframe-container" src="financiero.html"></iframe>
 
+    <!-- Iframes de Antivirus -->
+    <iframe id="vista-antivirus1" class="iframe-container" src="antivirus1.html"></iframe>
+    <iframe id="vista-antivirus2" class="iframe-container" src="antivirus2.html"></iframe>
+
     <script>
-        function openTab(evt, vistaId) {
+        // Función para cambiar la Categoría Principal (Consolas vs Antivirus)
+        function switchCategory(evt, groupId) {
+            // 1. Quitar 'active' de todos los botones principales
+            let primaryBtns = document.getElementsByClassName("primary-btn");
+            for (let i = 0; i < primaryBtns.length; i++) {
+                primaryBtns[i].classList.remove("active");
+            }
+            evt.currentTarget.classList.add("active");
+
+            // 2. Ocultar todos los grupos de sub-pestañas
+            let subGroups = document.getElementsByClassName("sub-nav-group");
+            for (let i = 0; i < subGroups.length; i++) {
+                subGroups[i].classList.remove("active");
+            }
+            
+            // 3. Mostrar el grupo seleccionado
+            let targetGroup = document.getElementById(groupId);
+            targetGroup.classList.add("active");
+
+            // 4. Hacer clic automáticamente en la primera sub-pestaña del grupo nuevo
+            let firstSubBtn = targetGroup.querySelector('.sub-btn');
+            if(firstSubBtn) {
+                firstSubBtn.click();
+            }
+        }
+
+        // Función para cambiar de Dashboard (Iframe)
+        function openDashboard(evt, iframeId) {
+            // 1. Ocultar todos los iframes
             let iframes = document.getElementsByClassName("iframe-container");
             for (let i = 0; i < iframes.length; i++) {
                 iframes[i].classList.remove("active");
             }
-            let botones = document.getElementsByClassName("tab-btn");
-            for (let i = 0; i < botones.length; i++) {
-                botones[i].classList.remove("active");
+            
+            // 2. Quitar estado activo de TODOS los botones secundarios
+            let subBtns = document.getElementsByClassName("sub-btn");
+            for (let i = 0; i < subBtns.length; i++) {
+                subBtns[i].classList.remove("active");
             }
-            document.getElementById(vistaId).classList.add("active");
+
+            // 3. Mostrar el iframe seleccionado y marcar el botón como activo
+            document.getElementById(iframeId).classList.add("active");
             evt.currentTarget.classList.add("active");
         }
     </script>
