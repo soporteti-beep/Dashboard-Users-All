@@ -101,6 +101,10 @@
         <button class="primary-btn" onclick="switchCategory(event, 'grupo-antivirus')">
             <i class="fa-solid fa-shield-halved"></i> Seguridad Antivirus
         </button>
+        <!-- NUEVA CATEGORÍA PRINCIPAL: Autocad y Nitro -->
+        <button class="primary-btn" onclick="switchCategory(event, 'grupo-autocad-nitro')">
+            <i class="fa-solid fa-pen-ruler"></i> Autocad - Nitro
+        </button>
     </div>
 
     <!-- Nivel 2: Sub-pestañas -->
@@ -122,6 +126,12 @@
             <button class="sub-btn" onclick="openDashboard(event, 'vista-sophos')">Sophos</button>
         </div>
 
+        <!-- Grupo 3: Autocad - Nitro (Oculto por defecto) -->
+        <div id="grupo-autocad-nitro" class="sub-nav-group">
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-autocad')">Autocad</button>
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-nitro')">Nitro</button>
+        </div>
+
     </div>
 
     <!-- ÁREA DE CARGA DE DASHBOARDS (Iframes) -->
@@ -138,8 +148,12 @@
     <iframe id="vista-trellix" class="iframe-container" src="trellix.html"></iframe>
     <iframe id="vista-sophos" class="iframe-container" src="sophos.html"></iframe>
 
+    <!-- Iframes de Autocad y Nitro -->
+    <iframe id="vista-autocad" class="iframe-container" src="autocad.html"></iframe>
+    <iframe id="vista-nitro" class="iframe-container" src="nitro.html"></iframe>
+
     <script>
-        // Función para cambiar la Categoría Principal (Consolas vs Antivirus)
+        // Función para cambiar la Categoría Principal (Consolas vs Antivirus vs Autocad-Nitro)
         function switchCategory(evt, groupId) {
             // 1. Quitar 'active' de todos los botones principales
             let primaryBtns = document.getElementsByClassName("primary-btn");
