@@ -61,6 +61,20 @@
         .card-desc { font-size: 12px; color: #666; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 12px; }
         .chart-container { position: relative; height: 285px; width: 100%; }
 
+        /* SECCIÓN FINANCIERA (NUEVA) */
+        .cost-section { margin-bottom: 28px; }
+        .cost-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 18px; }
+        .cost-box { border-radius: 8px; padding: 20px; border: 1px solid #ddd; }
+        .cost-box.green { background: #f3fbef; border-color: #b7dfae; }
+        .cost-box.gray { background: #fafafa; }
+        .cost-box.red { background: #fce8e6; border-color: #fad2cf; }
+        .cost-label { font-size: 14px; color: #333; font-weight: 600;}
+        .cost-value { font-size: 28px; font-weight: 600; margin-top: 8px; }
+        .green-value { color: #107c10; }
+        .red-value { color: #d93025; }
+        .cost-description { font-size: 12px; color: #555; margin-top: 12px; line-height: 1.5; }
+        .alert-box { background: #e3f2fd; border-left: 4px solid var(--primary); padding: 15px; margin-top: 15px; font-size: 13px; color: #333; border-radius: 4px;}
+
         /* TABLA DE USUARIOS */
         .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin: 18px 0; flex-wrap: wrap; }
         .search-box { position: relative; width: 330px; }
@@ -85,7 +99,7 @@
         .cost-text { font-weight: 600; color: var(--money); }
         footer { text-align: center; color: #777; font-size: 11px; padding: 25px 0 5px; }
 
-        @media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } .cost-grid { grid-template-columns: 1fr; } }
         @media (max-width: 650px) { .kpi-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -113,11 +127,11 @@
 
             <div class="kpi-card kpi-money" style="background-color: #f6feef; border-color: #cce8d6;">
                 <div class="kpi-header">
-                    <span style="color: var(--money); font-weight: 600;">Costo Licencias (Mes)</span>
+                    <span style="color: var(--money); font-weight: 600;">Costo Proyectado (Mes)</span>
                     <i class="fa-solid fa-money-bill-wave" style="color: var(--money);"></i>
                 </div>
                 <div id="totalCost" class="kpi-value" style="color: var(--money);">...</div>
-                <div class="kpi-subtext">Cuentas Activas × $70.000 COP</div>
+                <div class="kpi-subtext">Activos × $54.271 COP (Precio Partner)</div>
             </div>
 
             <div class="kpi-card kpi-money" style="background-color: #f6feef; border-color: #cce8d6;">
@@ -144,7 +158,7 @@
                     <i class="fa-solid fa-user-slash"></i>
                 </div>
                 <div id="suspendedUsers" class="kpi-value">...</div>
-                <div class="kpi-subtext">Requieren revisión o eliminación</div>
+                <div class="kpi-subtext">No generan cobro de licencia</div>
             </div>
             
             <div class="kpi-card kpi-red">
@@ -156,6 +170,39 @@
                 <div class="kpi-subtext">Cuentas vulnerables</div>
             </div>
         </div>
+
+        <!-- SECCIÓN DE AUDITORÍA FINANCIERA (NUEVA) -->
+        <section class="chart-card cost-section">
+            <h3 style="margin-top:0;">Auditoría de Facturación vs Precio Comercial</h3>
+            <div class="card-desc">Análisis de la factura emitida por el partner tecnológico (NUVA S.A.S) vs el precio público de Google Workspace.</div>
+            
+            <div class="cost-grid">
+                <div class="cost-box gray">
+                    <div class="cost-label">Factura NUVA (Mes)</div>
+                    <div class="cost-value">$5.111.978 COP</div>
+                    <div class="cost-description">Cobro exacto del último ciclo facturado.</div>
+                </div>
+                <div class="cost-box red">
+                    <div class="cost-label" style="color: #d93025;">Costo Comercial (Sin Partner)</div>
+                    <div class="cost-value red-value">$6.580.000 COP</div>
+                    <div class="cost-description">Costo si se pagaran las 94 licencias al precio estándar de Google ($70.000 COP).</div>
+                </div>
+                <div class="cost-box green">
+                    <div class="cost-label">Ahorro Generado</div>
+                    <div class="cost-value green-value">$1.468.022 COP</div>
+                    <div class="cost-description">Ahorro mensual gracias al precio preferencial ($54.271 COP/usuario).</div>
+                </div>
+            </div>
+
+            <div class="alert-box">
+                <strong><i class="fa-solid fa-circle-info"></i> Desglose oficial de la Factura de NUVA S.A.S:</strong><br><br>
+                La factura analiza el consumo de <strong>Workspace Business Standard Flex</strong> de forma prorrateada:<br>
+                • <strong>Uso del 1 al 3 de julio (3 días):</strong> 96 licencias a $5.252 COP c/u = $504.192 COP.<br>
+                • <strong>Uso del 4 al 31 de julio (28 días):</strong> 94 licencias a $49.019 COP c/u = $4.607.786 COP.<br>
+                • <strong>Total Facturado:</strong> $5.111.978 COP.<br><br>
+                Esto confirma que el costo unitario mensual real que estás pagando es de <strong>$54.271 COP</strong> por usuario, lo que representa un excelente beneficio frente a la tarifa pública.
+            </div>
+        </section>
 
         <!-- GRÁFICAS -->
         <div class="charts-grid">
@@ -174,7 +221,7 @@
         <!-- TABLA DE USUARIOS -->
         <div class="chart-card">
             <h3>Listado Completo de Usuarios</h3>
-            <div class="card-desc">Auditoría individual de consumos y costos estimados.</div>
+            <div class="card-desc">Auditoría individual de consumos y proyección de costos usando la tarifa preferencial ($54.271 COP).</div>
             
             <div class="table-toolbar">
                 <div class="user-count">Usuarios mostrados: <strong id="userCount">0</strong></div>
@@ -193,7 +240,7 @@
                             <th>Drive</th>
                             <th>Correo</th>
                             <th>Total Consumido</th>
-                            <th>Costo Estimado (COP)</th>
+                            <th>Costo Real (COP)</th>
                         </tr>
                     </thead>
                     <tbody id="topUsersTableBody">
@@ -208,8 +255,9 @@
 
     <script>
         // ==========================================================
-        // CONFIGURACIÓN FINANCIERA SERVIALCO (En Pesos Colombianos)
-        const COSTO_POR_USUARIO_COP = 70000; 
+        // CONFIGURACIÓN FINANCIERA (En Pesos Colombianos)
+        // Precio unitario real extraído de la factura de NUVA S.A.S
+        const COSTO_POR_USUARIO_COP = 54271; 
         // ==========================================================
 
         function parseStorageToGB(str) {
@@ -299,7 +347,7 @@
                 document.getElementById('suspendedUsers').innerText = suspendidos;
                 document.getElementById('usersWithout2FA').innerText = sin2FA;
 
-                // Calcular y asignar Costo Mensual Total en COP
+                // Calcular y asignar Costo Mensual Total en COP (Por Activos)
                 const costoTotalMes = activos * COSTO_POR_USUARIO_COP;
                 document.getElementById('totalCost').innerText = "$" + costoTotalMes.toLocaleString('es-CO');
 
@@ -310,7 +358,7 @@
                         labels: ['Google Drive', 'Gmail', 'Google Photos'],
                         datasets: [{
                             data: [totalDriveGB.toFixed(2), totalEmailGB.toFixed(2), totalPhotosGB.toFixed(2)],
-                            backgroundColor: ['#1a73e8', '#ea4335', '#f9ab00'], // Azul de Servialco
+                            backgroundColor: ['#1a73e8', '#ea4335', '#f9ab00'], 
                             borderWidth: 2,
                             hoverOffset: 4
                         }]
