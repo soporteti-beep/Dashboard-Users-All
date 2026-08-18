@@ -101,7 +101,6 @@
         <button class="primary-btn" onclick="switchCategory(event, 'grupo-antivirus')">
             <i class="fa-solid fa-shield-halved"></i> Seguridad Antivirus
         </button>
-        <!-- NUEVA CATEGORÍA PRINCIPAL: Autocad y Nitro -->
         <button class="primary-btn" onclick="switchCategory(event, 'grupo-autocad-nitro')">
             <i class="fa-solid fa-pen-ruler"></i> Autocad - Nitro
         </button>
@@ -153,26 +152,22 @@
     <iframe id="vista-nitro" class="iframe-container" src="nitro.html"></iframe>
 
     <script>
-        // Función para cambiar la Categoría Principal (Consolas vs Antivirus vs Autocad-Nitro)
+        // Función para cambiar la Categoría Principal
         function switchCategory(evt, groupId) {
-            // 1. Quitar 'active' de todos los botones principales
             let primaryBtns = document.getElementsByClassName("primary-btn");
             for (let i = 0; i < primaryBtns.length; i++) {
                 primaryBtns[i].classList.remove("active");
             }
             evt.currentTarget.classList.add("active");
 
-            // 2. Ocultar todos los grupos de sub-pestañas
             let subGroups = document.getElementsByClassName("sub-nav-group");
             for (let i = 0; i < subGroups.length; i++) {
                 subGroups[i].classList.remove("active");
             }
             
-            // 3. Mostrar el grupo seleccionado
             let targetGroup = document.getElementById(groupId);
             targetGroup.classList.add("active");
 
-            // 4. Hacer clic automáticamente en la primera sub-pestaña del grupo nuevo
             let firstSubBtn = targetGroup.querySelector('.sub-btn');
             if(firstSubBtn) {
                 firstSubBtn.click();
@@ -181,19 +176,16 @@
 
         // Función para cambiar de Dashboard (Iframe)
         function openDashboard(evt, iframeId) {
-            // 1. Ocultar todos los iframes
             let iframes = document.getElementsByClassName("iframe-container");
             for (let i = 0; i < iframes.length; i++) {
                 iframes[i].classList.remove("active");
             }
             
-            // 2. Quitar estado activo de TODOS los botones secundarios
             let subBtns = document.getElementsByClassName("sub-btn");
             for (let i = 0; i < subBtns.length; i++) {
                 subBtns[i].classList.remove("active");
             }
 
-            // 3. Mostrar el iframe seleccionado y marcar el botón como activo
             document.getElementById(iframeId).classList.add("active");
             evt.currentTarget.classList.add("active");
         }
