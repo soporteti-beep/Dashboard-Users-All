@@ -49,23 +49,24 @@
 </head>
 <body>
     
+    <!-- NUEVO TÍTULO DE BARRA -->
     <div class="navbar">
         <h1><span class="material-symbols-outlined">account_balance</span> Consolidado Financiero - Cuentas Secundarias</h1>
     </div>
 
     <div class="container">
         
-        <!-- TARJETA GLOBAL -->
+        <!-- TARJETA GLOBAL (SIN ARTECSAS) -->
         <div class="summary-card">
             <div class="summary-info">
                 <h2>Total Gasto Mensual Estimado (Licencias)</h2>
                 <p class="summary-total" id="grandTotalMes">Calculando...</p>
-                <p style="margin-top: 10px; opacity: 0.8; font-size: 0.9rem;">+ $294.950 COP Anuales en dominios</p>
+                <p style="margin-top: 10px; opacity: 0.8; font-size: 0.9rem;">+ $181.508 COP Anuales en dominios</p>
             </div>
             <span class="material-symbols-outlined" style="font-size: 80px; opacity: 0.5;">request_quote</span>
         </div>
 
-        <!-- TARJETAS POR CUENTA -->
+        <!-- TARJETAS POR CUENTA (SOLO LAS 4 SECUNDARIAS) -->
         <div class="grid">
             
             <!-- Cerrando Brechas -->
@@ -79,19 +80,6 @@
                 <div class="detail-row"><span class="label">Gasto Mensual:</span> <span class="val-money">$70.000 COP</span></div>
                 <div class="detail-row"><span class="label">Costo Dominio:</span> <span class="val">$45.377 COP / año</span></div>
                 <div class="detail-row"><span class="label">Renovación Dom:</span> <span class="val">22 may 2027</span></div>
-            </div>
-
-            <!-- Artecsas -->
-            <div class="card">
-                <h3><span class="material-symbols-outlined">business</span> Artecsas</h3>
-                <div class="subtitle">Google Workspace Business Standard</div>
-                <div class="detail-row"><span class="label">Admin:</span> <span class="val email-text">info@artecsas.co</span></div>
-                <div class="detail-row"><span class="label">Dominio Web:</span> <span class="val">artecsas.co</span></div>
-                <div class="detail-row"><span class="label">Licencias:</span> <span class="val">6 asignadas</span></div>
-                <div class="detail-row"><span class="label">Costo Licencia:</span> <span class="val">$70.000 COP</span></div>
-                <div class="detail-row"><span class="label">Gasto Mensual:</span> <span class="val-money">$420.000 COP</span></div>
-                <div class="detail-row"><span class="label">Costo Dominio:</span> <span class="val">$113.442 COP / año</span></div>
-                <div class="detail-row"><span class="label">Renovación Dom:</span> <span class="val">23 may 2027</span></div>
             </div>
 
             <!-- UT Red Putumayo -->
@@ -135,7 +123,7 @@
 
         </div>
 
-        <!-- GRÁFICAS -->
+        <!-- GRÁFICAS (ACTUALIZADAS SIN ARTECSAS) -->
         <div class="charts-container">
             <div class="chart-box">
                 <h3 style="text-align:center; color:#333; margin-top:0;">Gasto Mensual por Cuenta (COP)</h3>
@@ -154,10 +142,9 @@
     </div>
 
     <script>
-        // Datos extraídos de las imágenes
+        // Datos extraídos SIN ARTECSAS
         const dataCuentas = [
             { nombre: 'Cerrando Brechas', licencias: 1, costoMensual: 70000 },
-            { nombre: 'Artecsas', licencias: 6, costoMensual: 420000 },
             { nombre: 'UT Red Putumayo', licencias: 1, costoMensual: 70000 },
             { nombre: 'UT Red Valle', licencias: 1, costoMensual: 70000 },
             { nombre: 'UT Quindío', licencias: 1, costoMensual: 70000 }
@@ -167,8 +154,8 @@
         const granTotal = dataCuentas.reduce((sum, cuenta) => sum + cuenta.costoMensual, 0);
         document.getElementById('grandTotalMes').innerText = "$" + granTotal.toLocaleString('es-CO');
 
-        // Configuración de Colores
-        const colores = ['#1a73e8', '#34a853', '#fbbc04', '#ea4335', '#9334e6'];
+        // Configuración de Colores (Excluimos el verde oscuro de Artecsas)
+        const colores = ['#1a73e8', '#fbbc04', '#ea4335', '#9334e6'];
 
         // Gráfica de Barras (Gastos Mensuales)
         new Chart(document.getElementById('costosChart'), {
