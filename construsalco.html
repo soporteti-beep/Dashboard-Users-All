@@ -61,6 +61,19 @@
         .card-desc { font-size: 12px; color: #666; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 12px; }
         .chart-container { position: relative; height: 285px; width: 100%; }
 
+        /* SECCIÓN FINANCIERA */
+        .cost-section { margin-bottom: 28px; }
+        .cost-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 18px; }
+        .cost-box { border-radius: 8px; padding: 20px; border: 1px solid #ddd; }
+        .cost-box.green { background: #f3fbef; border-color: #b7dfae; }
+        .cost-box.red { background: #fce8e6; border-color: #fad2cf; }
+        .cost-label { font-size: 14px; color: #333; font-weight: 600;}
+        .cost-value { font-size: 28px; font-weight: 600; margin-top: 8px; }
+        .green-value { color: #107c10; }
+        .red-value { color: #d93025; }
+        .cost-description { font-size: 12px; color: #555; margin-top: 12px; line-height: 1.5; }
+        .alert-box { background: #fff4ce; border-left: 4px solid var(--warning); padding: 15px; margin-top: 15px; font-size: 13px; color: #333; border-radius: 4px;}
+
         /* TABLA DE USUARIOS */
         .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin: 18px 0; flex-wrap: wrap; }
         .search-box { position: relative; width: 330px; }
@@ -85,7 +98,7 @@
         .cost-text { font-weight: 600; color: var(--money); }
         footer { text-align: center; color: #777; font-size: 11px; padding: 25px 0 5px; }
 
-        @media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } .cost-grid { grid-template-columns: 1fr; } }
         @media (max-width: 650px) { .kpi-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -113,11 +126,11 @@
 
             <div class="kpi-card kpi-money" style="background-color: #f6feef; border-color: #cce8d6;">
                 <div class="kpi-header">
-                    <span style="color: var(--money); font-weight: 600;">Costo Licencias (Mes)</span>
+                    <span style="color: var(--money); font-weight: 600;">Costo Proyectado (Mes)</span>
                     <i class="fa-solid fa-money-bill-wave" style="color: var(--money);"></i>
                 </div>
                 <div id="totalCost" class="kpi-value" style="color: var(--money);">...</div>
-                <div class="kpi-subtext">Cuentas Activas × $70.000 COP</div>
+                <div class="kpi-subtext">Activos × $54.271 COP (Precio Partner)</div>
             </div>
 
             <div class="kpi-card kpi-money" style="background-color: #f6feef; border-color: #cce8d6;">
@@ -157,6 +170,30 @@
             </div>
         </div>
 
+        <!-- SECCIÓN DE AUDITORÍA FINANCIERA -->
+        <section class="chart-card cost-section">
+            <h3 style="margin-top:0;">Auditoría de Costos vs Precio Comercial</h3>
+            <div class="card-desc">Análisis del ahorro estimado gracias a la tarifa preferencial del partner (NUVA S.A.S).</div>
+            
+            <div class="cost-grid">
+                <div class="cost-box red">
+                    <div class="cost-label" style="color: #d93025;">Costo Público (Sin Partner)</div>
+                    <div id="costoComercial" class="cost-value red-value">...</div>
+                    <div class="cost-description">Costo mensual si se pagara la tarifa estándar de Google Workspace Business Standard ($70.000 COP).</div>
+                </div>
+                <div class="cost-box green">
+                    <div class="cost-label">Ahorro Mensual Estimado</div>
+                    <div id="ahorroMensual" class="cost-value green-value">...</div>
+                    <div class="cost-description">Dinero ahorrado cada mes gracias al acuerdo comercial de facturación ($54.271 COP / usuario).</div>
+                </div>
+            </div>
+
+            <div class="alert-box">
+                <strong><i class="fa-solid fa-circle-info"></i> Sobre el modelo de facturación:</strong><br>
+                El partner tecnológico proporciona una reducción sustancial del costo de licencia por volumen y/o acuerdo comercial, pasando de los $70.000 COP comerciales a <strong>$54.271 COP</strong>. Este dashboard proyecta automáticamente tu factura asumiendo este precio preferencial por cada usuario activo en el CSV.
+            </div>
+        </section>
+
         <!-- GRÁFICAS -->
         <div class="charts-grid">
             <div class="chart-card">
@@ -174,7 +211,7 @@
         <!-- TABLA DE USUARIOS -->
         <div class="chart-card">
             <h3>Listado Completo de Usuarios</h3>
-            <div class="card-desc">Auditoría individual de consumos y costos estimados.</div>
+            <div class="card-desc">Auditoría individual de consumos y costos proyectados.</div>
             
             <div class="table-toolbar">
                 <div class="user-count">Usuarios mostrados: <strong id="userCount">0</strong></div>
@@ -209,7 +246,8 @@
     <script>
         // ==========================================================
         // CONFIGURACIÓN FINANCIERA (En Pesos Colombianos)
-        const COSTO_POR_USUARIO_COP = 70000; 
+        const COSTO_POR_USUARIO_NUVA = 54271; 
+        const COSTO_POR_USUARIO_COMERCIAL = 70000;
         // ==========================================================
 
         function parseStorageToGB(str) {
@@ -280,8 +318,8 @@
                     totalPhotosGB += photosGB;
                     totalStorageGB += userTotalGB;
 
-                    // Google cobra solo por usuarios activos (salvo configuraciones específicas)
-                    const costoUsuario = isActivo ? COSTO_POR_USUARIO_COP : 0;
+                    // El costo aplica a los activos usando el precio preferencial
+                    const costoUsuario = isActivo ? COSTO_POR_USUARIO_NUVA : 0;
 
                     userList.push({
                         email: email,
@@ -299,11 +337,16 @@
                 document.getElementById('suspendedUsers').innerText = suspendidos;
                 document.getElementById('usersWithout2FA').innerText = sin2FA;
 
-                // Calcular y asignar Costo Mensual Total en COP (Por Activos)
-                const costoTotalMes = activos * COSTO_POR_USUARIO_COP;
-                document.getElementById('totalCost').innerText = "$" + costoTotalMes.toLocaleString('es-CO');
+                // Calcular Costos y Ahorros
+                const costoTotalMesNuva = activos * COSTO_POR_USUARIO_NUVA;
+                const costoTotalMesComercial = activos * COSTO_POR_USUARIO_COMERCIAL;
+                const ahorroMensual = costoTotalMesComercial - costoTotalMesNuva;
 
-                // Gráfica 1: Almacenamiento (COLORES ACTUALIZADOS DE ALTO CONTRASTE)
+                document.getElementById('totalCost').innerText = "$" + costoTotalMesNuva.toLocaleString('es-CO');
+                document.getElementById('costoComercial').innerText = "$" + costoTotalMesComercial.toLocaleString('es-CO') + " COP";
+                document.getElementById('ahorroMensual').innerText = "$" + ahorroMensual.toLocaleString('es-CO') + " COP";
+
+                // Gráfica 1: Almacenamiento (Alto Contraste)
                 new Chart(document.getElementById('storageBreakdownChart'), {
                     type: 'doughnut',
                     data: {
