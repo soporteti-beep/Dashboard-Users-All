@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario - ARKY</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        body { font-family: 'Google Sans', Arial, sans-serif; background-color: #f5f6f8; margin: 0; padding: 0; color: #1f1f1f; }
+        .header { background: #fff; border-bottom: 1px solid #e2e2e2; padding: 20px 30px; margin-bottom: 28px; }
+        .header h1 { margin: 0; font-size: 22px; font-weight: 600; display: flex; align-items: center; gap: 10px; color:#1a73e8;}
+        .container { max-width: 1450px; margin: 0 auto; padding: 0 28px 50px 28px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 28px; }
+        .kpi-card { background: #fff; border-radius: 8px; padding: 22px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border-left: 4px solid #1a73e8; }
+        .kpi-header { color: #555; font-size: 14px; font-weight: 500; margin-bottom: 10px;}
+        .kpi-value { font-size: 31px; font-weight: 600; color: #111; }
+        .chart-card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid #ddd;}
+        .table-container { overflow-y: auto; max-height: 500px; border: 1px solid #ddd; border-radius: 6px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+        th { background-color: #f5f5f5; color: #444; padding: 12px; border-bottom: 1px solid #ddd; position: sticky; top: 0; }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
+        tr:hover { background-color: #f8fbff; }
+        .error-msg { background: #fce8e6; color: #d93025; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container" style="padding:0;">
+            <h1><i class="fa-solid fa-boxes-stacked"></i> INVENTARIO - ARKY</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div id="errorMessage" class="error-msg">⚠️ Archivo no encontrado.</div>
+        <div class="kpi-grid">
+            <div class="kpi-card"><div class="kpi-header">Total Equipos ARKY</div><div id="kpiTotal" class="kpi-value">...</div></div>
+        </div>
+        <div class="chart-card">
+            <h3 style="margin: 0 0 15px 0; border-bottom: 1px solid #eee; padding-bottom:10px;">Listado de Activos</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Responsable</th><th>Cargo</th><th>Sede / Ubicación</th><th>Equipo</th><th>Fecha Entrega</th></tr></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        fetch("GT-FO-01 INVENTARIO DE ACTIVOS FIJOS V2.xlsx").then(res => res.arrayBuffer()).then(data => {
+            const wb = XLSX.read(data, { type: 'array' });
+            const jsData = XLSX.utils.sheet_to_json(wb.Sheets['ARKY'], { range: 1 });
+            let total = 0; const tbody = document.getElementById('tableBody');
+
+            jsData.forEach(row => {
+                if(!row['NOMBRE EQUIPO']) return;
+                total++;
+                
+                // Formatear fecha de Excel (SheetJS la devuelve como un número si no se configura diferente)
+                let fecha = row['FECHA ENTREGA'];
+                if(typeof fecha === 'number') {
+                    let date = new Date(Math.round((fecha - 25569) * 86400 * 1000));
+                    fecha = date.toLocaleDateString('es-CO');
+                }
+
+                tbody.innerHTML += `<tr>
+                    <td><strong>${row['RESPONSABLE']||'--'}</strong></td>
+                    <td>${row['CARGO']||'--'}</td>
+                    <td>${row['SEDE']||'--'} - ${row['UBICACIÓN']||''}</td>
+                    <td style="color:#1a73e8; font-weight:bold;">${row['NOMBRE EQUIPO']}</td>
+                    <td>${fecha||'--'}</td>
+                </tr>`;
+            });
+            document.getElementById('kpiTotal').innerText = total;
+        }).catch(() => document.getElementById('errorMessage').style.display='block');
+    </script>
+</body>
+</html>
