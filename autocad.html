@@ -111,7 +111,7 @@
                     <span>Total Licencias</span>
                     <i class="fa-solid fa-layer-group"></i>
                 </div>
-                <div class="kpi-value">8</div>
+                <div class="kpi-value">7</div>
                 <div class="kpi-subtext">Licencias reportadas en matriz</div>
             </div>
 
@@ -129,8 +129,8 @@
                     <span>Licencias Disponibles</span>
                     <i class="fa-solid fa-box-open"></i>
                 </div>
-                <div class="kpi-value">1</div>
-                <div class="kpi-subtext">Libre para nueva asignación</div>
+                <div class="kpi-value">0</div>
+                <div class="kpi-subtext">Aprovechamiento del 100%</div>
             </div>
 
             <div class="kpi-card kpi-money" style="background-color: #f6feef; border-color: #cce8d6;">
@@ -147,8 +147,8 @@
                     <span style="color: var(--money); font-weight: 600;">Inversión Total Anual</span>
                     <i class="fa-solid fa-file-invoice-dollar" style="color: var(--money);"></i>
                 </div>
-                <div class="kpi-value" style="color: var(--money); font-size: 26px;">$52.509.080</div>
-                <div class="kpi-subtext">Costo total por 8 licencias (COP)</div>
+                <div class="kpi-value" style="color: var(--money); font-size: 26px;">$45.945.445</div>
+                <div class="kpi-subtext">Costo total por 7 licencias (COP)</div>
             </div>
         </div>
 
@@ -165,12 +165,12 @@
                 </div>
                 <div class="cost-box gray">
                     <div class="cost-label">Licencia Disponible (Standby)</div>
-                    <div class="cost-value">1 Licencia</div>
-                    <div class="cost-description">Capital inactivo temporalmente.<br><strong>Costo Anual: $6.563.635 COP</strong></div>
+                    <div class="cost-value">0 Licencias</div>
+                    <div class="cost-description">No hay licencias inactivas generando gastos innecesarios.<br><strong>Costo Anual: $0 COP</strong></div>
                 </div>
                 <div class="cost-box green">
                     <div class="cost-label">Impacto Mensual Estimado</div>
-                    <div class="cost-value green-value">$4.375.756 COP</div>
+                    <div class="cost-value green-value">$3.828.787 COP</div>
                     <div class="cost-description">Gasto operativo de software al mes si se divide la inversión total anual entre 12.</div>
                 </div>
             </div>
@@ -179,7 +179,7 @@
                 <strong><i class="fa-solid fa-circle-info"></i> Base de Cálculo Financiero:</strong><br><br>
                 • El costo oficial de una suscripción comercial de <strong>AutoCAD 2025/2026</strong> en la región LATAM es de aproximadamente <strong>$2,095 USD anuales</strong>.<br>
                 • Al convertirlo con la tasa de cambio vigente, el valor estimado es de <strong>$6.563.635 COP</strong> por usuario.<br>
-                • La matriz de usuarios reporta 7 asignaciones activas, pero el total contable indica 8, dejando 1 licencia disponible en la consola de Autodesk.
+                • La matriz de usuarios reporta exactamente 7 asignaciones activas, lo que indica un aprovechamiento total del recurso adquirido.
             </div>
         </section>
 
@@ -230,7 +230,7 @@
             data: {
                 labels: ['Asignadas (En uso)', 'Disponibles'],
                 datasets: [{
-                    data: [7, 1],
+                    data: [7, 0],
                     backgroundColor: ['#C0392B', '#e0e0e0'], 
                     borderWidth: 0,
                     hoverOffset: 4
@@ -307,16 +307,6 @@
             </tr>`;
             tableBody.innerHTML += row;
         });
-
-        // Fila extra para la licencia no asignada
-        const unassignedRow = `<tr style="background-color: #fafafa;">
-            <td class="bold-text" style="color:#777;"><em>Sin asignar</em></td>
-            <td style="color:#777;">--</td>
-            <td><span class="badge badge-warning" style="background:#fef0d9; color:#f9ab00;"><i class="fa-solid fa-box-open"></i> Disponible</span></td>
-            <td style="color:#777;">--</td>
-            <td class="cost-text" style="opacity:0.5;">$6.563.635 COP</td>
-        </tr>`;
-        tableBody.innerHTML += unassignedRow;
 
     </script>
 </body>
