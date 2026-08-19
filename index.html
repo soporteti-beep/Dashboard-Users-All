@@ -29,6 +29,7 @@
             padding: 0 20px; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
             z-index: 10;
+            overflow-x: auto; /* Permite scroll horizontal si hay muchas pestañas */
         }
         .primary-btn { 
             background: none; 
@@ -43,6 +44,7 @@
             display: flex; 
             align-items: center; 
             gap: 8px;
+            white-space: nowrap; /* Evita que el texto de los botones se corte */
         }
         .primary-btn:hover { color: #ffffff; }
         .primary-btn.active { color: #ffffff; border-bottom-color: #ffffff; }
@@ -104,6 +106,10 @@
         <button class="primary-btn" onclick="switchCategory(event, 'grupo-autocad-nitro')">
             <i class="fa-solid fa-pen-ruler"></i> Autocad - Nitro
         </button>
+        <!-- NUEVA CATEGORÍA PRINCIPAL: INVENTARIO -->
+        <button class="primary-btn" onclick="switchCategory(event, 'grupo-inventario')">
+            <i class="fa-solid fa-boxes-stacked"></i> Inventario
+        </button>
     </div>
 
     <!-- Nivel 2: Sub-pestañas -->
@@ -119,16 +125,25 @@
             <button class="sub-btn" onclick="openDashboard(event, 'vista-financiero')">Cuentas Secundarias</button>
         </div>
 
-        <!-- Grupo 2: Antivirus (Oculto por defecto) -->
+        <!-- Grupo 2: Antivirus -->
         <div id="grupo-antivirus" class="sub-nav-group">
             <button class="sub-btn" onclick="openDashboard(event, 'vista-trellix')">Trellix</button>
             <button class="sub-btn" onclick="openDashboard(event, 'vista-sophos')">Sophos</button>
         </div>
 
-        <!-- Grupo 3: Autocad - Nitro (Oculto por defecto) -->
+        <!-- Grupo 3: Autocad - Nitro -->
         <div id="grupo-autocad-nitro" class="sub-nav-group">
             <button class="sub-btn" onclick="openDashboard(event, 'vista-autocad')">Autocad</button>
             <button class="sub-btn" onclick="openDashboard(event, 'vista-nitro')">Nitro</button>
+        </div>
+
+        <!-- Grupo 4: Inventario (NUEVO) -->
+        <div id="grupo-inventario" class="sub-nav-group">
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-inv-ays-construsalco')">AYS CONSTRUSALCO</button>
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-inv-servialco')">SERVIALCO SAS</button>
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-inv-unicat')">UNICAT</button>
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-inv-ays-servialco')">AYS SERVIALCO</button>
+            <button class="sub-btn" onclick="openDashboard(event, 'vista-inv-arky')">ARKY</button>
         </div>
 
     </div>
@@ -150,6 +165,14 @@
     <!-- Iframes de Autocad y Nitro -->
     <iframe id="vista-autocad" class="iframe-container" src="autocad.html"></iframe>
     <iframe id="vista-nitro" class="iframe-container" src="nitro.html"></iframe>
+
+    <!-- Iframes de Inventario (NUEVOS) -->
+    <!-- Para que funcionen, debes crear estos 5 archivos HTML en tu repositorio -->
+    <iframe id="vista-inv-ays-construsalco" class="iframe-container" src="inv_ays_construsalco.html"></iframe>
+    <iframe id="vista-inv-servialco" class="iframe-container" src="inv_servialco.html"></iframe>
+    <iframe id="vista-inv-unicat" class="iframe-container" src="inv_unicat.html"></iframe>
+    <iframe id="vista-inv-ays-servialco" class="iframe-container" src="inv_ays_servialco.html"></iframe>
+    <iframe id="vista-inv-arky" class="iframe-container" src="inv_arky.html"></iframe>
 
     <script>
         // Función para cambiar la Categoría Principal
