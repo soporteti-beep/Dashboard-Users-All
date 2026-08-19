@@ -19,18 +19,14 @@
         .chart-card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid #ddd;}
         .table-container { overflow-y: auto; max-height: 500px; border: 1px solid #ddd; border-radius: 6px; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
-        th { background-color: #f5f5f5; color: #444; padding: 12px; border-bottom: 1px solid #ddd; position: sticky; top: 0; }
+        th { background-color: #f5f5f5; color: #444; padding: 12px; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 1;}
         td { padding: 12px; border-bottom: 1px solid #eee; }
         tr:hover { background-color: #f8fbff; }
         .error-msg { background: #fce8e6; color: #d93025; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; display: none; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="container" style="padding:0;">
-            <h1><i class="fa-solid fa-boxes-stacked"></i> INVENTARIO - UNICAT</h1>
-        </div>
-    </div>
+    <div class="header"><div class="container" style="padding:0;"><h1><i class="fa-solid fa-boxes-stacked"></i> INVENTARIO - UNICAT</h1></div></div>
     <div class="container">
         <div id="errorMessage" class="error-msg">⚠️ Archivo no encontrado.</div>
         <div class="kpi-grid">
@@ -40,7 +36,7 @@
             <h3 style="margin: 0 0 15px 0; border-bottom: 1px solid #eee; padding-bottom:10px;">Listado de Activos</h3>
             <div class="table-container">
                 <table>
-                    <thead><tr><th>Responsable</th><th>Área / Cargo</th><th>Equipo</th><th>Tipo / Marca</th></tr></thead>
+                    <thead><tr><th>Responsable</th><th>Área / Cargo</th><th>Equipo</th><th>Tipo / Marca</th><th>Correo</th></tr></thead>
                     <tbody id="tableBody"></tbody>
                 </table>
             </div>
@@ -50,18 +46,21 @@
     <script>
         fetch("GT-FO-01 INVENTARIO DE ACTIVOS FIJOS V2.xlsx").then(res => res.arrayBuffer()).then(data => {
             const wb = XLSX.read(data, { type: 'array' });
-            const jsData = XLSX.utils.sheet_to_json(wb.Sheets['UNICAT'], { range: 1 }); // Header en fila 2
+            // Rango 2 para omitir los logos superiores
+            const jsData = XLSX.utils.sheet_to_json(wb.Sheets['UNICAT'], { range: 2 }); 
             let total = 0; const tbody = document.getElementById('tableBody');
 
             jsData.forEach(row => {
-                if(!row['NOMBRE EQUIPO']) return;
+                let responsable = row['RESPONSABLE'] || row[' '] || row['Unnamed: 1'];
+                if(!responsable || !row['NOMBRE EQUIPO']) return;
+                
                 total++;
-                let responsable = row[' '] || row['Unnamed: 1'] || '--';
                 tbody.innerHTML += `<tr>
                     <td><strong>${responsable}</strong></td>
                     <td>${row['AREA']||'--'}<br><small style="color:#777;">${row['CARGO']||''}</small></td>
                     <td style="color:#1a73e8; font-weight:bold;">${row['NOMBRE EQUIPO']}</td>
                     <td>${row['TIPO']||'--'} - ${row['MARCA']||''}</td>
+                    <td>${row['CORREO']||'--'}</td>
                 </tr>`;
             });
             document.getElementById('kpiTotal').innerText = total;
