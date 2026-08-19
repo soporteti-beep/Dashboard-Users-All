@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario - SERVIALCO SAS</title>
+    <title>Inventario - AYS SERVIALCO</title>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -17,7 +17,6 @@
         .kpi-header { color: #555; font-size: 14px; font-weight: 500; margin-bottom: 10px;}
         .kpi-value { font-size: 31px; font-weight: 600; color: #111; }
         .chart-card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid #ddd;}
-        .chart-card h3 { margin: 0 0 15px 0; font-size: 18px; border-bottom: 1px solid #eee; padding-bottom:10px;}
         .table-container { overflow-y: auto; max-height: 500px; border: 1px solid #ddd; border-radius: 6px; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
         th { background-color: #f5f5f5; color: #444; padding: 12px; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 1;}
@@ -27,29 +26,17 @@
     </style>
 </head>
 <body>
-    <div class="header"><div class="container" style="padding:0;"><h1><i class="fa-solid fa-boxes-stacked"></i> INVENTARIO - SERVIALCO SAS</h1></div></div>
+    <div class="header"><div class="container" style="padding:0;"><h1><i class="fa-solid fa-boxes-stacked"></i> INVENTARIO - AYS SERVIALCO</h1></div></div>
     <div class="container">
         <div id="errorMessage" class="error-msg">⚠️ Archivo no encontrado.</div>
         <div class="kpi-grid">
-            <div class="kpi-card"><div class="kpi-header">Total Equipos Activos</div><div id="kpiTotal" class="kpi-value">...</div></div>
-            <div class="kpi-card" style="border-left-color:#1e8e3e;"><div class="kpi-header">Equipos Propios</div><div id="kpiPropios" class="kpi-value">...</div></div>
-            <div class="kpi-card" style="border-left-color:#d93025;"><div class="kpi-header">Equipos Alquilados</div><div id="kpiAlquiler" class="kpi-value">...</div></div>
+            <div class="kpi-card"><div class="kpi-header">Total Equipos AYS</div><div id="kpiTotal" class="kpi-value">...</div></div>
         </div>
-
         <div class="chart-card">
-            <h3>Listado de Activos</h3>
+            <h3 style="margin: 0 0 15px 0; border-bottom: 1px solid #eee; padding-bottom:10px;">Listado de Activos</h3>
             <div class="table-container">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Responsable / Área</th>
-                            <th>Cargo</th>
-                            <th>Ubicación</th>
-                            <th>Nombre Equipo</th>
-                            <th>Serial / Plaqueta</th>
-                            <th>Correo Asignado</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Responsable</th><th>Cargo</th><th>Equipo</th><th>Serial / AYS</th></tr></thead>
                     <tbody id="tableBody"></tbody>
                 </table>
             </div>
@@ -57,37 +44,22 @@
     </div>
 
     <script>
-        fetch("GT-FO-01 INVENTARIO DE ACTIVOS FIJOS V2.xlsx").then(res => {
-            if(!res.ok) throw new Error(); return res.arrayBuffer();
-        }).then(data => {
+        fetch("GT-FO-01 INVENTARIO DE ACTIVOS FIJOS V2.xlsx").then(res => res.arrayBuffer()).then(data => {
             const wb = XLSX.read(data, { type: 'array' });
-            
-            // Suponiendo que el encabezado también está en la fila 3 (índice 2) como en AYS
-            const jsData = XLSX.utils.sheet_to_json(wb.Sheets['SERVIALCO SAS '], { range: 2 });
-            let propios = 0, alquiler = 0, total = 0;
-            const tbody = document.getElementById('tableBody');
+            const jsData = XLSX.utils.sheet_to_json(wb.Sheets['AYS SERVIALCO'], { range: 2 });
+            let total = 0; const tbody = document.getElementById('tableBody');
 
             jsData.forEach(row => {
-                // Las hojas de Servialco suelen tener el responsable en la segunda columna, a veces sin título (" ")
-                let responsable = row['RESPONSABLE'] || row[' '] || row['Unnamed: 1'];
-                if(!responsable || !row['NOMBRE EQUIPO']) return;
-
+                if(!row['RESPONSABLE'] || !row['NOMBRE EQUIPO']) return;
                 total++;
-                if(row['PROPIO']) propios++;
-                if(row['ALQUILER']) alquiler++;
-
                 tbody.innerHTML += `<tr>
-                    <td><strong>${responsable}</strong><br><small style="color:#777;">${row['AREA']||''}</small></td>
+                    <td><strong>${row['RESPONSABLE']}</strong></td>
                     <td>${row['CARGO']||'--'}</td>
-                    <td>${row['UBICACIÓN']||'--'}</td>
                     <td style="color:#1a73e8; font-weight:bold;">${row['NOMBRE EQUIPO']}</td>
-                    <td>${row['SERIAL']||'--'}<br><small style="color:#777;">${row['PLAQUETA']||''}</small></td>
-                    <td>${row['CORREO']||'--'}</td>
+                    <td>${row['SERIAL']||'--'} <br><small style="color:#777;">AYS: ${row['SERIAL AYS']||'--'}</small></td>
                 </tr>`;
             });
             document.getElementById('kpiTotal').innerText = total;
-            document.getElementById('kpiPropios').innerText = propios;
-            document.getElementById('kpiAlquiler').innerText = alquiler;
         }).catch(() => document.getElementById('errorMessage').style.display='block');
     </script>
 </body>
