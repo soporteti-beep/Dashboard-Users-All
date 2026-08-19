@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario - SERVIALCO SAS</title>
-    
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -21,23 +20,18 @@
         .chart-card h3 { margin: 0 0 15px 0; font-size: 18px; border-bottom: 1px solid #eee; padding-bottom:10px;}
         .table-container { overflow-y: auto; max-height: 500px; border: 1px solid #ddd; border-radius: 6px; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
-        th { background-color: #f5f5f5; color: #444; padding: 12px; border-bottom: 1px solid #ddd; position: sticky; top: 0; }
+        th { background-color: #f5f5f5; color: #444; padding: 12px; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 1;}
         td { padding: 12px; border-bottom: 1px solid #eee; }
         tr:hover { background-color: #f8fbff; }
         .error-msg { background: #fce8e6; color: #d93025; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; display: none; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="container" style="padding:0;">
-            <h1><i class="fa-solid fa-boxes-stacked"></i> INVENTARIO - SERVIALCO SAS</h1>
-        </div>
-    </div>
-
+    <div class="header"><div class="container" style="padding:0;"><h1><i class="fa-solid fa-boxes-stacked"></i> INVENTARIO - SERVIALCO SAS</h1></div></div>
     <div class="container">
         <div id="errorMessage" class="error-msg">⚠️ Archivo no encontrado.</div>
         <div class="kpi-grid">
-            <div class="kpi-card"><div class="kpi-header">Total Activos</div><div id="kpiTotal" class="kpi-value">...</div></div>
+            <div class="kpi-card"><div class="kpi-header">Total Equipos Activos</div><div id="kpiTotal" class="kpi-value">...</div></div>
             <div class="kpi-card" style="border-left-color:#1e8e3e;"><div class="kpi-header">Equipos Propios</div><div id="kpiPropios" class="kpi-value">...</div></div>
             <div class="kpi-card" style="border-left-color:#d93025;"><div class="kpi-header">Equipos Alquilados</div><div id="kpiAlquiler" class="kpi-value">...</div></div>
         </div>
@@ -52,7 +46,7 @@
                             <th>Cargo</th>
                             <th>Ubicación</th>
                             <th>Nombre Equipo</th>
-                            <th>Marca / Modelo</th>
+                            <th>Serial / Plaqueta</th>
                             <th>Correo Asignado</th>
                         </tr>
                     </thead>
@@ -67,26 +61,27 @@
             if(!res.ok) throw new Error(); return res.arrayBuffer();
         }).then(data => {
             const wb = XLSX.read(data, { type: 'array' });
-            // El encabezado en esta hoja está en la fila 5
-            const jsData = XLSX.utils.sheet_to_json(wb.Sheets['SERVIALCO SAS '], { range: 4 });
+            
+            // Suponiendo que el encabezado también está en la fila 3 (índice 2) como en AYS
+            const jsData = XLSX.utils.sheet_to_json(wb.Sheets['SERVIALCO SAS '], { range: 2 });
             let propios = 0, alquiler = 0, total = 0;
             const tbody = document.getElementById('tableBody');
 
             jsData.forEach(row => {
-                if(!row['NOMBRE EQUIPO']) return;
+                // Las hojas de Servialco suelen tener el responsable en la segunda columna, a veces sin título (" ")
+                let responsable = row['RESPONSABLE'] || row[' '] || row['Unnamed: 1'];
+                if(!responsable || !row['NOMBRE EQUIPO']) return;
+
                 total++;
                 if(row['PROPIO']) propios++;
                 if(row['ALQUILER']) alquiler++;
-
-                // Para encontrar el responsable, en tu Excel está en la columna en blanco al lado de 'Unnamed: 0'
-                let responsable = row[' '] || row['Unnamed: 1'] || '--';
 
                 tbody.innerHTML += `<tr>
                     <td><strong>${responsable}</strong><br><small style="color:#777;">${row['AREA']||''}</small></td>
                     <td>${row['CARGO']||'--'}</td>
                     <td>${row['UBICACIÓN']||'--'}</td>
                     <td style="color:#1a73e8; font-weight:bold;">${row['NOMBRE EQUIPO']}</td>
-                    <td>${row['MARCA']||'--'}</td>
+                    <td>${row['SERIAL']||'--'}<br><small style="color:#777;">${row['PLAQUETA']||''}</small></td>
                     <td>${row['CORREO']||'--'}</td>
                 </tr>`;
             });
