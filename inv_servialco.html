@@ -64,7 +64,7 @@
     
     <div class="container">
         
-        <div id="errorMessage" class="error-msg"><i class="fa-solid fa-triangle-exclamation"></i> No se pudo cargar el archivo "GT-FO-01 INVENTARIO DE ACTIVOS FIJOS V2.xlsx". Asegúrate de que el nombre sea exacto.</div>
+        <div id="errorMessage" class="error-msg"><i class="fa-solid fa-triangle-exclamation"></i> No se pudo cargar el archivo "GT-FO-01 INVENTARIO DE ACTIVOS FIJOS V2.xlsx". Asegúrate de que el nombre sea exacto en GitHub.</div>
         
         <div class="kpi-grid">
             <div class="kpi-card" style="border-left-color: var(--primary);">
@@ -106,12 +106,9 @@
     </div>
 
     <script>
-        // === IMPORTANTE: CONFIGURACIÓN DEL ARCHIVO ===
+        // CONFIGURACIÓN DEL ARCHIVO
         const EXCEL_FILE = "GT-FO-01 INVENTARIO DE ACTIVOS FIJOS V2.xlsx"; 
-        // Nota: Asegúrate de que este sea el nombre exacto del archivo en tu repositorio GitHub
         
-        const SHEET_NAME = "SERVIALCO SAS "; // Nombre de la pestaña (Fíjate si tiene espacio al final)
-
         fetch(EXCEL_FILE)
             .then(res => {
                 if(!res.ok) throw new Error("File not found");
@@ -120,14 +117,14 @@
             .then(data => {
                 const wb = XLSX.read(data, { type: 'array' });
                 
-                // Si la pestaña exacta no existe, intentamos buscarla omitiendo espacios al final
-                let actualSheetName = SHEET_NAME;
-                if (!wb.Sheets[actualSheetName]) {
-                    actualSheetName = wb.SheetNames.find(s => s.trim() === "SERVIALCO SAS");
+                // Encontrar la hoja (Con o sin espacio al final)
+                let targetSheetName = "SERVIALCO SAS ";
+                if (!wb.Sheets[targetSheetName]) {
+                    targetSheetName = wb.SheetNames.find(s => s.trim() === "SERVIALCO SAS");
                 }
-
-                // LEEMOS DESDE LA FILA 1 (Sin saltar filas porque pegaste los encabezados en la primera línea)
-                const jsData = XLSX.utils.sheet_to_json(wb.Sheets[actualSheetName || wb.SheetNames[0]]);
+                
+                // Leemos como matriz cruda (header: 1) para evitar problemas con nombres de columnas
+                const rawRows = XLSX.utils.sheet_to_json(wb.Sheets[targetSheetName], { header: 1 });
                 
                 let propios = 0;
                 let alquiler = 0;
@@ -135,58 +132,72 @@
                 let totalMonitores = 0;
                 
                 const tbody = document.getElementById('tableBody');
+                
+                let mode = 'none';
+                let headers = {};
 
-                jsData.forEach(row => {
-                    // Normalizamos las variables (Por si hay variaciones en los títulos del Excel)
-                    let responsable = row['RESPONSABLE'] || row[' '] || row['Unnamed: 1'];
-                    let equipo = row['NOMBRE EQUIPO'] || row['NOMBRE_EQUIPO'];
-                    
-                    // Solo dibujamos si hay un responsable o un equipo válido
-                    if(!responsable && !equipo) return;
+                rawRows.forEach((row, rowIndex) => {
+                    if (!row || row.length === 0) return;
 
-                    // Conteo de Modalidad
-                    let isPropio = row['PROPIO'] && row['PROPIO'].toString().trim().toUpperCase() === 'X';
-                    let isAlquiler = row['ALQUILER'] && row['ALQUILER'].toString().trim().toUpperCase() === 'X';
-                    
-                    let badgeModalidad = '';
-                    if (isPropio) {
-                        propios++;
-                        totalEquipos++;
-                        badgeModalidad = `<span class="badge badge-propio"><i class="fa-solid fa-check"></i> Propio</span>`;
-                    } else if (isAlquiler) {
-                        alquiler++;
-                        totalEquipos++;
-                        badgeModalidad = `<span class="badge badge-alquiler"><i class="fa-solid fa-file-contract"></i> Alquilado</span>`;
-                    } else if (equipo) {
-                        // Si no dice si es propio o alquiler, pero hay equipo, lo sumamos al total
-                        totalEquipos++;
-                        badgeModalidad = `<span style="color:#777; font-size:11px;">No especificado</span>`;
+                    // Detectar la fila de encabezados (Buscamos que tenga la columna RESPONSABLE y AREA)
+                    if (mode === 'none' && row.includes('RESPONSABLE') && row.includes('AREA')) {
+                        mode = 'data';
+                        // Guardamos el índice exacto de cada columna
+                        row.forEach((val, i) => { if(val) headers[val.toString().trim()] = i; });
+                        return;
                     }
 
-                    // Datos del Equipo
-                    let serialPC = row[' SERIAL '] || row['SERIAL'] || '--';
-                    let marcaPC = row['MARCA'] || '--';
-                    
-                    // Datos del Monitor
-                    let marcaMonitor = row['MONITOR/MARCA'] || '';
-                    let monitorHtml = '--';
-                    if (marcaMonitor && marcaMonitor.toUpperCase() !== 'N/A') {
-                        totalMonitores++;
-                        let plaquetaMonitor = row[' PLAQUETA '] || row['PLAQUETA'] || ''; // Cuidado con los espacios en tu excel
-                        monitorHtml = `<span class="badge badge-monitor"><i class="fa-solid fa-desktop"></i> ${marcaMonitor}</span><br><small style="color:#777;">${plaquetaMonitor}</small>`;
-                    }
+                    // Procesar los datos
+                    if (mode === 'data') {
+                        // Extraer valores usando los índices detectados
+                        let responsable = row[headers['RESPONSABLE']];
+                        let equipo = row[headers['NOMBRE EQUIPO']];
+                        
+                        // Ignorar filas que no tienen ni responsable ni nombre de equipo (filas en blanco del excel)
+                        if (!responsable && !equipo) return;
 
-                    tbody.innerHTML += `<tr>
-                        <td><strong>${responsable || '--'}</strong><br><small style="color:#777;">${row['AREA']||''}</small></td>
-                        <td>${row['CARGO'] || '--'}</td>
-                        <td>${row['UBICACIÓN'] || '--'}</td>
-                        <td>
-                            <strong style="color:var(--primary);">${equipo || '--'}</strong><br>
-                            <small style="color:#555;">${marcaPC} / SN: ${serialPC}</small>
-                        </td>
-                        <td>${monitorHtml}</td>
-                        <td>${badgeModalidad}</td>
-                    </tr>`;
+                        let isPropio = row[headers['PROPIO']] && row[headers['PROPIO']].toString().trim().toUpperCase() === 'X';
+                        let isAlquiler = row[headers['ALQUILER']] && row[headers['ALQUILER']].toString().trim().toUpperCase() === 'X';
+                        
+                        let badgeModalidad = '';
+                        if (isPropio) {
+                            propios++;
+                            totalEquipos++;
+                            badgeModalidad = `<span class="badge badge-propio"><i class="fa-solid fa-check"></i> Propio</span>`;
+                        } else if (isAlquiler) {
+                            alquiler++;
+                            totalEquipos++;
+                            badgeModalidad = `<span class="badge badge-alquiler"><i class="fa-solid fa-file-contract"></i> Alquilado</span>`;
+                        } else if (equipo) {
+                            totalEquipos++;
+                            badgeModalidad = `<span style="color:#777; font-size:11px;">No especificado</span>`;
+                        }
+
+                        let serialPC = row[headers['SERIAL']] || '--';
+                        let marcaPC = row[headers['MARCA']] || '--';
+                        
+                        let marcaMonitor = row[headers['MONITOR/MARCA']] || '';
+                        let monitorHtml = '--';
+                        
+                        if (marcaMonitor && marcaMonitor.toString().toUpperCase() !== 'N/A' && marcaMonitor.toString().trim() !== '') {
+                            totalMonitores++;
+                            // En tu excel, la plaqueta del monitor a veces se llama "PLAQUETA" u otro nombre repetido, intentamos leer varias opciones
+                            let plaquetaMonitor = row[headers['PLAQUETA.1']] || row[headers['PLAQUETA']] || '--'; 
+                            monitorHtml = `<span class="badge badge-monitor"><i class="fa-solid fa-desktop"></i> ${marcaMonitor}</span><br><small style="color:#777;">${plaquetaMonitor}</small>`;
+                        }
+
+                        tbody.innerHTML += `<tr>
+                            <td><strong>${responsable || '--'}</strong><br><small style="color:#777;">${row[headers['AREA']]||''}</small></td>
+                            <td>${row[headers['CARGO']] || '--'}</td>
+                            <td>${row[headers['UBICACIÓN']] || '--'}</td>
+                            <td>
+                                <strong style="color:var(--primary);">${equipo || '--'}</strong><br>
+                                <small style="color:#555;">${marcaPC} / SN: ${serialPC}</small>
+                            </td>
+                            <td>${monitorHtml}</td>
+                            <td>${badgeModalidad}</td>
+                        </tr>`;
+                    }
                 });
                 
                 // Actualizar KPIs
