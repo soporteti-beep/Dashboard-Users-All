@@ -106,7 +106,6 @@
     </div>
 
     <script>
-        // CONFIGURACIÓN DEL ARCHIVO
         const EXCEL_FILE = "GT-FO-01 INVENTARIO DE ACTIVOS FIJOS V2.xlsx"; 
         
         fetch(EXCEL_FILE)
@@ -120,11 +119,10 @@
                 // Encontrar la hoja (Con o sin espacio al final)
                 let targetSheetName = "SERVIALCO SAS ";
                 if (!wb.Sheets[targetSheetName]) {
-                    targetSheetName = wb.SheetNames.find(s => s.trim() === "SERVIALCO SAS");
+                    targetSheetName = wb.SheetNames.find(s => s.trim().toUpperCase() === "SERVIALCO SAS");
                 }
                 
-                // Leemos como matriz cruda (header: 1) para evitar problemas con nombres de columnas
-                const rawRows = XLSX.utils.sheet_to_json(wb.Sheets[targetSheetName], { header: 1 });
+                const rawRows = XLSX.utils.sheet_to_json(wb.Sheets[targetSheetName || wb.SheetNames[0]], { header: 1 });
                 
                 let propios = 0;
                 let alquiler = 0;
@@ -136,28 +134,32 @@
                 let mode = 'none';
                 let headers = {};
 
-                rawRows.forEach((row, rowIndex) => {
+                rawRows.forEach(row => {
                     if (!row || row.length === 0) return;
 
-                    // Detectar la fila de encabezados (Buscamos que tenga la columna RESPONSABLE y AREA)
-                    if (mode === 'none' && row.includes('RESPONSABLE') && row.includes('AREA')) {
+                    // Limpiamos la fila de espacios para que el código no falle si hay espacios ocultos
+                    let cleanRow = row.map(cell => cell ? cell.toString().trim().toUpperCase() : '');
+
+                    // Detectar la fila de encabezados
+                    if (mode === 'none' && cleanRow.includes('RESPONSABLE') && cleanRow.includes('AREA')) {
                         mode = 'data';
-                        // Guardamos el índice exacto de cada columna
-                        row.forEach((val, i) => { if(val) headers[val.toString().trim()] = i; });
+                        cleanRow.forEach((val, i) => { if(val) headers[val] = i; });
                         return;
                     }
 
                     // Procesar los datos
                     if (mode === 'data') {
-                        // Extraer valores usando los índices detectados
                         let responsable = row[headers['RESPONSABLE']];
                         let equipo = row[headers['NOMBRE EQUIPO']];
                         
-                        // Ignorar filas que no tienen ni responsable ni nombre de equipo (filas en blanco del excel)
+                        // Ignorar filas en blanco
                         if (!responsable && !equipo) return;
 
-                        let isPropio = row[headers['PROPIO']] && row[headers['PROPIO']].toString().trim().toUpperCase() === 'X';
-                        let isAlquiler = row[headers['ALQUILER']] && row[headers['ALQUILER']].toString().trim().toUpperCase() === 'X';
+                        let valPropio = row[headers['PROPIO']] ? row[headers['PROPIO']].toString().trim().toUpperCase() : '';
+                        let valAlquiler = row[headers['ALQUILER']] ? row[headers['ALQUILER']].toString().trim().toUpperCase() : '';
+                        
+                        let isPropio = valPropio === 'X' || valPropio === 'SI';
+                        let isAlquiler = valAlquiler === 'X' || valAlquiler === 'SI';
                         
                         let badgeModalidad = '';
                         if (isPropio) {
@@ -181,8 +183,7 @@
                         
                         if (marcaMonitor && marcaMonitor.toString().toUpperCase() !== 'N/A' && marcaMonitor.toString().trim() !== '') {
                             totalMonitores++;
-                            // En tu excel, la plaqueta del monitor a veces se llama "PLAQUETA" u otro nombre repetido, intentamos leer varias opciones
-                            let plaquetaMonitor = row[headers['PLAQUETA.1']] || row[headers['PLAQUETA']] || '--'; 
+                            let plaquetaMonitor = row[headers['PLAQUETA']] || '--'; 
                             monitorHtml = `<span class="badge badge-monitor"><i class="fa-solid fa-desktop"></i> ${marcaMonitor}</span><br><small style="color:#777;">${plaquetaMonitor}</small>`;
                         }
 
