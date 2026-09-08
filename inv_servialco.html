@@ -49,10 +49,12 @@
         th { background-color: #f5f5f5; color: #444; padding: 12px; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 1; }
         td { padding: 12px; border-bottom: 1px solid #eee; }
         tr:hover { background-color: #f8fbff; }
+        
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
         .badge-pc { background: #e3f2fd; color: #1a73e8; }
         .badge-desk { background: #e6f4ea; color: #1e8e3e; }
         .badge-monitor { background: #fef0d9; color: #e65100; }
+        .badge-propio { background: #e6f4ea; color: var(--success); }
 
         @media (max-width: 1100px) { .charts-grid { grid-template-columns: 1fr; } }
     </style>
@@ -65,19 +67,20 @@
     </div>
 
     <div class="container">
+
         <!-- KPIs SUPERIORES -->
         <div class="kpi-grid">
             <div class="kpi-card" style="border-left-color: var(--primary);">
                 <div class="kpi-header"><span>Computadores Propios</span><i class="fa-solid fa-laptop"></i></div>
-                <div id="kpiEquipos" class="kpi-value">59</div>
+                <div id="kpiEquipos" class="kpi-value">60</div>
             </div>
             <div class="kpi-card" style="border-left-color: var(--warning);">
                 <div class="kpi-header"><span>Monitores Propios</span><i class="fa-solid fa-desktop"></i></div>
                 <div id="kpiMonitores" class="kpi-value">31</div>
             </div>
             <div class="kpi-card" style="border-left-color: var(--success);">
-                <div class="kpi-header"><span>Total de Activos SERVIALCO</span><i class="fa-solid fa-layer-group"></i></div>
-                <div id="kpiTotal" class="kpi-value">90</div>
+                <div class="kpi-header"><span>Total de Activos</span><i class="fa-solid fa-layer-group"></i></div>
+                <div id="kpiTotal" class="kpi-value">91</div>
             </div>
         </div>
 
@@ -96,7 +99,7 @@
                         <thead>
                             <tr>
                                 <th>Responsable</th>
-                                <th>Área / Cargo</th>
+                                <th>Área / Ubicación</th>
                                 <th>Nombre Equipo</th>
                                 <th>Tipo</th>
                                 <th>Marca</th>
@@ -111,13 +114,13 @@
 
         <!-- TABLA 2: MONITORES -->
         <div class="chart-card">
-            <h3><i class="fa-solid fa-display"></i> Inventario de Monitores (Pantallas)</h3>
+            <h3><i class="fa-solid fa-display"></i> Inventario de Monitores (Pantallas Propias)</h3>
             <div class="table-container" style="max-height: 300px;">
                 <table>
                     <thead>
                         <tr>
                             <th>Responsable Asignado</th>
-                            <th>Ubicación</th>
+                            <th>Sede / Ubicación</th>
                             <th>Marca Pantalla</th>
                             <th>Plaqueta / Serial</th>
                             <th>Propiedad</th>
@@ -130,101 +133,102 @@
     </div>
 
     <script>
-        // DATA EMBEBIDA (No requiere Excel externo)
+        // DATA EMBEBIDA (Extraída y estructurada directamente de los datos brindados)
         const equiposData = [
-          {"resp": "LEIDY JOHANA ALDANA RODRIGUEZ", "area": "TODO AGIL 360", "cargo": "COORDINADORA DE NOMINA", "equipo": "SERVIALCOPC1", "serial": "5CG416681G", "tipo": "PORTATIL", "marca": "HP"},
-          {"resp": "JOHN MOLANO", "area": "GESTION OPERACIONES", "cargo": "GERENTE DE OPERACIONES", "equipo": "SERVIALCOPC2", "serial": "PF4WRTP3", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "ESTEFANIA VALENCIA", "area": "SIG", "cargo": "ANALISTA SST", "equipo": "SERVIALCOPC3", "serial": "PF5BM5XP", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "MARIANA RAMIREZ MONTA\u00d1A", "area": "GESTION OPERACIONES", "cargo": "DOCUMENTADOR", "equipo": "SERVIALCOPC4", "serial": "PF4R1XR4", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "ANGIE BAEZ", "area": "GESTION JURIDICA", "cargo": "ABOGADO SENIOR", "equipo": "SERVIALCOPC5", "serial": "PF4WT0Q3", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "FLORA MARGARITA DAZA", "area": "GESTION JURIDICA", "cargo": "OFICIAL DE CUMPLIMIENTO", "equipo": "SERVIALCOPC6", "serial": "PF5BL8WW", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "ELVIS PESTANA AVILA", "area": "GESTION TI", "cargo": "LIDERT TI", "equipo": "SERVIALCOPC7", "serial": "PF5BKAHQ", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "RAFAEL  JIMENEZ QUINTERO", "area": "GESTION COMERCIAL", "cargo": "FORMULADOR", "equipo": "SERVIALCOPC9", "serial": "PF5BLHS6", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "MAYDA LILIANA DIAZ MENDEZ", "area": "OPERACIONES", "cargo": "PM JUNIOR", "equipo": "SERVIALCOPC10", "serial": "5CG41667L7", "tipo": "PORTATIL", "marca": "HP"},
-          {"resp": "MARIA ALEJANDRA ESCOBAR MAHETE", "area": "GESTION COMERCIAL", "cargo": "LIDER PREVENTA TI", "equipo": "SERVIALCOPC11", "serial": "PF4T74GE", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "DANIEL DANILO CAMACHO VARGAS", "area": "GESTION COMPRAS Y LOGISTICA", "cargo": "LIDER DE COMPRAS", "equipo": "SERVIALCOPC12", "serial": "5CG4166854", "tipo": "PORTATIL", "marca": "HP"},
-          {"resp": "BRAYAN AUGUSTO AYALA PEREZ", "area": "GESTION COMPRAS Y LOGISTICA", "cargo": "LIDER DE LOGISTICA", "equipo": "SERVIALCOPC13", "serial": "PF4VCN3F", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "JUAN PABLO GARCIA SOLARTE", "area": "OPERACIONES", "cargo": "SUPERVISOR DE ZONA", "equipo": "SERVIALCOPC15", "serial": "5CG4166969", "tipo": "PORTATIL", "marca": "HP"},
-          {"resp": "LUZ ANGELA SERRATO TOMOTE", "area": "GESTION HUMANA", "cargo": "LIDER TALENTO HUMANO", "equipo": "SERVIALCOPC16", "serial": "PF4SZGJV", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "CAROLAY ACOSTA", "area": "GESTION FINANCIERA", "cargo": "GERENTE FINANCIERA", "equipo": "SERVIALCOPC17", "serial": "5CD3247R5D", "tipo": "PORTATIL", "marca": "HP"},
-          {"resp": "SANTIAGO RUBIO URIBE", "area": "GERENCIA GENERAL", "cargo": "GERENTE GENERAL", "equipo": "SERVIALCOPC18", "serial": "PF357E0H", "tipo": "PORTATIL", "marca": "LENOVO THINKSMART"},
-          {"resp": "LORENA GUEVARA ESCOBAR", "area": "GESTION COMERCIAL", "cargo": "GERENTE COMERCIAL", "equipo": "SERVIALCOPC19", "serial": "5CG4166859", "tipo": "PORTATIL", "marca": "HP"},
-          {"resp": "JEAN LUCAS WILD", "area": "GESTION JURIDICA", "cargo": "ABOGADO", "equipo": "SERVIALCOPC20", "serial": "PF4R24F6", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "SALA DE JUNTAS", "area": "SALA DE JUNTAS", "cargo": "SALA DE JUNTAS", "equipo": "SALA DE  JUNTAS", "serial": "PF357XDC", "tipo": "PORTATIL", "marca": "LENOVO THINKSMART"},
-          {"resp": "SANTIAGO RUBIO URIBE", "area": "GERENCIA GENERAL", "cargo": "GERENTE GENERAL", "equipo": "SERVIALCOPC21", "serial": "PF4WRPF2", "tipo": "PORTATIL", "marca": "LENOVO THINPADK"},
-          {"resp": "CAROLAY ACOSTA (BACKUP)", "area": "GESTION FINANCIERA", "cargo": "GERENTE FINANCIERA", "equipo": "SERVI-GF-24", "serial": "5CD70369Y", "tipo": "PORTATIL", "marca": "HP PAVILON"},
-          {"resp": "JOHAN FRANCISCO BARBA NU\u00d1EZ", "area": "FNA", "cargo": "INGENIERO LAN", "equipo": "FONDO1", "serial": "PF4M1486", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "MARCO ANTONIO ROMERO VANEGAS", "area": "FNA", "cargo": "LIDER LAN", "equipo": "FONDO2", "serial": "PF4M2Q5C", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "HARBEY ANTONIO CUBIDES MARTINEZ", "area": "FNA", "cargo": "INGENIERO LAN", "equipo": "FONDO3", "serial": "PF4M0YSR", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "SANDRA MILENA BUSTOS RODRIGUEZ", "area": "FNA", "cargo": "INGENIERO LAN", "equipo": "FONDO4", "serial": "PF4MSEV5", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "JOSE VICENTE ALMECIGA HURTADO", "area": "FNA", "cargo": "INGENIERO LAN", "equipo": "FONDO5", "serial": "PF4M2CCJ", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "CARLOS ANDRES CAMACHO CAMACHO", "area": "FNA", "cargo": "INGENIERO LAN", "equipo": "FONDO6", "serial": "PF4LZHZX", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "DIEGO ARMANDO ANZOLA LEON", "area": "FNA", "cargo": "INGENIERO LAN", "equipo": "FONDO7", "serial": "PF4LY5AX", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "NICOLAS ALBERTO CAMARGO AGUIRRE", "area": "FNA", "cargo": "INGENIERO LAN", "equipo": "FONDO8", "serial": "PF4M31W1", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "GUILLERMO NI\u00d1O JURADO ", "area": "FNA", "cargo": "INGENIERO LAN", "equipo": "FONDO9", "serial": "PF4M0YXN", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "JHON GABRIEL ESCAMILLA S\u00c1NCHEZ", "area": "FNA", "cargo": "INGENIERO LAN", "equipo": "FONDO10", "serial": "PF4LY6XN", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "MAYCON ACOSTA MURCIA", "area": "FNA", "cargo": "INGENIERO LAN", "equipo": "FONDO11", "serial": "PF4LZHXQ", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "ANDRES FELIPE HUERTAS NU\u00d1EZ", "area": "FNA", "cargo": "INGENIERO LAN", "equipo": "FONDO12", "serial": "PF4LY6X6", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "DIEGO ALEJANDRO BARRAGAN", "area": "FNA", "cargo": "APOYO AL FNA", "equipo": "PROCESOS", "serial": "PF4WSX9", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
-          {"resp": "MAURICIO ANDRES AGUDELO JIMENEZ", "area": "GESTION OPERACIONES", "cargo": "PMO", "equipo": "SERVIALCOPC21", "serial": "PF4WRYMY", "tipo": "PORTATIL", "marca": "LENOVO THINPADK"},
-          {"resp": "DIANA CAROLINA RODRIGUEZ OSORIO", "area": "GESTION OPERACIONES", "cargo": "COMERCIAL", "equipo": "SERVIALCOPC22", "serial": "5CG4166831", "tipo": "PORTATIL", "marca": "HP"},
-          {"resp": "JORGE CARLOS MORALES ALVIS", "area": "GESTION OPERACIONES", "cargo": "PMO", "equipo": "SERVIALCOPC23", "serial": "PF4WYVGK", "tipo": "PORTATIL", "marca": "LENOVO THINPADK"},
-          {"resp": "STOCTIC", "area": "GESTION TI", "cargo": "N/A", "equipo": "SERVIALCOPC24", "serial": "PF4WWJR8", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "STOC TIC", "area": "TIC", "cargo": "N/A", "equipo": "SERVIALCOPC25", "serial": "L5NXCV06T533209", "tipo": "PORTATIL", "marca": "ASUS"},
-          {"resp": "JENNY PAOLA BALLESTEROS", "area": "OPERACIONES", "cargo": "LIDER MESA DE SERVICIO", "equipo": "SERVIALCOPC26", "serial": "PF3WRZEQE", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "JHONIER YAIR FINO TICORA", "area": "GESTION TI", "cargo": "ANALISTA TI ", "equipo": "SERVIALCOPC27", "serial": "PF4WWPPN", "tipo": "PORTATIL", "marca": "LENOVO THINPADK"},
-          {"resp": "SANTIAGO RUBIO URIBE(BACKUP)", "area": "GERENCIA GENERAL", "cargo": "GERENCIA GENERAL", "equipo": "SISTEMAS", "serial": "PF3FZJ3E", "tipo": "PORTATIL", "marca": "LENOVO"},
-          {"resp": "DAVID STIVEN GARCIA ROJAS ", "area": "FONDO", "cargo": "APOYO ADMINISTRATIVO", "equipo": "FONDO13", "serial": "L5NXCV06T507206", "tipo": "PORTATIL", "marca": "ASUS VIVOK"},
-          {"resp": "JUAN PABLO PINTO", "area": "FONDO", "cargo": "COORDINADOR DE PROYECTOS", "equipo": "FONDO14", "serial": "5CG416683P", "tipo": "PORTATIL", "marca": "HP"},
-          {"resp": "STOC TI ", "area": "CONTABILIDAD", "cargo": "COORDINADOR CONTABLE", "equipo": "FONDO15", "serial": "5CG416681Z", "tipo": "PORTATIL", "marca": "HP"},
-          {"resp": "BRYGGITH DANIELA QUINTERO RICO", "area": "CONTABILIDAD", "cargo": "ANALISTA CONTABLE", "equipo": "--", "serial": "G42YX93", "tipo": "PORTATIL", "marca": "DELL"},
-          {"resp": " LUZ MERY TAMARA LARA", "area": "FNA", "cargo": "DOCUMENTADOR", "equipo": "--", "serial": "PF4QYQVW", "tipo": "PORTATIL", "marca": "LENOVO PORTATIL"},
-          {"resp": "DANIEL ALEJANDRO GARCIA IBA\u00d1EZ", "area": "GESTION TI", "cargo": "TECNICO SISTEMAS", "equipo": "BOGOTA", "serial": "710YX93", "tipo": "PORTATIL", "marca": "DELL"},
-          {"resp": "OMAR DANIEL CERQUERA", "area": "BODEGA", "cargo": "AUXILIAR DE INVENTARIO Y LOGISTICA", "equipo": "BOGOTA", "serial": "5C4M8B3", "tipo": "ESCRITORIO", "marca": "DELL"},
-          {"resp": "JUAN PABLO JACANAMEJOY", "area": "BODEGA", "cargo": "AUXILIAR DE INVENTARIO Y LOGISTICA", "equipo": "BOGOTA", "serial": "5C2S8B3", "tipo": "ESCRITORIO", "marca": "DELL"},
-          {"resp": "CRISTIAN CASTILLO", "area": "BODEGA", "cargo": "AUXILIAR DE INVENTARIO Y LOGISTICA", "equipo": "BOGOTA", "serial": "5C4L8B3", "tipo": "ESCRITORIO", "marca": "DELL"},
-          {"resp": "STOPORTE TI 04 i5", "area": "CUARTO DE RACK", "cargo": "--", "equipo": "BOGOTA", "serial": "5BPQ8B3", "tipo": "ESCRITORIO", "marca": "DELL"},
-          {"resp": "STOPORTE TI 05 i5", "area": "CUARTO DE RACK", "cargo": "--", "equipo": "BOGOTA", "serial": "5BNN8B3", "tipo": "ESCRITORIO", "marca": "--"},
-          {"resp": "STOPORTE TI 06 i5", "area": "CUARTO DE RACK", "cargo": "--", "equipo": "BOGOTA", "serial": "5C5K8B3", "tipo": "ESCRITORIO", "marca": "--"},
-          {"resp": "HELEN NICOLE VARGAS VELASQUEZ", "area": "ADMINISTRATIVO", "cargo": "ASISTENTE GERENCIA", "equipo": "BOGOTA", "serial": "5C6J8B3", "tipo": "ESCRITORIO", "marca": "--"},
-          {"resp": "CABRERA APONTE WILMAR ANDRES", "area": "MESA DE SERVICIOS", "cargo": "ANALISTA MESA DE SERVICIOS", "equipo": "BOGOTA", "serial": "HF5J8Y2", "tipo": "PORTATIL", "marca": "--"},
-          {"resp": "MARTINEZ PRADO JHONATAN", "area": "MESA DE SERVICIOS", "cargo": "ANALISTA MESA DE SERVICIOS", "equipo": "--", "serial": "9JGJ8Y2", "tipo": "PORTATIL", "marca": "--"},
-          {"resp": "BLADIMIR ARAGON BARRIOS ", "area": "OPERACIONES", "cargo": "PM ", "equipo": "--", "serial": "F9GK8Y2", "tipo": "PORTATIL", "marca": "--"},
-          {"resp": "JULIO SCARPETTA", "area": "TIC", "cargo": "TIC", "equipo": "--", "serial": "JRYXX93", "tipo": "PORTATIL", "marca": "--"}
+          {"resp": "LEIDY JOHANA ALDANA RODRIGUEZ", "area": "TODO AGIL 360", "cargo": "COORDINADORA DE NOMINA", "ubi": "BOGOTA CALLE 76", "equipo": "SERVIALCOPC1", "serial": "5CG416681G", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "JOHN MOLANO", "area": "GESTION OPERACIONES", "cargo": "GERENTE DE OPERACIONES", "ubi": "BOGOTA", "equipo": "SERVIALCOPC2", "serial": "PF4WRTP3", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "ESTEFANIA VALENCIA", "area": "SIG", "cargo": "ANALISTA SST", "ubi": "BOGOTA", "equipo": "SERVIALCOPC3", "serial": "PF5BM5XP", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "MARIANA RAMIREZ MONTA\u00d1A", "area": "GESTION OPERACIONES", "cargo": "DOCUMENTADOR", "ubi": "BOGOTA", "equipo": "SERVIALCOPC4", "serial": "PF4R1XR4", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "ANGIE BAEZ", "area": "GESTION JURIDICA", "cargo": "ABOGADO SENIOR", "ubi": "BOGOTA", "equipo": "SERVIALCOPC5", "serial": "PF4WT0Q3", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "FLORA MARGARITA DAZA", "area": "GESTION JURIDICA", "cargo": "OFICIAL DE CUMPLIMIENTO", "ubi": "BOGOTA", "equipo": "SERVIALCOPC6", "serial": "PF5BL8WW", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "ELVIS PESTANA AVILA", "area": "GESTION TI", "cargo": "LIDERT TI", "ubi": "BOGOTA", "equipo": "SERVIALCOPC7", "serial": "PF5BKAHQ", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "RAFAEL  JIMENEZ QUINTERO", "area": "GESTION COMERCIAL", "cargo": "FORMULADOR", "ubi": "BOGOTA", "equipo": "SERVIALCOPC9", "serial": "PF5BLHS6", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "MAYDA LILIANA DIAZ MENDEZ", "area": "OPERACIONES", "cargo": "PM JUNIOR", "ubi": "NEIVA", "equipo": "SERVIALCOPC10", "serial": "5CG41667L7", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "MARIA ALEJANDRA ESCOBAR MAHETE", "area": "GESTION COMERCIAL", "cargo": "LIDER PREVENTA TI", "ubi": "BOGOTA", "equipo": "SERVIALCOPC11", "serial": "PF4T74GE", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "DANIEL DANILO CAMACHO VARGAS", "area": "GESTION COMPRAS Y LOGISTICA", "cargo": "LIDER DE COMPRAS", "ubi": "BOGOTA", "equipo": "SERVIALCOPC12", "serial": "5CG4166854", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "BRAYAN AUGUSTO AYALA PEREZ", "area": "GESTION COMPRAS Y LOGISTICA", "cargo": "LIDER DE LOGISTICA", "ubi": "BOGOTA", "equipo": "SERVIALCOPC13", "serial": "PF4VCN3F", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "JUAN PABLO GARCIA SOLARTE", "area": "OPERACIONES", "cargo": "SUPERVISOR DE ZONA", "ubi": "MOCOA PUTUMAYO", "equipo": "SERVIALCOPC15", "serial": "5CG4166969", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "LUZ ANGELA SERRATO TOMOTE", "area": "GESTION HUMANA", "cargo": "LIDER TALENTO HUMANO", "ubi": "BOGOTA", "equipo": "SERVIALCOPC16", "serial": "PF4SZGJV", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "CAROLAY ACOSTA", "area": "GESTION FINANCIERA", "cargo": "GERENTE FINANCIERA", "ubi": "BOGOTA", "equipo": "SERVIALCOPC17", "serial": "5CD3247R5D", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "SANTIAGO RUBIO URIBE", "area": "GERENCIA GENERAL", "cargo": "GERENTE GENERAL", "ubi": "BOGOTA", "equipo": "SERVIALCOPC18", "serial": "PF357E0H", "tipo": "PORTATIL", "marca": "LENOVO THINKSMART"},
+          {"resp": "LORENA GUEVARA ESCOBAR", "area": "GESTION COMERCIAL", "cargo": "GERENTE COMERCIAL", "ubi": "BOGOTA", "equipo": "SERVIALCOPC19", "serial": "5CG4166859", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "JEAN LUCAS WILD", "area": "GESTION JURIDICA", "cargo": "ABOGADO", "ubi": "BOGOTA", "equipo": "SERVIALCOPC20", "serial": "PF4R24F6", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "SALA DE JUNTAS", "area": "SALA DE JUNTAS", "cargo": "SALA DE JUNTAS", "ubi": "BOGOTA", "equipo": "SALA DE  JUNTAS", "serial": "PF357XDC", "tipo": "PORTATIL", "marca": "LENOVO THINKSMART"},
+          {"resp": "SANTIAGO RUBIO URIBE", "area": "GERENCIA GENERAL", "cargo": "GERENTE GENERAL", "ubi": "BOGOTA", "equipo": "SERVIALCOPC21", "serial": "PF4WRPF2", "tipo": "PORTATIL", "marca": "LENOVO THINPADK"},
+          {"resp": "CAROLAY ACOSTA (BACKUP)", "area": "GESTION FINANCIERA", "cargo": "GERENTE FINANCIERA", "ubi": "BOGOTA", "equipo": "SERVI-GF-24", "serial": "5CD70369Y", "tipo": "PORTATIL", "marca": "HP PAVILON"},
+          {"resp": "JOHAN FRANCISCO BARBA NU\u00d1EZ", "area": "FNA", "cargo": "INGENIERO LAN", "ubi": "FNA", "equipo": "FONDO1", "serial": "PF4M1486", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "MARCO ANTONIO ROMERO VANEGAS", "area": "FNA", "cargo": "LIDER LAN", "ubi": "FNA", "equipo": "FONDO2", "serial": "PF4M2Q5C", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "HARBEY ANTONIO CUBIDES MARTINEZ", "area": "FNA", "cargo": "INGENIERO LAN", "ubi": "FNA", "equipo": "FONDO3", "serial": "PF4M0YSR", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "SANDRA MILENA BUSTOS RODRIGUEZ", "area": "FNA", "cargo": "INGENIERO LAN", "ubi": "FNA", "equipo": "FONDO4", "serial": "PF4MSEV5", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "JOSE VICENTE ALMECIGA HURTADO", "area": "FNA", "cargo": "INGENIERO LAN", "ubi": "FNA", "equipo": "FONDO5", "serial": "PF4M2CCJ", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "CARLOS ANDRES CAMACHO CAMACHO", "area": "FNA", "cargo": "INGENIERO LAN", "ubi": "FNA", "equipo": "FONDO6", "serial": "PF4LZHZX", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "DIEGO ARMANDO ANZOLA LEON", "area": "FNA", "cargo": "INGENIERO LAN", "ubi": "FNA", "equipo": "FONDO7", "serial": "PF4LY5AX", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "NICOLAS ALBERTO CAMARGO AGUIRRE", "area": "FNA", "cargo": "INGENIERO LAN", "ubi": "FNA", "equipo": "FONDO8", "serial": "PF4M31W1", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "GUILLERMO NI\u00d1O JURADO ", "area": "FNA", "cargo": "INGENIERO LAN", "ubi": "FNA", "equipo": "FONDO9", "serial": "PF4M0YXN", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "JHON GABRIEL ESCAMILLA S\u00c1NCHEZ", "area": "FNA", "cargo": "INGENIERO LAN", "ubi": "FNA", "equipo": "FONDO10", "serial": "PF4LY6XN", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "MAYCON ACOSTA MURCIA", "area": "FNA", "cargo": "INGENIERO LAN", "ubi": "FNA", "equipo": "FONDO11", "serial": "PF4LZHXQ", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "ANDRES FELIPE HUERTAS NU\u00d1EZ", "area": "FNA", "cargo": "INGENIERO LAN", "ubi": "FNA", "equipo": "FONDO12", "serial": "PF4LY6X6", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "DIEGO ALEJANDRO BARRAGAN", "area": "FNA", "cargo": "APOYO AL FNA", "ubi": "FNA", "equipo": "PROCESOS", "serial": "PF4WSX9", "tipo": "PORTATIL", "marca": "LENOVO V14 G3"},
+          {"resp": "MAURICIO ANDRES AGUDELO JIMENEZ", "area": "GESTION OPERACIONES", "cargo": "PMO", "ubi": "CALI", "equipo": "SERVIALCOPC21", "serial": "PF4WRYMY", "tipo": "PORTATIL", "marca": "LENOVO THINPADK"},
+          {"resp": "DIANA CAROLINA RODRIGUEZ OSORIO", "area": "GESTION OPERACIONES", "cargo": "COMERCIAL", "ubi": "CALI", "equipo": "SERVIALCOPC22", "serial": "5CG4166831", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "JORGE CARLOS MORALES ALVIS", "area": "GESTION OPERACIONES", "cargo": "PMO", "ubi": "CALI", "equipo": "SERVIALCOPC23", "serial": "PF4WYVGK", "tipo": "PORTATIL", "marca": "LENOVO THINPADK"},
+          {"resp": "STOCTIC", "area": "GESTION TI", "cargo": "N/A", "ubi": "BOGOTA", "equipo": "SERVIALCOPC24", "serial": "PF4WWJR8", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "STOC TIC", "area": "TIC", "cargo": "N/A", "ubi": "BOGOTA", "equipo": "SERVIALCOPC25", "serial": "L5NXCV06T533209", "tipo": "PORTATIL", "marca": "ASUS"},
+          {"resp": "JENNY PAOLA BALLESTEROS", "area": "OPERACIONES", "cargo": "LIDER MESA DE SERVICIO", "ubi": "CALLE 76", "equipo": "SERVIALCOPC26", "serial": "PF3WRZEQE", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "JHONIER YAIR FINO TICORA", "area": "GESTION TI", "cargo": "ANALISTA TI ", "ubi": "BOGOTA", "equipo": "SERVIALCOPC27", "serial": "PF4WWPPN", "tipo": "PORTATIL", "marca": "LENOVO THINPADK"},
+          {"resp": "SANTIAGO RUBIO URIBE(BACKUP)", "area": "GERENCIA GENERAL", "cargo": "GERENCIA GENERAL", "ubi": "BOGOTA", "equipo": "SISTEMAS", "serial": "PF3FZJ3E", "tipo": "PORTATIL", "marca": "LENOVO"},
+          {"resp": "DAVID STIVEN GARCIA ROJAS ", "area": "FONDO", "cargo": "APOYO ADMINISTRATIVO", "ubi": "BOGOTA", "equipo": "FONDO13", "serial": "L5NXCV06T507206", "tipo": "PORTATIL", "marca": "ASUS VIVOK"},
+          {"resp": "JUAN PABLO PINTO", "area": "FONDO", "cargo": "COORDINADOR DE PROYECTOS", "ubi": "BOGOTA", "equipo": "FONDO14", "serial": "5CG416683P", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "STOC TI ", "area": "CONTABILIDAD", "cargo": "COORDINADOR CONTABLE", "ubi": "BOGOTA", "equipo": "FONDO15", "serial": "5CG416681Z", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "BRYGGITH DANIELA QUINTERO RICO", "area": "CONTABILIDAD", "cargo": "ANALISTA CONTABLE", "ubi": "BOGOTA", "equipo": "--", "serial": "G42YX93", "tipo": "PORTATIL", "marca": "DELL"},
+          {"resp": " LUZ MERY TAMARA LARA", "area": "FNA", "cargo": "DOCUMENTADOR", "ubi": "FNA", "equipo": "--", "serial": "PF4QYQVW", "tipo": "PORTATIL", "marca": "LENOVO PORTATIL"},
+          {"resp": "DANIEL ALEJANDRO GARCIA IBA\u00d1EZ", "area": "GESTION TI", "cargo": "TECNICO SISTEMAS", "ubi": "BOGOTA", "equipo": "BOGOTA", "serial": "710YX93", "tipo": "PORTATIL", "marca": "DELL PORTATIL"},
+          {"resp": "OMAR DANIEL CERQUERA", "area": "BODEGA", "cargo": "AUXILIAR DE INVENTARIO Y LOGISTICA", "ubi": "ARMENIA", "equipo": "BOGOTA", "serial": "5C4M8B3", "tipo": "ESCRITORIO", "marca": "i5 CPU DELL"},
+          {"resp": "JUAN PABLO JACANAMEJOY", "area": "BODEGA", "cargo": "AUXILIAR DE INVENTARIO Y LOGISTICA", "ubi": "PUTUMAYO MOCOA", "equipo": "BOGOTA", "serial": "5C2S8B3", "tipo": "ESCRITORIO", "marca": "i5 CPU DELL"},
+          {"resp": "CRISTIAN CASTILLO", "area": "BODEGA", "cargo": "AUXILIAR DE INVENTARIO Y LOGISTICA", "ubi": "POPAYAN", "equipo": "BOGOTA", "serial": "5C4L8B3", "tipo": "ESCRITORIO", "marca": "i5 CPU DELL"},
+          {"resp": "STOPORTE TI 04 i5", "area": "CUARTO DE RACK", "cargo": "--", "ubi": "BOGOTA", "equipo": "BOGOTA", "serial": "5BPQ8B3", "tipo": "ESCRITORIO", "marca": "i5 CPU DELL"},
+          {"resp": "STOPORTE TI 05 i5", "area": "CUARTO DE RACK", "cargo": "--", "ubi": "BOGOTA", "equipo": "BOGOTA", "serial": "5BNN8B3", "tipo": "ESCRITORIO", "marca": "i5 CPU DELL"},
+          {"resp": "STOPORTE TI 06 i5", "area": "CUARTO DE RACK", "cargo": "--", "ubi": "BOGOTA", "equipo": "BOGOTA", "serial": "5C5K8B3", "tipo": "ESCRITORIO", "marca": "i5 CPU DELL"},
+          {"resp": "HELEN NICOLE VARGAS VELASQUEZ", "area": "ADMINISTRATIVO", "cargo": "ASISTENTE GERENCIA", "ubi": "BOGOTA", "equipo": "BOGOTA", "serial": "5C6J8B3", "tipo": "ESCRITORIO", "marca": "i5 CPU DELL"},
+          {"resp": "CABRERA APONTE WILMAR ANDRES", "area": "MESA DE SERVICIOS", "cargo": "ANALISTA MESA DE SERVICIOS", "ubi": "CALI", "equipo": "BOGOTA", "serial": "HF5J8Y2", "tipo": "PORTATIL", "marca": "DELL PORTATIL"},
+          {"resp": "MARTINEZ PRADO JHONATAN", "area": "MESA DE SERVICIOS", "cargo": "ANALISTA MESA DE SERVICIOS", "ubi": "CALI", "equipo": "--", "serial": "9JGJ8Y2", "tipo": "PORTATIL", "marca": "DELL PORTATIL"},
+          {"resp": "BLADIMIR ARAGON BARRIOS ", "area": "OPERACIONES", "cargo": "PM ", "ubi": "CAUCA", "equipo": "--", "serial": "F9GK8Y2", "tipo": "PORTATIL", "marca": "DELL PORTATIL"},
+          {"resp": "JULIO SCARPETTA", "area": "TIC", "cargo": "TIC", "ubi": "BOGOTA CALLE 99", "equipo": "--", "serial": "JRYXX93", "tipo": "PORTATIL", "marca": "DELL PORTATIL"},
+          {"resp": "HELEN NICOLE VARGAS VELASQUEZ", "area": "ADMINISTRATIVO", "cargo": "ASISTENTE GERENCIA", "ubi": "BOGOTA", "equipo": "5QYXX93", "serial": "--", "tipo": "PORTATIL", "marca": "PORTATIL DELL"}
         ];
 
         const monitoresData = [
-          {"resp": "JOHN MOLANO", "ubi": "BOGOTA", "marca": "SAMSUMG", "serial": "MON-031", "tipo": "ASIGNADO"},
-          {"resp": "ESTEFANIA VALENCIA", "ubi": "BOGOTA", "marca": "SAMSUMG", "serial": "MON-002", "tipo": "ASIGNADO"},
-          {"resp": "MARIANA RAMIREZ MONTA\u00d1A", "ubi": "BOGOTA", "marca": "LG", "serial": "MON-227", "tipo": "ASIGNADO"},
-          {"resp": "FLORA MARGARITA DAZA", "ubi": "BOGOTA", "marca": "HP", "serial": "MON-010", "tipo": "ASIGNADO"},
-          {"resp": "DANIEL DANILO CAMACHO VARGAS", "ubi": "BOGOTA", "marca": "HP", "serial": "MON-005", "tipo": "ASIGNADO"},
-          {"resp": "CAROLAY ACOSTA", "ubi": "BOGOTA", "marca": "LG", "serial": "MON-033", "tipo": "ASIGNADO"},
-          {"resp": "SANTIAGO RUBIO URIBE", "ubi": "BOGOTA", "marca": "LG", "serial": "--", "tipo": "ASIGNADO"},
-          {"resp": "LORENA GUEVARA ESCOBAR", "ubi": "BOGOTA", "marca": "LG", "serial": "MON-032", "tipo": "ASIGNADO"},
-          {"resp": "JEAN LUCAS WILD", "ubi": "BOGOTA", "marca": "SAMSUMG", "serial": "MON-009", "tipo": "ASIGNADO"},
-          {"resp": "SANTIAGO RUBIO URIBE", "ubi": "BOGOTA", "marca": "SAMSUMG", "serial": "0AZ4HCPX500169D", "tipo": "ASIGNADO"},
-          {"resp": "JOHAN FRANCISCO BARBA NU\u00d1EZ", "ubi": "FNA", "marca": "HP", "serial": "CNC3251R39", "tipo": "ASIGNADO"},
-          {"resp": "MARCO ANTONIO ROMERO VANEGAS", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX402685R", "tipo": "ASIGNADO"},
-          {"resp": "HARBEY ANTONIO CUBIDES MARTINEZ", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX402311H", "tipo": "ASIGNADO"},
-          {"resp": "JOSE VICENTE ALMECIGA HURTADO", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX401991K", "tipo": "ASIGNADO"},
-          {"resp": "CARLOS ANDRES CAMACHO CAMACHO", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX401185B", "tipo": "ASIGNADO"},
-          {"resp": "DIEGO ARMANDO ANZOLA LEON", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX402098B", "tipo": "ASIGNADO"},
-          {"resp": "NICOLAS ALBERTO CAMARGO AGUIRRE", "ubi": "FNA", "marca": "SAMSUMG", "serial": "OASVHCPX402524Y", "tipo": "ASIGNADO"},
-          {"resp": "GUILLERMO NI\u00d1O JURADO ", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX402688D", "tipo": "ASIGNADO"},
-          {"resp": "JHON GABRIEL ESCAMILLA S\u00c1NCHEZ", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0A5VHCPX900405H", "tipo": "ASIGNADO"},
-          {"resp": "MAYCON ACOSTA MURCIA", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX402090X", "tipo": "ASIGNADO"},
-          {"resp": "ANDRES FELIPE HUERTAS NU\u00d1EZ", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX402120W", "tipo": "ASIGNADO"},
-          {"resp": "STOC TI ", "ubi": "BOGOTA", "marca": "SAMSUNG", "serial": "--", "tipo": "ASIGNADO"},
-          {"resp": "DANIEL ALEJANDRO GARCIA IBA\u00d1EZ", "ubi": "BOGOTA", "marca": "SAMSUNG", "serial": "SI", "tipo": "ASIGNADO"},
-          {"resp": "OMAR DANIEL CERQUERA", "ubi": "ARMENIA", "marca": "01 SAMSUNG", "serial": "SI", "tipo": "ASIGNADO"},
-          {"resp": "JUAN PABLO JACANAMEJOY", "ubi": "PUTUMAYO MOCOA", "marca": "02 SAMSUNG", "serial": "SI", "tipo": "ASIGNADO"},
-          {"resp": "CRISTIAN CASTILLO", "ubi": "POPAYAN", "marca": "03 SAMSUNG", "serial": "SI", "tipo": "ASIGNADO"},
-          {"resp": "STOPORTE TI 04 i5", "ubi": "", "marca": "04 SAMSUNG", "serial": "SI", "tipo": "ASIGNADO"},
-          {"resp": "STOPORTE TI 05 i5", "ubi": "", "marca": "05 SAMSUNG", "serial": "SI", "tipo": "ASIGNADO"},
-          {"resp": "STOPORTE TI 06 i5", "ubi": "", "marca": "06 SAMSUNG", "serial": "SI", "tipo": "ASIGNADO"},
-          {"resp": "YURI TATIANA CUERVO", "ubi": "BOGOTA CALLE 76", "marca": "SAMSUNG", "serial": "--", "tipo": "ASIGNADO"},
-          {"resp": "DIANA PAOLA DIAZ", "ubi": "BOGOTA CALLE 76", "marca": "SAMSUNG", "serial": "--", "tipo": "ASIGNADO"}
+          {"resp": "JOHN MOLANO", "ubi": "BOGOTA", "marca": "SAMSUMG", "serial": "MON-031"},
+          {"resp": "ESTEFANIA VALENCIA", "ubi": "BOGOTA", "marca": "SAMSUMG", "serial": "MON-002"},
+          {"resp": "MARIANA RAMIREZ MONTA\u00d1A", "ubi": "BOGOTA", "marca": "LG", "serial": "MON-227"},
+          {"resp": "FLORA MARGARITA DAZA", "ubi": "BOGOTA", "marca": "HP", "serial": "MON-010"},
+          {"resp": "DANIEL DANILO CAMACHO VARGAS", "ubi": "BOGOTA", "marca": "HP", "serial": "MON-005"},
+          {"resp": "CAROLAY ACOSTA", "ubi": "BOGOTA", "marca": "LG", "serial": "MON-033"},
+          {"resp": "SANTIAGO RUBIO URIBE", "ubi": "BOGOTA", "marca": "LG", "serial": "N/A"},
+          {"resp": "LORENA GUEVARA ESCOBAR", "ubi": "BOGOTA", "marca": "LG", "serial": "MON-032"},
+          {"resp": "JEAN LUCAS WILD", "ubi": "BOGOTA", "marca": "SAMSUMG", "serial": "MON-009"},
+          {"resp": "SANTIAGO RUBIO URIBE", "ubi": "BOGOTA", "marca": "SAMSUMG", "serial": "0AZ4HCPX500169D"},
+          {"resp": "JOHAN FRANCISCO BARBA NU\u00d1EZ", "ubi": "FNA", "marca": "HP", "serial": "CNC3251R39"},
+          {"resp": "MARCO ANTONIO ROMERO VANEGAS", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX402685R"},
+          {"resp": "HARBEY ANTONIO CUBIDES MARTINEZ", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX402311H"},
+          {"resp": "JOSE VICENTE ALMECIGA HURTADO", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX401991K"},
+          {"resp": "CARLOS ANDRES CAMACHO CAMACHO", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX401185B"},
+          {"resp": "DIEGO ARMANDO ANZOLA LEON", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX402098B"},
+          {"resp": "NICOLAS ALBERTO CAMARGO AGUIRRE", "ubi": "FNA", "marca": "SAMSUMG", "serial": "OASVHCPX402524Y"},
+          {"resp": "GUILLERMO NI\u00d1O JURADO ", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX402688D"},
+          {"resp": "JHON GABRIEL ESCAMILLA S\u00c1NCHEZ", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0A5VHCPX900405H"},
+          {"resp": "MAYCON ACOSTA MURCIA", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX402090X"},
+          {"resp": "ANDRES FELIPE HUERTAS NU\u00d1EZ", "ubi": "FNA", "marca": "SAMSUMG", "serial": "0ASVHCPX402120W"},
+          {"resp": "STOC TI ", "ubi": "BOGOTA", "marca": "SAMSUNG", "serial": "--"},
+          {"resp": "DANIEL ALEJANDRO GARCIA IBA\u00d1EZ", "ubi": "BOGOTA", "marca": "SAMSUNG", "serial": "--"},
+          {"resp": "OMAR DANIEL CERQUERA", "ubi": "ARMENIA", "marca": "01 SAMSUNG", "serial": "--"},
+          {"resp": "JUAN PABLO JACANAMEJOY", "ubi": "PUTUMAYO MOCOA", "marca": "02 SAMSUNG", "serial": "--"},
+          {"resp": "CRISTIAN CASTILLO", "ubi": "POPAYAN", "marca": "03 SAMSUNG", "serial": "--"},
+          {"resp": "STOPORTE TI 04 i5", "ubi": "--", "marca": "04 SAMSUNG", "serial": "--"},
+          {"resp": "STOPORTE TI 05 i5", "ubi": "--", "marca": "05 SAMSUNG", "serial": "--"},
+          {"resp": "STOPORTE TI 06 i5", "ubi": "--", "marca": "06 SAMSUNG", "serial": "--"},
+          {"resp": "YURI TATIANA CUERVO", "ubi": "BOGOTA CALLE 76", "marca": "SAMSUNG", "serial": "--"},
+          {"resp": "DIANA PAOLA DIAZ", "ubi": "BOGOTA CALLE 76", "marca": "SAMSUNG", "serial": "--"}
         ];
 
         let countLaptops = 0;
@@ -238,11 +242,12 @@
 
             let badgeTipo = eq.tipo === 'PORTATIL' ? 'badge-pc' : 'badge-desk';
             let iconTipo = eq.tipo === 'PORTATIL' ? 'laptop' : 'computer';
+            let formattedEquipo = eq.equipo === '--' || eq.equipo === 'BOGOTA' ? '<i>S/N Equipo</i>' : eq.equipo;
 
             tbodyEq.innerHTML += `<tr>
                 <td><strong>${eq.resp}</strong></td>
-                <td>${eq.area}<br><small style="color:#777;">${eq.cargo}</small></td>
-                <td style="color:var(--primary); font-weight:bold;">${eq.equipo}</td>
+                <td>${eq.area}<br><small style="color:#777;"><i class="fa-solid fa-location-dot"></i> ${eq.ubi}</small></td>
+                <td style="color:var(--primary); font-weight:bold;">${formattedEquipo}</td>
                 <td><span class="badge ${badgeTipo}"><i class="fa-solid fa-${iconTipo}"></i> ${eq.tipo}</span></td>
                 <td>${eq.marca}</td>
                 <td>${eq.serial}</td>
@@ -254,10 +259,10 @@
         monitoresData.forEach(mon => {
             tbodyMon.innerHTML += `<tr>
                 <td><strong>${mon.resp}</strong></td>
-                <td>${mon.ubi || '--'}</td>
-                <td style="font-weight:bold;">${mon.marca}</td>
+                <td>${mon.ubi !== '--' ? mon.ubi : 'BOGOTA'}</td>
+                <td style="font-weight:bold;"><span class="badge badge-monitor"><i class="fa-solid fa-desktop"></i> ${mon.marca}</span></td>
                 <td>${mon.serial}</td>
-                <td><span class="badge badge-monitor"><i class="fa-solid fa-check"></i> PROPIO</span></td>
+                <td><span class="badge badge-propio"><i class="fa-solid fa-check"></i> Propio</span></td>
             </tr>`;
         });
 
@@ -265,7 +270,7 @@
         new Chart(document.getElementById('assetChart'), {
             type: 'doughnut',
             data: {
-                labels: ['Laptops Propias', 'Escritorio Propios', 'Monitores Propios'],
+                labels: ['Laptops Propias', 'PCs Escritorio Propios', 'Monitores Propios'],
                 datasets: [{
                     data: [countLaptops, countDesktops, monitoresData.length],
                     backgroundColor: ['#1a73e8', '#1e8e3e', '#f9ab00'],
