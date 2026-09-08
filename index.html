@@ -91,6 +91,24 @@
             background: #f8f9fa;
         }
         .iframe-container.active { display: block; }
+
+        /* =========================================
+           4. FOOTER FIRMA
+        ========================================= */
+        .dashboard-footer {
+            background: #ffffff;
+            color: #5f6368;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 12px;
+            font-weight: 500;
+            border-top: 1px solid #e2e2e2;
+            z-index: 10;
+        }
+        .dashboard-footer i {
+            color: #1a73e8;
+            margin-right: 4px;
+        }
     </style>
 </head>
 <body>
@@ -137,7 +155,7 @@
             <button class="sub-btn" onclick="openDashboard(event, 'vista-nitro')">Nitro</button>
         </div>
 
-        <!-- Grupo 4: Inventario (NUEVO) -->
+        <!-- Grupo 4: Inventario -->
         <div id="grupo-inventario" class="sub-nav-group">
             <button class="sub-btn" onclick="openDashboard(event, 'vista-inv-ays-construsalco')">AYS CONSTRUSALCO</button>
             <button class="sub-btn" onclick="openDashboard(event, 'vista-inv-servialco')">SERVIALCO SAS</button>
@@ -166,13 +184,17 @@
     <iframe id="vista-autocad" class="iframe-container" src="autocad.html"></iframe>
     <iframe id="vista-nitro" class="iframe-container" src="nitro.html"></iframe>
 
-    <!-- Iframes de Inventario (NUEVOS) -->
-    <!-- Para que funcionen, debes crear estos 5 archivos HTML en tu repositorio -->
+    <!-- Iframes de Inventario -->
     <iframe id="vista-inv-ays-construsalco" class="iframe-container" src="inv_ays_construsalco.html"></iframe>
     <iframe id="vista-inv-servialco" class="iframe-container" src="inv_servialco.html"></iframe>
     <iframe id="vista-inv-unicat" class="iframe-container" src="inv_unicat.html"></iframe>
     <iframe id="vista-inv-ays-servialco" class="iframe-container" src="inv_ays_servialco.html"></iframe>
     <iframe id="vista-inv-arky" class="iframe-container" src="inv_arky.html"></iframe>
+
+    <!-- PIE DE PÁGINA (FIRMA) -->
+    <div class="dashboard-footer">
+        <i class="fa-solid fa-code"></i> Dashboard Analítico Multi-Consolas · Desarrollado por <strong>Alejandro Garcia</strong> · Soporte TI
+    </div>
 
     <script>
         // Función para cambiar la Categoría Principal
