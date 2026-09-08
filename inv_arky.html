@@ -49,7 +49,7 @@
         
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
         .badge-pc { background: #e3f2fd; color: #1a73e8; }
-        .badge-propio { background: #e6f4ea; color: var(--success); }
+        .badge-ARKY { background: #e6f4ea; color: var(--success); }
 
         @media (max-width: 1100px) { .charts-grid { grid-template-columns: 1fr; } }
     </style>
@@ -65,7 +65,7 @@
         <!-- KPIs SUPERIORES -->
         <div class="kpi-grid">
             <div class="kpi-card" style="border-left-color: var(--primary);">
-                <div class="kpi-header"><span>Computadores Propios</span><i class="fa-solid fa-laptop"></i></div>
+                <div class="kpi-header"><span>Computadores de ARKY</span><i class="fa-solid fa-laptop"></i></div>
                 <div id="kpiEquipos" class="kpi-value">8</div>
             </div>
             <div class="kpi-card" style="border-left-color: var(--success);">
@@ -137,7 +137,7 @@
             if(marcaUpper.includes('DELL')) countDell++;
 
             tbody.innerHTML += `<tr>
-                <td><strong>${eq.resp}</strong><br><span class="badge badge-propio" style="margin-top:4px;"><i class="fa-solid fa-check"></i> Propio</span></td>
+                <td><strong>${eq.resp}</strong><br><span class="badge badge-ARKY" style="margin-top:4px;"><i class="fa-solid fa-check"></i> ARKY</span></td>
                 <td>${eq.area}<br><small style="color:#777;">${eq.cargo}</small></td>
                 <td><i class="fa-solid fa-location-dot" style="color:#777;"></i> ${eq.ubi}<br><small style="color:#1a73e8; font-weight:600;">Sede: ${eq.sede}</small></td>
                 <td>
