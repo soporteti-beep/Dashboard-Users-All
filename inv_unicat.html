@@ -4,67 +4,256 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario - UNICAT</title>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
     <style>
-        body { font-family: 'Google Sans', Arial, sans-serif; background-color: #f5f6f8; margin: 0; padding: 0; color: #1f1f1f; }
+        :root {
+            --primary: #1a73e8; 
+            --success: #1e8e3e;
+            --danger: #d93025;
+            --warning: #f9ab00;
+            --bg-color: #f5f6f8;
+            --card-bg: #ffffff;
+            --text-main: #1f1f1f;
+        }
+
+        body { font-family: 'Google Sans', Arial, sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: var(--text-main); }
+        
         .header { background: #fff; border-bottom: 1px solid #e2e2e2; padding: 20px 30px; margin-bottom: 28px; }
-        .header h1 { margin: 0; font-size: 22px; font-weight: 600; display: flex; align-items: center; gap: 10px; color:#1a73e8;}
+        .header h1 { margin: 0; font-size: 22px; font-weight: 600; display: flex; align-items: center; gap: 10px; color: var(--primary);}
+        
         .container { max-width: 1450px; margin: 0 auto; padding: 0 28px 50px 28px; }
-        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 28px; }
-        .kpi-card { background: #fff; border-radius: 8px; padding: 22px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border-left: 4px solid #1a73e8; }
-        .kpi-header { color: #555; font-size: 14px; font-weight: 500; margin-bottom: 10px;}
+        
+        /* KPIs */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 28px; }
+        .kpi-card { background: #fff; border-radius: 8px; padding: 22px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border-left: 4px solid var(--primary); position: relative;}
+        .kpi-header { color: #555; font-size: 14px; font-weight: 500; margin-bottom: 10px; display: flex; justify-content: space-between;}
+        .kpi-header i { font-size: 20px; opacity: 0.6; }
         .kpi-value { font-size: 31px; font-weight: 600; color: #111; }
-        .chart-card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid #ddd;}
-        .table-container { overflow-y: auto; max-height: 500px; border: 1px solid #ddd; border-radius: 6px; }
+        
+        /* Grillas de Gráficas y Tablas */
+        .charts-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-bottom: 28px; }
+        .chart-card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid #ddd; }
+        .chart-card h3 { margin: 0 0 15px 0; font-size: 18px; color: #171717; font-weight: 600; border-bottom: 1px solid #eee; padding-bottom:10px; display: flex; align-items: center; gap: 8px;}
+        .chart-container { position: relative; height: 250px; width: 100%; }
+        
+        /* Estilos de Tablas */
+        .table-container { overflow-y: auto; max-height: 400px; border: 1px solid #ddd; border-radius: 6px; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
-        th { background-color: #f5f5f5; color: #444; padding: 12px; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 1;}
+        th { background-color: #f5f5f5; color: #444; padding: 12px; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 1; }
         td { padding: 12px; border-bottom: 1px solid #eee; }
         tr:hover { background-color: #f8fbff; }
-        .error-msg { background: #fce8e6; color: #d93025; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; display: none; }
+        
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
+        .badge-pc { background: #e3f2fd; color: #1a73e8; }
+        .badge-desk { background: #e6f4ea; color: #1e8e3e; }
+        .badge-monitor { background: #fef0d9; color: #e65100; }
+        .badge-externo { background: #f1f3f4; color: #5f6368; border: 1px solid #dadce0;}
+
+        @media (max-width: 1100px) { .charts-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <div class="header"><div class="container" style="padding:0;"><h1><i class="fa-solid fa-boxes-stacked"></i> INVENTARIO - UNICAT</h1></div></div>
-    <div class="container">
-        <div id="errorMessage" class="error-msg">⚠️ Archivo no encontrado.</div>
-        <div class="kpi-grid">
-            <div class="kpi-card"><div class="kpi-header">Total Equipos Unicat</div><div id="kpiTotal" class="kpi-value">...</div></div>
+    <div class="header">
+        <div class="container" style="padding:0;">
+            <h1><i class="fa-solid fa-boxes-stacked"></i> INVENTARIO - UNICAT (FNA)</h1>
         </div>
+    </div>
+
+    <div class="container">
+        <!-- KPIs SUPERIORES -->
+        <div class="kpi-grid">
+            <div class="kpi-card" style="border-left-color: var(--primary);">
+                <div class="kpi-header"><span>Computadores Asignados</span><i class="fa-solid fa-laptop"></i></div>
+                <div id="kpiEquipos" class="kpi-value">31</div>
+            </div>
+            <div class="kpi-card" style="border-left-color: var(--warning);">
+                <div class="kpi-header"><span>Monitores Asignados</span><i class="fa-solid fa-desktop"></i></div>
+                <div id="kpiMonitores" class="kpi-value">34</div>
+            </div>
+            <div class="kpi-card" style="border-left-color: #5f6368;">
+                <div class="kpi-header"><span>Total de Activos Externos</span><i class="fa-solid fa-layer-group"></i></div>
+                <div id="kpiTotal" class="kpi-value">65</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <!-- GRÁFICA DE DISTRIBUCIÓN -->
+            <div class="chart-card">
+                <h3><i class="fa-solid fa-chart-pie"></i> Distribución de Activos</h3>
+                <div class="chart-container"><canvas id="assetChart"></canvas></div>
+            </div>
+
+            <!-- TABLA 1: COMPUTADORES -->
+            <div class="chart-card">
+                <h3><i class="fa-solid fa-laptop"></i> Inventario de Computadores (Externos)</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Responsable</th>
+                                <th>Área / Cargo</th>
+                                <th>Equipo Asignado</th>
+                                <th>Tipo de Máquina</th>
+                                <th>Marca / Serial</th>
+                                <th>Propiedad</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equiposTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLA 2: MONITORES -->
         <div class="chart-card">
-            <h3 style="margin: 0 0 15px 0; border-bottom: 1px solid #eee; padding-bottom:10px;">Listado de Activos</h3>
-            <div class="table-container">
+            <h3><i class="fa-solid fa-display"></i> Inventario de Monitores Adicionales</h3>
+            <div class="table-container" style="max-height: 300px;">
                 <table>
-                    <thead><tr><th>Responsable</th><th>Área / Cargo</th><th>Equipo</th><th>Tipo / Marca</th><th>Correo</th></tr></thead>
-                    <tbody id="tableBody"></tbody>
+                    <thead>
+                        <tr>
+                            <th>Responsable Asignado</th>
+                            <th>Ubicación del Monitor</th>
+                            <th>Marca Pantalla</th>
+                            <th>Serial Number</th>
+                            <th>Propiedad</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monitoresTableBody"></tbody>
                 </table>
             </div>
         </div>
     </div>
 
     <script>
-        fetch("GT-FO-01 INVENTARIO DE ACTIVOS FIJOS V2.xlsx").then(res => res.arrayBuffer()).then(data => {
-            const wb = XLSX.read(data, { type: 'array' });
-            // Rango 2 para omitir los logos superiores
-            const jsData = XLSX.utils.sheet_to_json(wb.Sheets['UNICAT'], { range: 2 }); 
-            let total = 0; const tbody = document.getElementById('tableBody');
+        // DATA EMBEBIDA (Extraída de la matriz UNICAT)
+        const equiposData = [
+          {"resp": "CRISTIAN CASTILLO", "area": "OPERACIONES", "cargo": "BODEGA", "ubi": "POPAYAN", "equipo": "SERVIALCOPC30", "serial": "C7P4M63", "tipo": "PORTATIL", "marca": "DELL"},
+          {"resp": "JULIAN CAMILO BAQUERO VELA", "area": "OPERACIONES", "cargo": "DISE\u00d1ADOR", "ubi": "BOGOTA", "equipo": "SERVIALCOPC31", "serial": "JVWS1F3", "tipo": "PORTATIL", "marca": "DELL"},
+          {"resp": "NAISER JOSE ALVAREZ", "area": "CONTABILIDAD", "cargo": "CONTADOR TRIBUTARIO", "ubi": "BOGOTA", "equipo": "SERVIALCOPC33", "serial": "2ZLR1F3", "tipo": "PORTATIL", "marca": "DELL"},
+          {"resp": "MAURICIO ALMANZAR BONILLA", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA1", "serial": "8CC150247Y", "tipo": "ESCRITORIO", "marca": "HP"},
+          {"resp": "SEBASTI\u00c1N DAVID MU\u00d1OZ ARAG\u00d3N", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA2", "serial": "8CC1470H3D", "tipo": "ESCRITORIO", "marca": "HP"},
+          {"resp": "JOHANNA PATRICIA RODRIGUEZ MOYA", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA4", "serial": "8CC15024BT", "tipo": "ESCRITORIO", "marca": "HP"},
+          {"resp": "GLORIA MARCELA MALUENDAS PARDO", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA5", "serial": "8CC1472QYT", "tipo": "ESCRITORIO", "marca": "HP"},
+          {"resp": "ANDRES FELIPE SOLANO MOLINA", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA6", "serial": "8CC1472QY2", "tipo": "ESCRITORIO", "marca": "HP"},
+          {"resp": "DUVAN FELIPE GARZ\u00d3N CONDE", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA7", "serial": "8CC150245V", "tipo": "ESCRITORIO", "marca": "HP"},
+          {"resp": "GERSON YAIR ACEVEDO RODR\u00cdGUEZ", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA8", "serial": "8CC1470H2Q", "tipo": "ESCRITORIO", "marca": "HP"},
+          {"resp": "GINETH ALEJANDRA SANCHEZ RODRIGUEZ", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA9", "serial": "5NDKKQ3", "tipo": "ESCRITORIO", "marca": "Dell"},
+          {"resp": "BRAYAM ALEXANDER CLAROS GALLEGO", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA10", "serial": "6MDKKQ3", "tipo": "ESCRITORIO", "marca": "Dell"},
+          {"resp": "JULIAN ANDRES REAL ARBOLEDA", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA11", "serial": "1NDKKQ3", "tipo": "ESCRITORIO", "marca": "Dell"},
+          {"resp": "FEDERICO SANCHEZ PAEZ", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA13", "serial": "8CC150246M", "tipo": "ESCRITORIO", "marca": "HP"},
+          {"resp": "DUVER HARVEY GUTI\u00c9RREZ HURTADO", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA14", "serial": "8CC1472R2D", "tipo": "ESCRITORIO", "marca": "HP"},
+          {"resp": "FABIAN ESTEBAN GARC\u00cdA ESPITIA", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA15", "serial": "8CC1472ROW", "tipo": "ESCRITORIO", "marca": "HP"},
+          {"resp": "CRISTIAN JULIAN ROJAS RAMIREZ", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA17", "serial": "8CC1421H8G", "tipo": "ESCRITORIO", "marca": "HP"},
+          {"resp": "ANGIE VALENTINA BARRETO GARZ\u00d3N", "area": "MESA FNA", "cargo": "GESTORA DE CALIDAD", "ubi": "FNA", "equipo": "FNA21", "serial": "8CC1421H6L", "tipo": "ESCRITORIO", "marca": "HP"},
+          {"resp": "OMAR JAVIER OSORIO CASALLAS", "area": "MESA FNA", "cargo": "GESTOR DE INCIDENTES", "ubi": "FNA", "equipo": "FNA22", "serial": "5CD2107N56", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "GLADYS RUBIANO ROJAS", "area": "MESA FNA", "cargo": "GESTORA DE CONOCIMIENTOS", "ubi": "FNA", "equipo": "FNA23", "serial": "5CD0131TQ0", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "ANGIE VALENTINA BARRETO GARZ\u00d3N", "area": "MESA FNA", "cargo": "GESTORA DE CALIDAD", "ubi": "FNA", "equipo": "FNA24", "serial": "5CD0131TFL", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "CINDY PAOLA JARAMILLO GARCIA", "area": "MESA FNA", "cargo": "GESTORA DE PROCESOS", "ubi": "FNA", "equipo": "FNA25", "serial": "HGT11B3", "tipo": "PORTATIL", "marca": "Dell"},
+          {"resp": "DANIEL MORENO AVELLANEDA", "area": "MESA FNA", "cargo": "COORDINADOR, MESA DE SERVICIO.", "ubi": "FNA", "equipo": "FNA26", "serial": "5CD0131TRL", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "BUSTOS SANTAMARIA ELIOHT ARON", "area": "MESA FNA", "cargo": "LIDER ASEGURAMIENTO CALIDAD", "ubi": "FNA", "equipo": "FNA27", "serial": "5CD1013SMM", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "DIAZ GARZON RAUL ARMANDO", "area": "MESA FNA", "cargo": "LIDER GESTION DE SERVICIOS TI", "ubi": "FNA", "equipo": "FNA29", "serial": "5CD1013SQ9", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "GALINDO CIFUENTES EDWIN YECID", "area": "MESA FNA", "cargo": "GESTOR DE CONOCIMIENTOS", "ubi": "FNA", "equipo": "FNA30", "serial": "3UVM2R73", "tipo": "PORTATIL", "marca": "DELL"},
+          {"resp": "LEON RAMIREZ LUIS EDUARDO", "area": "MESA FNA", "cargo": "GESTOR DE MEJORA CONTINUA", "ubi": "FNA", "equipo": "FNA31", "serial": "5CD01BZLT", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "SANCHEZ SANCHEZ HUGO ANDRES", "area": "KIOSKOS", "cargo": "TECNICO EN SISTEMAS", "ubi": "FNA", "equipo": "FNA32", "serial": "5CD1013SS7", "tipo": "PORTATIL", "marca": "HP"},
+          {"resp": "DEIMER QUINTO", "area": "KIOSKOS", "cargo": "APOYO KIOSKO", "ubi": "FNA", "equipo": "FNA33", "serial": "UX433FAC", "tipo": "PORTATIL", "marca": "ASUS"},
+          {"resp": "KATHERINE JOHANNA OBREGOSO ORTIZ", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA34", "serial": "8CC1470H22", "tipo": "TORRE", "marca": "HP"},
+          {"resp": "OSCAR JAVIER BERM\u00daDEZ RAM\u00cdREZ", "area": "MESA FNA", "cargo": "ANALISTAS MESA DE SERVICIO", "ubi": "FNA", "equipo": "FNA36", "serial": "8CC1470GZD", "tipo": "TORRE", "marca": "HP"}
+        ];
 
-            jsData.forEach(row => {
-                let responsable = row['RESPONSABLE'] || row[' '] || row['Unnamed: 1'];
-                if(!responsable || !row['NOMBRE EQUIPO']) return;
-                
-                total++;
-                tbody.innerHTML += `<tr>
-                    <td><strong>${responsable}</strong></td>
-                    <td>${row['AREA']||'--'}<br><small style="color:#777;">${row['CARGO']||''}</small></td>
-                    <td style="color:#1a73e8; font-weight:bold;">${row['NOMBRE EQUIPO']}</td>
-                    <td>${row['TIPO']||'--'} - ${row['MARCA']||''}</td>
-                    <td>${row['CORREO']||'--'}</td>
-                </tr>`;
-            });
-            document.getElementById('kpiTotal').innerText = total;
-        }).catch(() => document.getElementById('errorMessage').style.display='block');
+        const monitoresData = [
+          {"resp": "JULIAN CAMILO BAQUERO VELA", "ubi": "BOGOTA", "marca": "HP", "serial": "CNK6020JPY"},
+          {"resp": "NAISER JOSE ALVAREZ", "ubi": "BOGOTA", "marca": "HP", "serial": "CNK1221K0K"},
+          {"resp": "CELESTE ARBELAEZ OSPINA", "ubi": "BOGOTA", "marca": "HP", "serial": "6CM11908Y7"},
+          {"resp": "MARIA ALEJANDRA ESCOBAR", "ubi": "BOGOTA", "marca": "HP", "serial": "CNK1221KBK"},
+          {"resp": "FLORA MARGARITA DAZA", "ubi": "BOGOTA", "marca": "HP", "serial": "CNK1221K04"},
+          {"resp": "NATALIA BAEZ", "ubi": "BOGOTA", "marca": "HP", "serial": "CNK1170WPY"},
+          {"resp": "DUVAN RAMIREZ", "ubi": "BOGOTA", "marca": "HP", "serial": "CNK1221JZ0"},
+          {"resp": "ELVIS PESTANA", "ubi": "BOGOTA", "marca": "HP", "serial": "CNK1221KD7"},
+          {"resp": "DANIEL CAMILO CAMACHO VARGAS", "ubi": "BOGOTA", "marca": "HP", "serial": "CNK1221K0M"},
+          {"resp": "DANILO TERNERA", "ubi": "BOGOTA", "marca": "HP", "serial": "CNK1221KC9"},
+          {"resp": "RAFAEL JIMENEZ", "ubi": "BOGOTA", "marca": "HP", "serial": "6CM11909CK"},
+          {"resp": "MAURICIO ALMANZAR BONILLA", "ubi": "FNA", "marca": "HP", "serial": "3CQ35224NN"},
+          {"resp": "SEBASTI\u00c1N DAVID MU\u00d1OZ ARAG\u00d3N", "ubi": "FNA", "marca": "HP", "serial": "3CQ5291TVJ"},
+          {"resp": "JOHANNA PATRICIA RODRIGUEZ MOYA", "ubi": "FNA", "marca": "HP", "serial": "3CQ40916TS"},
+          {"resp": "GLORIA MARCELA MALUENDAS PARDO", "ubi": "FNA", "marca": "HP", "serial": "3CQ5291TVZ"},
+          {"resp": "ANDRES FELIPE SOLANO MOLINA", "ubi": "FNA", "marca": "LENOVO", "serial": "V1M8128"},
+          {"resp": "DUVAN FELIPE GARZ\u00d3N CONDE", "ubi": "FNA", "marca": "LENOVO", "serial": "V6-68393"},
+          {"resp": "GERSON YAIR ACEVEDO RODR\u00cdGUEZ", "ubi": "FNA", "marca": "LENOVO", "serial": "V9-MBBHV"},
+          {"resp": "GINETH ALEJANDRA SANCHEZ RODRIGUEZ", "ubi": "FNA", "marca": "HP", "serial": "CNK7300F6H"},
+          {"resp": "BRAYAM ALEXANDER CLAROS GALLEGO", "ubi": "FNA", "marca": "Dell", "serial": "V9-MBE1C"},
+          {"resp": "JULIAN ANDRES REAL ARBOLEDA", "ubi": "FNA", "marca": "HP", "serial": "CNK6291FBC"},
+          {"resp": "FEDERICO SANCHEZ PAEZ", "ubi": "FNA", "marca": "HP", "serial": "Li2215sD"},
+          {"resp": "DUVER HARVEY GUTI\u00c9RREZ HURTADO", "ubi": "FNA", "marca": "HP", "serial": "3CQ3511PK9"},
+          {"resp": "FABIAN ESTEBAN GARC\u00cdA ESPITIA", "ubi": "FNA", "marca": "SAMSUNG", "serial": "ZZP0H4ZM800976L"},
+          {"resp": "CRISTIAN JULIAN ROJAS RAMIREZ", "ubi": "FNA", "marca": "HP", "serial": "CMK6010V52"},
+          {"resp": "ANGIE VALENTINA BARRETO GARZ\u00d3N", "ubi": "FNA", "marca": "HP", "serial": "3CQ4240NT9"},
+          {"resp": "OMAR JAVIER OSORIO CASALLAS", "ubi": "FNA", "marca": "DELL", "serial": "CN-V50XY"},
+          {"resp": "GLADYS RUBIANO ROJAS", "ubi": "FNA", "marca": "DELL", "serial": "CN-0G8TVHQDC0012G6FKBA16"},
+          {"resp": "ANGIE VALENTINA BARRETO GARZ\u00d3N", "ubi": "FNA", "marca": "DELL", "serial": "CN-0G8TVHQDC00127570IA16"},
+          {"resp": "CINDY PAOLA JARAMILLO GARCIA", "ubi": "FNA", "marca": "DELL", "serial": "CN-0GMGXFTV20001801UB"},
+          {"resp": "DANIEL MORENO AVELLANEDA", "ubi": "FNA", "marca": "DELL", "serial": "CN-0G8TVH-QDC00"},
+          {"resp": "KATHERINE JOHANNA OBREGOSO ORTIZ", "ubi": "FNA", "marca": "HP", "serial": "CNC91007DS"},
+          {"resp": "OSCAR JAVIER BERM\u00daDEZ RAM\u00cdREZ", "ubi": "FNA", "marca": "HP", "serial": "3CQ451QJF"}
+        ];
+
+        let countLaptops = 0;
+        let countDesktops = 0;
+
+        // LLENAR TABLA DE COMPUTADORES
+        const tbodyEq = document.getElementById('equiposTableBody');
+        equiposData.forEach(eq => {
+            let isCPU = eq.tipo.toUpperCase().includes('ESCRITORIO') || eq.tipo.toUpperCase().includes('TORRE');
+            
+            if (isCPU) {
+                countDesktops++;
+            } else {
+                countLaptops++;
+            }
+
+            let badgeTipo = isCPU ? 'badge-desk' : 'badge-pc';
+            let iconTipo = isCPU ? 'computer' : 'laptop';
+            let tipoLabel = isCPU ? 'Escritorio (Torre)' : 'Portátil';
+
+            tbodyEq.innerHTML += `<tr>
+                <td><strong>${eq.resp}</strong></td>
+                <td>${eq.area}<br><small style="color:#777;"><i class="fa-solid fa-location-dot"></i> ${eq.ubi}</small></td>
+                <td style="color:var(--primary); font-weight:bold;">${eq.equipo}</td>
+                <td><span class="badge ${badgeTipo}"><i class="fa-solid fa-${iconTipo}"></i> ${tipoLabel}</span></td>
+                <td>${eq.marca}<br><small style="color:#555;">SN: ${eq.serial}</small></td>
+                <td><span class="badge badge-externo"><i class="fa-solid fa-handshake"></i> Asignado Externo</span></td>
+            </tr>`;
+        });
+
+        // LLENAR TABLA DE MONITORES
+        const tbodyMon = document.getElementById('monitoresTableBody');
+        monitoresData.forEach(mon => {
+            tbodyMon.innerHTML += `<tr>
+                <td><strong>${mon.resp}</strong></td>
+                <td><i class="fa-solid fa-location-dot" style="color:#777; font-size:10px;"></i> ${mon.ubi}</td>
+                <td style="font-weight:bold;"><span class="badge badge-monitor"><i class="fa-solid fa-desktop"></i> ${mon.marca}</span></td>
+                <td>${mon.serial}</td>
+                <td><span class="badge badge-externo"><i class="fa-solid fa-handshake"></i> Asignado Externo</span></td>
+            </tr>`;
+        });
+
+        // DIBUJAR GRÁFICA DE DONA
+        new Chart(document.getElementById('assetChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Laptops Asignadas', 'CPUs Asignados', 'Monitores Asignados'],
+                datasets: [{
+                    data: [countLaptops, countDesktops, monitoresData.length],
+                    backgroundColor: ['#1a73e8', '#1e8e3e', '#f9ab00'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: { maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+        });
     </script>
 </body>
 </html>
