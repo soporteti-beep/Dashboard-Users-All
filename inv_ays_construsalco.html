@@ -53,7 +53,7 @@
         .badge-pc { background: #e3f2fd; color: #1a73e8; }
         .badge-desk { background: #e6f4ea; color: #1e8e3e; }
         .badge-monitor { background: #fef0d9; color: #e65100; }
-        .badge-propio { background: #e6f4ea; color: var(--success); }
+        .badge-AYS { background: #e6f4ea; color: var(--success); }
 
         @media (max-width: 1100px) { .charts-grid { grid-template-columns: 1fr; } }
     </style>
@@ -70,11 +70,11 @@
         <!-- KPIs SUPERIORES -->
         <div class="kpi-grid">
             <div class="kpi-card" style="border-left-color: var(--primary);">
-                <div class="kpi-header"><span>Computadores Propios</span><i class="fa-solid fa-laptop"></i></div>
+                <div class="kpi-header"><span>Computadores AYS</span><i class="fa-solid fa-laptop"></i></div>
                 <div id="kpiEquipos" class="kpi-value">20</div>
             </div>
             <div class="kpi-card" style="border-left-color: var(--warning);">
-                <div class="kpi-header"><span>Monitores Propios</span><i class="fa-solid fa-desktop"></i></div>
+                <div class="kpi-header"><span>Monitores AYS</span><i class="fa-solid fa-desktop"></i></div>
                 <div id="kpiMonitores" class="kpi-value">8</div>
             </div>
             <div class="kpi-card" style="border-left-color: var(--success);">
@@ -92,7 +92,7 @@
 
             <!-- TABLA 1: COMPUTADORES -->
             <div class="chart-card">
-                <h3><i class="fa-solid fa-laptop"></i> Inventario de Computadores (Todos Propios)</h3>
+                <h3><i class="fa-solid fa-laptop"></i> Inventario de Computadores (Todos AYS)</h3>
                 <div class="table-container">
                     <table>
                         <thead>
@@ -186,7 +186,7 @@
                 <td style="color:var(--primary); font-weight:bold;">${eq.equipo || '--'}</td>
                 <td><span class="badge ${badgeTipo}"><i class="fa-solid fa-${iconTipo}"></i> ${eq.tipo}</span></td>
                 <td>${eq.marca}<br><small style="color:#555;">SN: ${eq.serial}</small></td>
-                <td><span class="badge badge-propio"><i class="fa-solid fa-check"></i> Propio</span></td>
+                <td><span class="badge badge-AYS"><i class="fa-solid fa-check"></i> AYS</span></td>
             </tr>`;
         });
 
@@ -198,7 +198,7 @@
                 <td>${mon.ubi}</td>
                 <td style="font-weight:bold;"><span class="badge badge-monitor"><i class="fa-solid fa-desktop"></i> ${mon.marca}</span></td>
                 <td>${mon.serial}</td>
-                <td><span class="badge badge-propio"><i class="fa-solid fa-check"></i> Propio</span></td>
+                <td><span class="badge badge-AYS"><i class="fa-solid fa-check"></i> AYS</span></td>
             </tr>`;
         });
 
@@ -206,7 +206,7 @@
         new Chart(document.getElementById('assetChart'), {
             type: 'doughnut',
             data: {
-                labels: ['Laptops Propias', 'Escritorio Propios', 'Monitores Propios'],
+                labels: ['Laptops Propias', 'Escritorio AYS', 'Monitores AYS'],
                 datasets: [{
                     data: [countLaptops, countDesktops, monitoresData.length],
                     backgroundColor: ['#1a73e8', '#1e8e3e', '#f9ab00'],
